@@ -106,6 +106,60 @@ export const posts = [
       },
     ],
   },
+  {
+    slug: 'react-hashrouter-to-browserrouter-seo',
+    title: 'How I Migrated a React SPA from HashRouter to BrowserRouter for Better SEO',
+    date: '2026-02-09',
+    excerpt:
+      'A practical migration from hash URLs to clean routes in React, including Vercel rewrites, sitemap updates, and Search Console reindexing.',
+    sections: [
+      {
+        heading: 'The problem: hash routes were blocking discoverability',
+        text: 'My site used HashRouter, which created URLs like /#/blog and /#/posts/slug. That works for client-side navigation, but it weakens indexability because crawlers treat those fragments differently and you end up with less reliable page-level ranking signals.',
+      },
+      {
+        heading: 'Step 1: migrate React Router to clean paths',
+        bullets: [
+          'Swapped HashRouter for BrowserRouter in App.jsx',
+          'Kept route structure identical (/blog, /portfolio, /posts/:slug, /projects/:slug)',
+          'Updated internal links to always use clean paths',
+        ],
+      },
+      {
+        heading: 'Step 2: prevent 404s on deep links in Vercel',
+        text: 'BrowserRouter requires server fallback so direct visits to /posts/some-slug do not 404. I added a Vercel route config that serves index.html for non-file paths after filesystem handling.',
+      },
+      {
+        heading: 'Step 3: fix the sitemap to match real crawlable URLs',
+        bullets: [
+          'Removed all #/ entries from sitemap.xml',
+          'Added canonical paths for blog, portfolio, project pages, and post pages',
+          'Resubmitted sitemap in Google Search Console',
+        ],
+      },
+      {
+        heading: 'Step 4: tighten page-level SEO signals',
+        bullets: [
+          'Added dynamic title, description, canonical, OG, and Twitter tags per route',
+          'Added JSON-LD schema by page type (WebPage, Blog, Article, CreativeWork)',
+          'Added internal related links between posts and projects',
+        ],
+      },
+      {
+        heading: 'Search Console reindex workflow',
+        bullets: [
+          'Submit updated sitemap',
+          'Use URL Inspection on home + key routes',
+          'Request indexing for priority pages',
+          'Monitor Coverage and Performance for 3-7 days before title tuning',
+        ],
+      },
+      {
+        heading: 'What changed after the migration',
+        text: 'The site now exposes clean URLs, proper canonical signals, and crawl-friendly route behavior. That creates a stronger foundation for rankings than any one-off meta tag tweak. If your React app still uses hash routes, this migration is one of the highest-ROI SEO fixes you can make.',
+      },
+    ],
+  },
 ]
 
 export const getPostBySlug = (slug) => posts.find((p) => p.slug === slug)
