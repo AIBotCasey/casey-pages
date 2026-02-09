@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { posts, sortPostsByNewest } from '../data/posts'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import NewsletterSignup from '../components/NewsletterSignup'
 
 export default function StartHerePage() {
   const topPosts = sortPostsByNewest(posts).slice(0, 5)
@@ -69,10 +70,12 @@ export default function StartHerePage() {
         ))}
       </Grid>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mt: 5 }}>
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ mt: 5, mb: 4 }}>
         <Button component={RouterLink} to="/blog" variant="outlined">Browse All Posts</Button>
         <Button component={RouterLink} to="/portfolio" variant="outlined">Browse Full Portfolio</Button>
       </Stack>
+
+      <NewsletterSignup source="start-here" />
     </Box>
   )
 }
