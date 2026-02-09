@@ -85,18 +85,28 @@ export default function HomePage() {
         <Typography variant="h4" sx={{ mb: 3 }}>Latest Posts</Typography>
         <Grid container spacing={2.5}>
           {latestPosts.map((post) => (
-            <Grid item xs={12} md={6} key={post.slug}>
+            <Grid item xs={12} sm={6} md={4} key={post.slug}>
               <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <CardMedia
                   component="img"
                   image={getPostImageUrl(post)}
                   alt={post.title}
-                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', maxHeight: 180, borderBottom: '1px solid rgba(255,255,255,0.08)' }}
                 />
                 <CardContent>
                   <Typography variant="caption" color="text.secondary">{post.date}</Typography>
                   <Typography variant="h6" gutterBottom>{post.title}</Typography>
-                  <Typography color="text.secondary">{post.excerpt}</Typography>
+                  <Typography
+                    color="text.secondary"
+                    sx={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {post.excerpt}
+                  </Typography>
                 </CardContent>
                 <CardActions sx={{ px: 2, pb: 2 }}>
                   <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
