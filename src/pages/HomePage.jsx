@@ -57,16 +57,46 @@ export default function HomePage() {
         <Typography variant="h4" sx={{ mb: 2 }}>Featured Apps</Typography>
         <Grid container spacing={2.5}>
           {featuredProjects.map((project) => (
-            <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={project.slug}>
-              <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.78)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>{project.name}</Typography>
-                  <Typography color="text.secondary" sx={{ mb: 2 }}>{project.tagline}</Typography>
-                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                    {project.stack.map((tag) => <Chip key={tag} label={tag} variant="outlined" />)}
-                  </Stack>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={project.slug}>
+              <Card
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  background: 'rgba(18, 24, 44, 0.72)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                <Box
+                  sx={{
+                    aspectRatio: '16 / 9',
+                    borderBottom: '1px solid rgba(255,255,255,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background:
+                      'linear-gradient(135deg, rgba(124,77,255,0.28) 0%, rgba(0,229,255,0.14) 55%, rgba(255,64,129,0.14) 100%)',
+                  }}
+                >
+                  <Chip label="Featured App" color="secondary" variant="outlined" />
+                </Box>
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      minHeight: '3.2em',
+                    }}
+                  >
+                    {project.name}
+                  </Typography>
+                  <Typography color="text.secondary">{project.tagline}</Typography>
                 </CardContent>
-                <CardActions sx={{ px: 2, pb: 2, gap: 1, flexWrap: 'wrap' }}>
+                <CardActions sx={{ px: 2, pb: 2, mt: 'auto', gap: 1, flexWrap: 'wrap' }}>
                   <Button variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
                   {project.liveUrl ? (
                     <Button variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
