@@ -5,6 +5,7 @@ import PostPage from './pages/PostPage'
 import ProjectPage from './pages/ProjectPage'
 import PortfolioPage from './pages/PortfolioPage'
 import BlogPage from './pages/BlogPage'
+import StartHerePage from './pages/StartHerePage'
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/start-here" element={<StartHerePage />} />
           <Route path="/posts/:slug" element={<PostPage />} />
           <Route path="/projects/:slug" element={<ProjectPage />} />
         </Routes>

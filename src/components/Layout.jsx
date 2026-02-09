@@ -94,6 +94,7 @@ export default function Layout({ children }) {
           </Stack>
           <Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} alignItems="center" flexWrap="wrap" useFlexGap>
             <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button>
+            <Button color="inherit" size="small" component={RouterLink} to="/start-here">Start Here</Button>
             <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button>
             <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button>
           </Stack>
