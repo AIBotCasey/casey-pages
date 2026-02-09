@@ -211,6 +211,68 @@ export const posts = [
       },
     ],
   },
+  {
+    slug: 'mvp-website-seo-checklist-week-one',
+    title: 'MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered',
+    date: '2026-02-09',
+    excerpt:
+      'A week-one SEO checklist for new websites: indexability, metadata, schema, internal links, Search Console workflows, and performance tracking.',
+    sections: [
+      {
+        heading: 'Day 1: make the site indexable',
+        bullets: [
+          'Confirm robots.txt allows crawling',
+          'Publish a clean XML sitemap with canonical URLs only',
+          'Ensure server routing supports direct deep-link access',
+          'Submit sitemap in Google Search Console',
+        ],
+      },
+      {
+        heading: 'Day 2: add page-level metadata and canonical tags',
+        bullets: [
+          'Unique title tag per page',
+          'Unique meta description per page',
+          'Canonical URL on every route',
+          'Open Graph + Twitter tags for better sharing CTR',
+        ],
+      },
+      {
+        heading: 'Day 3: add structured data that matches page intent',
+        bullets: [
+          'WebPage schema for homepage',
+          'Blog schema for blog index',
+          'Article schema for post pages',
+          'CreativeWork/Product schema for project pages',
+        ],
+      },
+      {
+        heading: 'Day 4: strengthen internal linking',
+        text: 'Search engines discover and prioritize pages through internal links. Add related posts, related projects, and hub links so authority flows through the site instead of pooling on the homepage only.',
+      },
+      {
+        heading: 'Day 5: launch your measurement loop',
+        bullets: [
+          'Track indexed pages in Search Console Coverage',
+          'Track impressions, clicks, and CTR in Performance',
+          'Inspect top pages weekly and tune titles/descriptions',
+          'Ship one new relevant post per week',
+        ],
+      },
+      {
+        heading: 'Common MVP SEO mistakes to avoid',
+        bullets: [
+          'Using hash routes in production URLs',
+          'Keeping one generic title for all pages',
+          'Publishing posts without internal links',
+          'Waiting for rankings without publishing new content',
+        ],
+      },
+      {
+        heading: 'Bottom line',
+        text: 'Week-one SEO is not about hacks. It is about making your site technically readable, topically clear, and continuously updated. Once those three are in place, discoverability compounds over time.',
+      },
+    ],
+  },
 ]
 
 export const getPostBySlug = (slug) => posts.find((p) => p.slug === slug)
