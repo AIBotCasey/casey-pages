@@ -1,7 +1,7 @@
 import { Alert, Box, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 
-const NEWSLETTER_ENDPOINT = import.meta.env.VITE_NEWSLETTER_ENDPOINT
+const NEWSLETTER_ENDPOINT = import.meta.env.VITE_NEWSLETTER_ENDPOINT || '/api/newsletter-subscribe'
 
 export default function NewsletterSignup({ source = 'site' }) {
   const [email, setEmail] = useState('')
@@ -19,11 +19,7 @@ export default function NewsletterSignup({ source = 'site' }) {
       return
     }
 
-    if (!NEWSLETTER_ENDPOINT) {
-      setStatus('error')
-      setMessage('Newsletter endpoint is not configured yet. Set VITE_NEWSLETTER_ENDPOINT to enable submissions.')
-      return
-    }
+    // Endpoint defaults to /api/newsletter-subscribe when not explicitly set.
 
     try {
       setStatus('loading')
