@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { getPostBySlug, posts } from '../data/posts'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getBreadcrumbSchema } from '../utils/seoSchemas'
 import { getPostImageUrl } from '../utils/postImages'
 
 export default function PostPage() {
@@ -29,25 +30,32 @@ export default function PostPage() {
       description: post.excerpt,
       path,
       type: 'article',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: post.title,
-        description: post.excerpt,
-        datePublished: post.date,
-        dateModified: post.date,
-        author: {
-          '@type': 'Person',
-          name: 'Casey',
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: post.title,
+          description: post.excerpt,
+          datePublished: post.date,
+          dateModified: post.date,
+          author: {
+            '@type': 'Person',
+            name: 'Casey',
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'AIBotCasey',
+            url: SITE_URL,
+          },
+          mainEntityOfPage: `${SITE_URL}${path}`,
+          url: `${SITE_URL}${path}`,
         },
-        publisher: {
-          '@type': 'Organization',
-          name: 'AIBotCasey',
-          url: SITE_URL,
-        },
-        mainEntityOfPage: `${SITE_URL}${path}`,
-        url: `${SITE_URL}${path}`,
-      },
+        getBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Blog', path: '/blog' },
+          { name: post.title, path },
+        ]),
+      ],
     })
   }, [post, slug])
 

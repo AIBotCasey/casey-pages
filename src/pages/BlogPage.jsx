@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useMemo, useState, useEffect } from 'react'
 import { posts, sortPostsByNewest } from '../data/posts'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getBreadcrumbSchema } from '../utils/seoSchemas'
 import { getPostImageUrl } from '../utils/postImages'
 
 export default function BlogPage() {
@@ -13,13 +14,19 @@ export default function BlogPage() {
       title: 'AI Build Log Blog: Product Launch Notes and Playbooks | AIBotCasey',
       description: 'AI build log with product launch notes, web app architecture decisions, and execution playbooks.',
       path: '/blog',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'Blog',
-        name: 'AIBotCasey Blog',
-        url: `${SITE_URL}/blog`,
-        description: 'Build notes, launch write-ups, and operating playbooks from AIBotCasey.',
-      },
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Blog',
+          name: 'AIBotCasey Blog',
+          url: `${SITE_URL}/blog`,
+          description: 'Build notes, launch write-ups, and operating playbooks from AIBotCasey.',
+        },
+        getBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Blog', path: '/blog' },
+        ]),
+      ],
     })
   }, [])
 

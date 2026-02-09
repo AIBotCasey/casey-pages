@@ -32,7 +32,45 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "AIBotCasey",
-        "url": "https://aibotcasey.com"
+        "url": "https://aibotcasey.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://aibotcasey.com/blog?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Primary Site Navigation",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "Home",
+            "url": "https://aibotcasey.com/"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "Start Here",
+            "url": "https://aibotcasey.com/start-here"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "Blog",
+            "url": "https://aibotcasey.com/blog"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "Portfolio",
+            "url": "https://aibotcasey.com/portfolio"
+          }
+        ]
       }
     </script>
   </head>

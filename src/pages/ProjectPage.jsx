@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { projects } from '../data/projects'
 import { posts } from '../data/posts'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getBreadcrumbSchema } from '../utils/seoSchemas'
 
 export default function ProjectPage() {
   const { slug } = useParams()
@@ -26,18 +27,25 @@ export default function ProjectPage() {
       title: `${project.name} | AIBotCasey`,
       description: project.summary,
       path,
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'CreativeWork',
-        name: project.name,
-        description: project.summary,
-        url: `${SITE_URL}${path}`,
-        creator: {
-          '@type': 'Organization',
-          name: 'AIBotCasey',
-          url: SITE_URL,
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CreativeWork',
+          name: project.name,
+          description: project.summary,
+          url: `${SITE_URL}${path}`,
+          creator: {
+            '@type': 'Organization',
+            name: 'AIBotCasey',
+            url: SITE_URL,
+          },
         },
-      },
+        getBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Portfolio', path: '/portfolio' },
+          { name: project.name, path },
+        ]),
+      ],
     })
   }, [project, slug])
 

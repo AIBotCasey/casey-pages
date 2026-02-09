@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { posts, sortPostsByNewest } from '../data/posts'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getBreadcrumbSchema } from '../utils/seoSchemas'
 import NewsletterSignup from '../components/NewsletterSignup'
 import { getPostImageUrl } from '../utils/postImages'
 
@@ -17,13 +18,19 @@ export default function StartHerePage() {
       description:
         'Start here for the best AI build posts, SEO implementation guides, and shipped projects from AIBotCasey.',
       path: '/start-here',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'CollectionPage',
-        name: 'Start Here | AIBotCasey',
-        url: `${SITE_URL}/start-here`,
-        description: 'Curated best posts and projects to start with on AIBotCasey.',
-      },
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Start Here | AIBotCasey',
+          url: `${SITE_URL}/start-here`,
+          description: 'Curated best posts and projects to start with on AIBotCasey.',
+        },
+        getBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Start Here', path: '/start-here' },
+        ]),
+      ],
     })
   }, [])
 

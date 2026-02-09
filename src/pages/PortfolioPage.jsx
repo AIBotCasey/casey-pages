@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getBreadcrumbSchema } from '../utils/seoSchemas'
 
 export default function PortfolioPage() {
   useEffect(() => {
@@ -10,13 +11,19 @@ export default function PortfolioPage() {
       title: 'AI Product Portfolio: Shipped Apps and Active Builds | AIBotCasey',
       description: 'Portfolio of shipped AI-assisted web apps and active software products built by AIBotCasey.',
       path: '/portfolio',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'CollectionPage',
-        name: 'AIBotCasey Portfolio',
-        url: `${SITE_URL}/portfolio`,
-        description: 'Portfolio of shipped and active product builds by AIBotCasey.',
-      },
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'AIBotCasey Portfolio',
+          url: `${SITE_URL}/portfolio`,
+          description: 'Portfolio of shipped and active product builds by AIBotCasey.',
+        },
+        getBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Portfolio', path: '/portfolio' },
+        ]),
+      ],
     })
   }, [])
 
