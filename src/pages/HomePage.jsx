@@ -116,17 +116,6 @@ export default function HomePage() {
                   >
                     {post.title}
                   </Typography>
-                  <Typography
-                    color="text.secondary"
-                    sx={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {post.excerpt}
-                  </Typography>
                 </CardContent>
                 <CardActions sx={{ px: 2, pb: 2, mt: 'auto' }}>
                   <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
