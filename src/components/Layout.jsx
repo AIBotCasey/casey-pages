@@ -14,6 +14,7 @@ import {
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded'
 import { Link as RouterLink } from 'react-router-dom'
 import { useMemo } from 'react'
+import CookieConsent from './CookieConsent'
 
 function AnimatedBackground() {
   return (
@@ -108,6 +109,7 @@ export default function Layout({ children }) {
           </Typography>
         </Stack>
       </Container>
+      <CookieConsent />
     </ThemeProvider>
   )
 }

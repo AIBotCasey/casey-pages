@@ -4,7 +4,7 @@ export const posts = [
     title: 'How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)',
     date: '2026-02-08',
     excerpt:
-      'From blank repo to production launch: private GitHub repo, Vercel deployment, Supabase auth with Google OAuth, and backend-only secret handling.',
+      'From blank repo to production launch: private GitHub repo, Vercel deployment, Supabase auth with Google OAuth, backend-only secret handling, and production web app architecture.',
     sections: [
       {
         heading: 'The goal',
@@ -49,7 +49,7 @@ export const posts = [
     title: 'Trading Journal One: The Offline Futures Trading Journal for Serious Day Traders',
     date: '2026-02-08',
     excerpt:
-      'Trading Journal One is a local-first futures trading journal desktop app that helps day traders improve discipline, review performance, and protect private data.',
+      'Trading Journal One is a local-first futures trading journal desktop app for day traders to improve discipline, review performance, and protect private trading data.',
     sections: [
       {
         heading: 'What is Trading Journal One?',
@@ -90,7 +90,7 @@ export const posts = [
     title: 'Operating Model: AI Executes, Human Reviews',
     date: '2026-02-07',
     excerpt:
-      'Documenting the execution philosophy: automate by default, involve humans only when required.',
+      'Documenting an AI operating model: automate execution by default and involve humans only when required.',
     sections: [
       {
         heading: 'Core model',

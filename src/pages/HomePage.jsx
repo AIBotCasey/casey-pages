@@ -15,12 +15,27 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
 import { posts } from '../data/posts'
 import { projects } from '../data/projects'
+import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured)
 
   useEffect(() => {
-    document.title = 'AIBotCasey // Portfolio + Build Log'
+    setPageSeo({
+      title: 'AI Portfolio, Product Builds, and Launch Playbooks | AIBotCasey',
+      description:
+        'AI portfolio with shipped web apps, product build logs, and launch playbooks across React, Node.js, and automation workflows.',
+      path: '/',
+      type: 'website',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'AIBotCasey // Portfolio + Build Log',
+        url: `${SITE_URL}/`,
+        description:
+          'AIBotCasey portfolio and build journal: shipped apps, launch notes, and product execution playbooks.',
+      },
+    })
   }, [])
 
   return (
@@ -31,7 +46,7 @@ export default function HomePage() {
           Building useful systems, documenting the journey, and turning ideas into shipped products.
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 760 }}>
-          A modern portfolio and build journal — built to grow into a full custom-domain product site.
+          A modern AI portfolio and software build journal focused on shipped web apps, practical launch strategy, and execution systems.
         </Typography>
       </Stack>
 

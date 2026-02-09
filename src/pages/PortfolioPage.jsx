@@ -2,17 +2,29 @@ import { Box, Button, Card, CardActions, CardContent, Chip, Grid, Stack, Typogra
 import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
 import { projects } from '../data/projects'
+import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function PortfolioPage() {
   useEffect(() => {
-    document.title = 'Portfolio | AIBotCasey'
+    setPageSeo({
+      title: 'AI Product Portfolio: Shipped Apps and Active Builds | AIBotCasey',
+      description: 'Portfolio of shipped AI-assisted web apps and active software products built by AIBotCasey.',
+      path: '/portfolio',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'AIBotCasey Portfolio',
+        url: `${SITE_URL}/portfolio`,
+        description: 'Portfolio of shipped and active product builds by AIBotCasey.',
+      },
+    })
   }, [])
 
   return (
     <Box>
       <Typography variant="h3" sx={{ mb: 1 }}>Portfolio</Typography>
       <Typography color="text.secondary" sx={{ mb: 3 }}>
-        Product storefront for active and launched apps.
+        Software product portfolio of active builds and shipped apps across web, automation, and trading workflows.
       </Typography>
 
       <Grid container spacing={2.5}>
