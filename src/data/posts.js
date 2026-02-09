@@ -160,6 +160,57 @@ export const posts = [
       },
     ],
   },
+  {
+    slug: 'seo-react-vite-canonical-meta-jsonld',
+    title: 'Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work',
+    date: '2026-02-09',
+    excerpt:
+      'A practical SEO setup for React + Vite apps: dynamic meta tags, canonical URLs, Open Graph, Twitter cards, and structured data by page type.',
+    sections: [
+      {
+        heading: 'Why React SPAs miss rankings even when content is solid',
+        text: 'Most React apps ship with one static index.html title and description. That means every route competes with weak or duplicate metadata, which makes it harder for search engines to understand page intent and rank individual URLs.',
+      },
+      {
+        heading: 'The baseline SEO stack I used',
+        bullets: [
+          'Unique title and meta description per route',
+          'Canonical link for every page URL',
+          'Open Graph and Twitter meta tags for sharing + CTR',
+          'Robots directives for normal and not-found states',
+        ],
+      },
+      {
+        heading: 'Build a small dynamic SEO helper once',
+        text: 'Instead of hardcoding tags in every component, I used a reusable setPageSeo helper to upsert meta tags, canonical links, and JSON-LD from each page component. This keeps SEO maintainable as routes scale.',
+      },
+      {
+        heading: 'Use structured data by page type (not one-size-fits-all)',
+        bullets: [
+          'Home: WebPage schema',
+          'Blog listing: Blog schema',
+          'Post pages: Article schema with datePublished/dateModified',
+          'Project pages: CreativeWork schema',
+        ],
+      },
+      {
+        heading: 'Canonical and route hygiene matter more than people think',
+        text: 'Once routes are clean, canonical tags should match the exact preferred URL (no hash fragments, no duplicate variants). Combined with a clean sitemap, this gives crawlers one clear version of every page to index.',
+      },
+      {
+        heading: 'Internal links complete the SEO loop',
+        bullets: [
+          'Link related posts from each post page',
+          'Link projects from posts and posts from projects',
+          'Use descriptive anchor text tied to your page topic',
+        ],
+      },
+      {
+        heading: 'The practical result',
+        text: 'This setup does not guarantee instant rankings, but it fixes the technical bottlenecks that stop React SPAs from being discovered. Once this foundation is in place, content quality and consistent publishing become the main growth levers.',
+      },
+    ],
+  },
 ]
 
 export const getPostBySlug = (slug) => posts.find((p) => p.slug === slug)
