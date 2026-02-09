@@ -21,7 +21,7 @@ import { getPostImageUrl } from '../utils/postImages'
 
 export default function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured)
-  const latestPosts = sortPostsByNewest(posts).slice(0, 5)
+  const latestPosts = sortPostsByNewest(posts).slice(0, 6)
 
   useEffect(() => {
     setPageSeo({
@@ -91,7 +91,7 @@ export default function HomePage() {
                   component="img"
                   image={getPostImageUrl(post)}
                   alt={post.title}
-                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', maxHeight: 180, borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
                 />
                 <CardContent>
                   <Typography variant="caption" color="text.secondary">{post.date}</Typography>
