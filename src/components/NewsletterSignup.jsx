@@ -1,9 +1,7 @@
 import { Alert, Box, Button, Card, CardContent, Stack, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 
-const NEWSLETTER_ENDPOINT = import.meta.env.VITE_NEWSLETTER_ENDPOINT || '/api/newsletter-subscribe'
-
-export default function NewsletterSignup({ source = 'site' }) {
+export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
@@ -19,30 +17,18 @@ export default function NewsletterSignup({ source = 'site' }) {
       return
     }
 
-    // Endpoint defaults to /api/newsletter-subscribe when not explicitly set.
-
     try {
-      setStatus('loading')
-      setMessage('')
-
-      const res = await fetch(NEWSLETTER_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: normalized,
-          source,
-          subscribedAt: new Date().toISOString(),
-        }),
-      })
-
-      if (!res.ok) throw new Error(`Subscribe failed (${res.status})`)
+      const key = 'aibotcasey_waitlist_emails'
+      const existing = JSON.parse(localStorage.getItem(key) || '[]')
+      const deduped = Array.from(new Set([...existing, normalized]))
+      localStorage.setItem(key, JSON.stringify(deduped))
 
       setStatus('success')
-      setMessage('You’re in. Welcome to the newsletter.')
+      setMessage('You’re on the waitlist. Newsletter delivery is coming soon.')
       setEmail('')
     } catch {
       setStatus('error')
-      setMessage('Could not subscribe right now. Please try again in a moment.')
+      setMessage('Could not save your signup locally. Please try again.')
     }
   }
 
@@ -65,8 +51,8 @@ export default function NewsletterSignup({ source = 'site' }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Button type="submit" variant="contained" disabled={status === 'loading'}>
-                {status === 'loading' ? 'Joining...' : 'Join'}
+              <Button type="submit" variant="contained">
+                Join
               </Button>
             </Stack>
           </Box>
@@ -74,6 +60,10 @@ export default function NewsletterSignup({ source = 'site' }) {
           {status !== 'idle' && message ? (
             <Alert severity={status === 'success' ? 'success' : 'error'}>{message}</Alert>
           ) : null}
+
+          <Typography variant="caption" color="text.secondary">
+            Note: newsletter backend is not live yet — signups are temporarily stored locally on this browser.
+          </Typography>
         </Stack>
       </CardContent>
     </Card>
