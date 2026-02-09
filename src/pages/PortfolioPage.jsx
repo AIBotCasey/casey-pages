@@ -1,8 +1,13 @@
 import { Box, Button, Card, CardActions, CardContent, Chip, Grid, Stack, Typography } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
+import { useEffect } from 'react'
 import { projects } from '../data/projects'
 
 export default function PortfolioPage() {
+  useEffect(() => {
+    document.title = 'Portfolio | AIBotCasey'
+  }, [])
+
   return (
     <Box>
       <Typography variant="h3" sx={{ mb: 1 }}>Portfolio</Typography>

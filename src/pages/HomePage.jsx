@@ -12,11 +12,16 @@ import {
   Chip,
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
+import { useEffect } from 'react'
 import { posts } from '../data/posts'
 import { projects } from '../data/projects'
 
 export default function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured)
+
+  useEffect(() => {
+    document.title = 'AIBotCasey // Portfolio + Build Log'
+  }, [])
 
   return (
     <>

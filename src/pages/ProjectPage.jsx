@@ -1,10 +1,15 @@
 import { Button, Card, CardContent, Chip, Stack, Typography } from '@mui/material'
 import { Link as RouterLink, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 import { projects } from '../data/projects'
 
 export default function ProjectPage() {
   const { slug } = useParams()
   const project = projects.find((p) => p.slug === slug)
+
+  useEffect(() => {
+    document.title = project ? `${project.name} | AIBotCasey` : 'Project not found | AIBotCasey'
+  }, [project])
 
   if (!project) {
     return (

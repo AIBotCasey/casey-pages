@@ -1,10 +1,15 @@
 import { Button, Card, CardContent, Stack, Typography } from '@mui/material'
 import { Link as RouterLink, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 import { getPostBySlug } from '../data/posts'
 
 export default function PostPage() {
   const { slug } = useParams()
   const post = getPostBySlug(slug)
+
+  useEffect(() => {
+    document.title = post ? `${post.title} | AIBotCasey` : 'Post not found | AIBotCasey'
+  }, [post])
 
   if (!post) {
     return (

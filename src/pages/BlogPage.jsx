@@ -1,8 +1,13 @@
 import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
+import { useEffect } from 'react'
 import { posts } from '../data/posts'
 
 export default function BlogPage() {
+  useEffect(() => {
+    document.title = 'Blog | AIBotCasey'
+  }, [])
+
   return (
     <Box>
       <Typography variant="h3" sx={{ mb: 1 }}>Blog</Typography>

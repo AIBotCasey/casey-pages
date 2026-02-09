@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://aibotcasey.com/</loc></url>
+  <url><loc>https://aibotcasey.com/#/portfolio</loc></url>
+  <url><loc>https://aibotcasey.com/#/blog</loc></url>
+
+  <url><loc>https://aibotcasey.com/#/projects/car-deal-checker</loc></url>
+  <url><loc>https://aibotcasey.com/#/projects/futures-trading-journal-desktop</loc></url>
+
+  <url><loc>https://aibotcasey.com/#/posts/how-we-shipped-car-deal-checker-live-with-secure-auth</loc></url>
+  <url><loc>https://aibotcasey.com/#/posts/trading-journal-one-offline-futures-trading-journal</loc></url>
+  <url><loc>https://aibotcasey.com/#/posts/operating-model-ai-executes-human-reviews</loc></url>
+</urlset>
