@@ -1,9 +1,10 @@
-import { Button, Card, CardContent, Stack, Typography } from '@mui/material'
+import { Button, Card, CardContent, CardMedia, Stack, Typography } from '@mui/material'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getPostBySlug, posts } from '../data/posts'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getPostImageUrl } from '../utils/postImages'
 
 export default function PostPage() {
   const { slug } = useParams()
@@ -65,6 +66,12 @@ export default function PostPage() {
       <Typography variant="h3" sx={{ fontSize: { xs: '1.75rem', sm: '2.2rem', md: '3rem' } }}>{post.title}</Typography>
       <Typography variant="body2" color="text.secondary">{post.date}</Typography>
       <Card sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <CardMedia
+          component="img"
+          image={getPostImageUrl(post)}
+          alt={post.title}
+          sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+        />
         <CardContent>
           {post.sections?.map((section) => (
             <Stack key={section.heading} spacing={1.2} sx={{ mb: 2.5 }}>

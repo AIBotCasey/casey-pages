@@ -1,8 +1,9 @@
-import { Box, Button, Card, CardActions, CardContent, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, TextField, Typography } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { useMemo, useState, useEffect } from 'react'
 import { posts, sortPostsByNewest } from '../data/posts'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getPostImageUrl } from '../utils/postImages'
 
 export default function BlogPage() {
   const [query, setQuery] = useState('')
@@ -54,6 +55,12 @@ export default function BlogPage() {
         {visiblePosts.map((post) => (
           <Grid item xs={12} md={6} key={post.slug}>
             <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <CardMedia
+                component="img"
+                image={getPostImageUrl(post)}
+                alt={post.title}
+                sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+              />
               <CardContent>
                 <Typography variant="caption" color="text.secondary">{post.date}</Typography>
                 <Typography variant="h6" gutterBottom>{post.title}</Typography>
