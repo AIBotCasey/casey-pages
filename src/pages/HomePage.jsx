@@ -67,19 +67,6 @@ export default function HomePage() {
                   border: '1px solid rgba(255,255,255,0.08)',
                 }}
               >
-                <Box
-                  sx={{
-                    aspectRatio: '16 / 9',
-                    borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background:
-                      'linear-gradient(135deg, rgba(124,77,255,0.28) 0%, rgba(0,229,255,0.14) 55%, rgba(255,64,129,0.14) 100%)',
-                  }}
-                >
-                  <Chip label="Featured App" color="secondary" variant="outlined" />
-                </Box>
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography
                     variant="h6"
@@ -96,12 +83,12 @@ export default function HomePage() {
                   </Typography>
                   <Typography color="text.secondary">{project.tagline}</Typography>
                 </CardContent>
-                <CardActions sx={{ px: 2, pb: 2, mt: 'auto', gap: 1, flexWrap: 'wrap' }}>
-                  <Button variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
+                <CardActions sx={{ px: 2, pb: 2, mt: 'auto', gap: 0.75, flexWrap: 'nowrap' }}>
+                  <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
                   {project.liveUrl ? (
-                    <Button variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
+                    <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
                   ) : null}
-                  <Button variant="outlined" component={RouterLink} to={`/projects/${project.slug}`}>Project Page</Button>
+                  <Button size="small" variant="outlined" component={RouterLink} to={`/projects/${project.slug}`}>Project Page</Button>
                 </CardActions>
               </Card>
             </Grid>
