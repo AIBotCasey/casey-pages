@@ -276,3 +276,6 @@ export const posts = [
 ]
 
 export const getPostBySlug = (slug) => posts.find((p) => p.slug === slug)
+
+export const sortPostsByNewest = (list) =>
+  [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

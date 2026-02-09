@@ -13,12 +13,13 @@ import {
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
-import { posts } from '../data/posts'
+import { posts, sortPostsByNewest } from '../data/posts'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured)
+  const latestPosts = sortPostsByNewest(posts).slice(0, 5)
 
   useEffect(() => {
     setPageSeo({
@@ -81,7 +82,7 @@ export default function HomePage() {
       <Box id="blog">
         <Typography variant="h4" sx={{ mb: 3 }}>Latest Posts</Typography>
         <Grid container spacing={2.5}>
-          {posts.map((post) => (
+          {latestPosts.map((post) => (
             <Grid item xs={12} md={6} key={post.slug}>
               <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <CardContent>

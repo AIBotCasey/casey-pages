@@ -1,10 +1,12 @@
-import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, Grid, TextField, Typography } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
-import { useEffect } from 'react'
-import { posts } from '../data/posts'
+import { useMemo, useState, useEffect } from 'react'
+import { posts, sortPostsByNewest } from '../data/posts'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function BlogPage() {
+  const [query, setQuery] = useState('')
+
   useEffect(() => {
     setPageSeo({
       title: 'AI Build Log Blog: Product Launch Notes and Playbooks | AIBotCasey',
@@ -20,6 +22,18 @@ export default function BlogPage() {
     })
   }, [])
 
+  const orderedPosts = useMemo(() => sortPostsByNewest(posts), [])
+
+  const visiblePosts = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    if (!q) return orderedPosts
+
+    return orderedPosts.filter((post) => {
+      const haystack = [post.title, post.excerpt, ...(post.sections?.map((s) => s.heading) ?? [])].join(' ').toLowerCase()
+      return haystack.includes(q)
+    })
+  }, [orderedPosts, query])
+
   return (
     <Box>
       <Typography variant="h3" sx={{ mb: 1 }}>Blog</Typography>
@@ -27,8 +41,17 @@ export default function BlogPage() {
         AI product build notes, launch write-ups, and execution playbooks for shipping software faster.
       </Typography>
 
+      <TextField
+        fullWidth
+        label="Search posts"
+        placeholder="Try: SEO, React, MVP, routing..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        sx={{ mb: 3 }}
+      />
+
       <Grid container spacing={2.5}>
-        {posts.map((post) => (
+        {visiblePosts.map((post) => (
           <Grid item xs={12} md={6} key={post.slug}>
             <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <CardContent>
@@ -43,6 +66,12 @@ export default function BlogPage() {
           </Grid>
         ))}
       </Grid>
+
+      {visiblePosts.length === 0 ? (
+        <Typography color="text.secondary" sx={{ mt: 3 }}>
+          No posts found for “{query}”. Try a broader keyword.
+        </Typography>
+      ) : null}
     </Box>
   )
 }
