@@ -38,7 +38,7 @@ export default function StartHerePage() {
       <Typography variant="h4" sx={{ mb: 2 }}>Top 5 Posts</Typography>
       <Grid container spacing={2.5} sx={{ mb: 6 }}>
         {topPosts.map((post) => (
-          <Grid item xs={12} md={6} key={post.slug}>
+          <Grid size={{ xs: 12, md: 6 }} key={post.slug}>
             <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <CardMedia
                 component="img"
@@ -62,7 +62,7 @@ export default function StartHerePage() {
       <Typography variant="h4" sx={{ mb: 2 }}>Top Projects</Typography>
       <Grid container spacing={2.5}>
         {topProjects.map((project) => (
-          <Grid item xs={12} md={6} key={project.slug}>
+          <Grid size={{ xs: 12, md: 6 }} key={project.slug}>
             <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>{project.name}</Typography>

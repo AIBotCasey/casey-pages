@@ -57,7 +57,7 @@ export default function HomePage() {
         <Typography variant="h4" sx={{ mb: 2 }}>Featured Apps</Typography>
         <Grid container spacing={2.5}>
           {featuredProjects.map((project) => (
-            <Grid item xs={12} sm={6} lg={3} key={project.slug}>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }} key={project.slug}>
               <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.78)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>{project.name}</Typography>
@@ -85,7 +85,7 @@ export default function HomePage() {
         <Typography variant="h4" sx={{ mb: 3 }}>Latest Posts</Typography>
         <Grid container spacing={2.5}>
           {latestPosts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} key={post.slug}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={post.slug}>
               <Card
                 sx={{
                   height: '100%',

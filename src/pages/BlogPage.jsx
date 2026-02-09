@@ -53,7 +53,7 @@ export default function BlogPage() {
 
       <Grid container spacing={2.5}>
         {visiblePosts.map((post) => (
-          <Grid item xs={12} md={6} key={post.slug}>
+          <Grid size={{ xs: 12, md: 6 }} key={post.slug}>
             <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <CardMedia
                 component="img"
