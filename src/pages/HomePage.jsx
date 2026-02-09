@@ -86,16 +86,36 @@ export default function HomePage() {
         <Grid container spacing={2.5}>
           {latestPosts.map((post) => (
             <Grid item xs={12} sm={6} md={4} key={post.slug}>
-              <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <Card
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  background: 'rgba(18, 24, 44, 0.72)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
                 <CardMedia
                   component="img"
                   image={getPostImageUrl(post)}
                   alt={post.title}
                   sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
                 />
-                <CardContent>
+                <CardContent sx={{ flexGrow: 1 }}>
                   <Typography variant="caption" color="text.secondary">{post.date}</Typography>
-                  <Typography variant="h6" gutterBottom>{post.title}</Typography>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      minHeight: '3.2em',
+                    }}
+                  >
+                    {post.title}
+                  </Typography>
                   <Typography
                     color="text.secondary"
                     sx={{
@@ -108,7 +128,7 @@ export default function HomePage() {
                     {post.excerpt}
                   </Typography>
                 </CardContent>
-                <CardActions sx={{ px: 2, pb: 2 }}>
+                <CardActions sx={{ px: 2, pb: 2, mt: 'auto' }}>
                   <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
                 </CardActions>
               </Card>
