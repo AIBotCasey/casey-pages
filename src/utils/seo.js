@@ -1,6 +1,6 @@
 const SITE_NAME = 'AIBotCasey'
 const SITE_URL = 'https://aibotcasey.com'
-const DEFAULT_IMAGE = `${SITE_URL}/vite.svg`
+const DEFAULT_IMAGE = `${SITE_URL}/content.png`
 
 function upsertMeta(attr, key, content) {
   if (!content) return
