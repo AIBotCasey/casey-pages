@@ -190,7 +190,7 @@ export default function App() {
         text: 'My site used HashRouter, which created URLs like /#/blog and /#/posts/slug. That works for client-side navigation, but it weakens indexability because crawlers treat those fragments differently and you end up with less reliable page-level ranking signals.',
       },
       {
-        heading: 'Step 1: migrate React Router to clean paths',
+        heading: 'Start with clean route structure in React Router',
         bullets: [
           'Swapped HashRouter for BrowserRouter in App.jsx',
           'Kept route structure identical (/blog, /portfolio, /posts/:slug, /projects/:slug)',
@@ -198,11 +198,11 @@ export default function App() {
         ],
       },
       {
-        heading: 'Step 2: prevent 404s on deep links in Vercel',
+        heading: 'Add Vercel fallback behavior for deep links',
         text: 'BrowserRouter requires server fallback so direct visits to /posts/some-slug do not 404. I added a Vercel route config that serves index.html for non-file paths after filesystem handling.',
       },
       {
-        heading: 'Step 3: fix the sitemap to match real crawlable URLs',
+        heading: 'Publish a sitemap with only real crawlable URLs',
         bullets: [
           'Removed all #/ entries from sitemap.xml',
           'Added canonical paths for blog, portfolio, project pages, and post pages',
@@ -210,7 +210,7 @@ export default function App() {
         ],
       },
       {
-        heading: 'Step 4: tighten page-level SEO signals',
+        heading: 'Strengthen on-page signals so each route can rank',
         bullets: [
           'Added dynamic title, description, canonical, OG, and Twitter tags per route',
           'Added JSON-LD schema by page type (WebPage, Blog, Article, CreativeWork)',
@@ -218,7 +218,7 @@ export default function App() {
         ],
       },
       {
-        heading: 'Search Console reindex workflow',
+        heading: 'How to verify indexing after the fix',
         bullets: [
           'Submit updated sitemap',
           'Use URL Inspection on home + key routes',
@@ -244,13 +244,8 @@ export default function App() {
         text: 'Most React apps ship with one static index.html title and description. That means every route competes with weak or duplicate metadata, which makes it harder for search engines to understand page intent and rank individual URLs.',
       },
       {
-        heading: 'The baseline SEO stack I used',
-        bullets: [
-          'Unique title and meta description per route',
-          'Canonical link for every page URL',
-          'Open Graph and Twitter meta tags for sharing + CTR',
-          'Robots directives for normal and not-found states',
-        ],
+        heading: 'The baseline SEO stack that made the biggest difference',
+        text: 'I kept this intentionally simple: unique titles and descriptions per route, canonical URLs on every page, Open Graph/Twitter tags for better share previews, and clear robots directives for valid vs not-found states.',
       },
       {
         heading: 'Build a small dynamic SEO helper once',
@@ -291,13 +286,8 @@ export default function App() {
       'A week-one SEO checklist for new websites: indexability, metadata, schema, internal links, Search Console workflows, and performance tracking.',
     sections: [
       {
-        heading: 'Day 1: make the site indexable',
-        bullets: [
-          'Confirm robots.txt allows crawling',
-          'Publish a clean XML sitemap with canonical URLs only',
-          'Ensure server routing supports direct deep-link access',
-          'Submit sitemap in Google Search Console',
-        ],
+        heading: 'Day 1: make sure search engines can actually crawl your pages',
+        text: 'Start with basics that are easy to miss: allow crawling in robots.txt, publish a clean sitemap, and confirm direct route access works in production. Then submit the sitemap in Search Console so Google discovers URLs faster.',
       },
       {
         heading: 'Day 2: add page-level metadata and canonical tags',
@@ -322,13 +312,8 @@ export default function App() {
         text: 'Search engines discover and prioritize pages through internal links. Add related posts, related projects, and hub links so authority flows through the site instead of pooling on the homepage only.',
       },
       {
-        heading: 'Day 5: launch your measurement loop',
-        bullets: [
-          'Track indexed pages in Search Console Coverage',
-          'Track impressions, clicks, and CTR in Performance',
-          'Inspect top pages weekly and tune titles/descriptions',
-          'Ship one new relevant post per week',
-        ],
+        heading: 'Day 5: start a weekly measurement loop',
+        text: 'Use Search Console like a feedback system, not a dashboard you check once. Track indexing coverage, impressions, and CTR weekly, then tune titles and descriptions based on real query data. Keep publishing at least one relevant post per week so momentum compounds.',
       },
       {
         heading: 'Common MVP SEO mistakes to avoid',
