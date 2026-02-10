@@ -162,19 +162,35 @@ export default function App() {
     title: 'Operating Model: AI Executes, Human Reviews',
     date: '2026-02-07',
     excerpt:
-      'Documenting an AI operating model: automate execution by default and involve humans only when required.',
+      'A practical operating model for teams using AI in production: let the agent execute by default, then keep humans focused on review, risk, and quality.',
     sections: [
       {
-        heading: 'Core model',
+        heading: 'Why this model works in real teams',
+        text: 'Most teams get stuck when AI is treated like a suggestion engine instead of an execution engine. The momentum comes from flipping that: let AI do the first pass of real work quickly, and let humans spend their energy on final judgment, prioritization, and risk calls.',
+      },
+      {
+        heading: 'The core workflow',
+        text: 'The AI executes by default, humans review outcomes, and user input is requested only when a platform block, policy boundary, or required human action appears. This keeps speed high without ignoring safety or quality control.',
+      },
+      {
+        heading: 'Where teams usually break this pattern',
         bullets: [
-          'AI executes by default',
-          'Human reviews outcomes',
-          'Ask for input only when blocked by platform constraints or required human action',
+          'Asking for approval before every low-risk step',
+          'Letting AI produce output without review checkpoints on high-impact actions',
+          'Treating tool access as a substitute for process discipline',
         ],
       },
       {
-        heading: 'Result',
-        text: 'This keeps momentum high, reduces friction, and turns ideas into shipped work faster.',
+        heading: 'How to apply it this week',
+        bullets: [
+          'Define which tasks are safe for autonomous execution',
+          'Define review checkpoints for risky or external actions',
+          'Track outcomes weekly and tighten prompts/processes based on misses',
+        ],
+      },
+      {
+        heading: 'Bottom line',
+        text: 'This model reduces handoff friction and ships faster while keeping humans in charge of what matters most: quality, safety, and final accountability.',
       },
     ],
   },
@@ -191,11 +207,7 @@ export default function App() {
       },
       {
         heading: 'Start with clean route structure in React Router',
-        bullets: [
-          'Swapped HashRouter for BrowserRouter in App.jsx',
-          'Kept route structure identical (/blog, /portfolio, /posts/:slug, /projects/:slug)',
-          'Updated internal links to always use clean paths',
-        ],
+        text: 'The first move is simple: replace HashRouter with BrowserRouter and keep your route map explicit for pages like /blog, /portfolio, /posts/:slug, and /projects/:slug. Then make sure internal links consistently use clean paths so users and crawlers see one canonical URL shape.',
       },
       {
         heading: 'Add Vercel fallback behavior for deep links',
@@ -203,19 +215,11 @@ export default function App() {
       },
       {
         heading: 'Publish a sitemap with only real crawlable URLs',
-        bullets: [
-          'Removed all #/ entries from sitemap.xml',
-          'Added canonical paths for blog, portfolio, project pages, and post pages',
-          'Resubmitted sitemap in Google Search Console',
-        ],
+        text: 'After the router migration, make the sitemap reflect reality. Remove hash-fragment URLs, include only canonical clean paths, and resubmit the updated sitemap in Search Console so crawl discovery aligns with your production routing.',
       },
       {
         heading: 'Strengthen on-page signals so each route can rank',
-        bullets: [
-          'Added dynamic title, description, canonical, OG, and Twitter tags per route',
-          'Added JSON-LD schema by page type (WebPage, Blog, Article, CreativeWork)',
-          'Added internal related links between posts and projects',
-        ],
+        text: 'This is where clean routing turns into real discoverability: assign unique title/description/canonical tags per route, layer in schema by page type, and add internal links between related posts and project pages so topical authority can flow through the site.',
       },
       {
         heading: 'How to verify indexing after the fix',
@@ -253,12 +257,7 @@ export default function App() {
       },
       {
         heading: 'Use structured data by page type (not one-size-fits-all)',
-        bullets: [
-          'Home: WebPage schema',
-          'Blog listing: Blog schema',
-          'Post pages: Article schema with datePublished/dateModified',
-          'Project pages: CreativeWork schema',
-        ],
+        text: 'Search engines understand context better when schema matches intent. Use WebPage for the homepage, Blog for the listing page, Article for post pages, and CreativeWork for project pages. This clarity helps Google map your content architecture more reliably.',
       },
       {
         heading: 'Canonical and route hygiene matter more than people think',
@@ -266,11 +265,7 @@ export default function App() {
       },
       {
         heading: 'Internal links complete the SEO loop',
-        bullets: [
-          'Link related posts from each post page',
-          'Link projects from posts and posts from projects',
-          'Use descriptive anchor text tied to your page topic',
-        ],
+        text: 'Once technical tags are in place, internal links become the force multiplier. Link related posts to each other, connect posts to relevant projects, and use descriptive anchor text so readers and crawlers can follow your topic graph naturally.',
       },
       {
         heading: 'The practical result',
@@ -290,22 +285,12 @@ export default function App() {
         text: 'Start with basics that are easy to miss: allow crawling in robots.txt, publish a clean sitemap, and confirm direct route access works in production. Then submit the sitemap in Search Console so Google discovers URLs faster.',
       },
       {
-        heading: 'Day 2: add page-level metadata and canonical tags',
-        bullets: [
-          'Unique title tag per page',
-          'Unique meta description per page',
-          'Canonical URL on every route',
-          'Open Graph + Twitter tags for better sharing CTR',
-        ],
+        heading: 'Day 2: publish clear page-level metadata',
+        text: 'Give every important page its own title and description, set canonical URLs, and include Open Graph/Twitter tags for stronger social snippets. This reduces ambiguity and improves click-through potential from both search and social surfaces.',
       },
       {
         heading: 'Day 3: add structured data that matches page intent',
-        bullets: [
-          'WebPage schema for homepage',
-          'Blog schema for blog index',
-          'Article schema for post pages',
-          'CreativeWork/Product schema for project pages',
-        ],
+        text: 'Use schema to remove guesswork for crawlers: WebPage for home, Blog for your listing page, Article for each post, and CreativeWork or Product for project pages. Think of this as explicit labeling for your content model.',
       },
       {
         heading: 'Day 4: strengthen internal linking',
