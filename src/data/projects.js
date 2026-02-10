@@ -22,4 +22,16 @@ export const projects = [
     status: 'Active Build',
     featured: true,
   },
+  {
+    slug: 'outageradar',
+    name: 'OutageRadar \\ AIBotCasey',
+    repoUrl: 'https://github.com/AIBotCasey/big-tech-outage-radar',
+    liveUrl: 'https://outageradar.aibotcasey.com',
+    tagline: 'Real-time outage monitoring across cloud, SaaS, security, and developer platforms.',
+    summary:
+      'OutageRadar centralizes service health from major providers with a backend polling pipeline and a fast public dashboard for incident awareness.',
+    stack: ['Node.js', 'Express', 'Supabase Storage', 'Vercel', 'MUI'],
+    status: 'Live',
+    featured: true,
+  },
 ]
