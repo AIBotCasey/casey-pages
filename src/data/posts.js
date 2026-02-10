@@ -1,348 +1,350 @@
 export const posts = [
   {
-    slug: 'react-router-vercel-404-fix',
-    title: 'React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production',
-    date: '2026-02-09',
-    excerpt:
-      'Fix BrowserRouter 404 errors on Vercel with a safe SPA rewrite and a quick verification checklist for deep links and page refreshes.',
+    slug: "react-router-vercel-404-fix",
+    title: "React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production",
+    date: "2026-02-09",
+    excerpt: "Fix BrowserRouter 404 errors on Vercel with a safe SPA rewrite and a quick verification checklist for deep links and page refreshes.",
     sections: [
       {
-        heading: 'Why this error happens',
-        text: 'React Router handles routing in the browser, but Vercel handles requests on the server edge first. When someone opens /posts/my-article directly, Vercel looks for a matching file path. If no rewrite fallback exists, it returns a 404 before React ever gets a chance to render the route.',
+        heading: "Why this error happens",
+        text: "React Router handles routing in the browser, but Vercel handles requests on the server edge first. When someone opens /posts/my-article directly, Vercel looks for a matching file path. If no rewrite fallback exists, it returns a 404 before React ever gets a chance to render the route."
       },
       {
-        heading: 'The fix in plain English',
-        text: 'Keep BrowserRouter for clean URLs, and tell Vercel to serve index.html for non-file routes. That way React can resolve the route client-side while real static assets still load normally.',
+        heading: "The fix in plain English",
+        text: "Keep BrowserRouter for clean URLs, and tell Vercel to serve index.html for non-file routes. That way React can resolve the route client-side while real static assets still load normally."
       },
       {
-        heading: 'Code example: vercel.json rewrite for SPA routes',
-        text: 'This rewrite catches app routes but avoids touching asset files like CSS, JS, or images.',
-        code: `{
-  "rewrites": [
-    {
-      "source": "/((?!.*\..*).*)",
-      "destination": "/index.html"
-    }
-  ]
-}`,
+        heading: "Code example: vercel.json rewrite for SPA routes",
+        text: "This rewrite catches app routes but avoids touching asset files like CSS, JS, or images.",
+        code: "{\n  \rewrites\: [\n    {\n      \source\: \"/((?!.*..*).*)\",\n      \destination\: \"/index.html\"\n    }\n  ]\n}"
       },
       {
-        heading: 'Code example: BrowserRouter route map',
-        text: 'Make sure every deep link path exists in your client router. Rewrites only route traffic into the app—they do not create missing routes.',
-        code: `import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/posts/:slug" element={<PostPage />} />
-      </Routes>
-    </BrowserRouter>
-  )
-}`,
+        heading: "Code example: BrowserRouter route map",
+        text: "Make sure every deep link path exists in your client router. Rewrites only route traffic into the app—they do not create missing routes.",
+        code: "import { BrowserRouter, Routes, Route } from 'react-router-dom'\n\nexport default function App() {\n  return (\n    <BrowserRouter>\n      <Routes>\n        <Route path=\"/\" element={<HomePage />} />\n        <Route path=\"/blog\" element={<BlogPage />} />\n        <Route path=\"/posts/:slug\" element={<PostPage />} />\n      </Routes>\n    </BrowserRouter>\n  )\n}"
       },
       {
-        heading: 'How to verify the fix after deploy',
+        heading: "How to verify the fix after deploy",
         bullets: [
-          'Open a deep URL directly in a fresh tab (not via in-app navigation)',
-          'Refresh that deep URL and confirm it still loads',
-          'Open DevTools Network and ensure JS/CSS assets return 200 responses',
-          'Check sitemap URLs match real clean paths (no hash fragments)',
-        ],
+          "Open a deep URL directly in a fresh tab (not via in-app navigation)",
+          "Refresh that deep URL and confirm it still loads",
+          "Open DevTools Network and ensure JS/CSS assets return 200 responses",
+          "Check sitemap URLs match real clean paths (no hash fragments)"
+        ]
       },
       {
-        heading: 'Common mistakes that cause repeat 404s',
+        heading: "Common mistakes that cause repeat 404s",
         bullets: [
-          'Using redirects instead of rewrites for SPA fallback behavior',
-          'Applying a rewrite pattern that accidentally captures static asset files',
-          'Forgetting to redeploy after editing vercel.json',
-          'Mixing HashRouter links with BrowserRouter routes',
-        ],
+          "Using redirects instead of rewrites for SPA fallback behavior",
+          "Applying a rewrite pattern that accidentally captures static asset files",
+          "Forgetting to redeploy after editing vercel.json",
+          "Mixing HashRouter links with BrowserRouter routes"
+        ]
       },
       {
-        heading: 'When to consider a different approach',
-        text: 'If your app has mostly static content and strong SEO requirements, consider prerendering or server-side rendering instead of relying purely on SPA rewrites. Rewrites solve the 404 symptom, but they do not improve initial content rendering for every crawl scenario. For many product sites, BrowserRouter + rewrites is the right practical middle ground. But if organic traffic is your primary growth channel, it is worth evaluating whether hybrid rendering gives you better long-term visibility and performance.',
+        heading: "When to consider a different approach",
+        text: "If your app has mostly static content and strong SEO requirements, consider prerendering or server-side rendering instead of relying purely on SPA rewrites. Rewrites solve the 404 symptom, but they do not improve initial content rendering for every crawl scenario. For many product sites, BrowserRouter + rewrites is the right practical middle ground. But if organic traffic is your primary growth channel, it is worth evaluating whether hybrid rendering gives you better long-term visibility and performance."
       },
       {
-        heading: 'Related reading',
+        heading: "Production rollout notes that prevent regressions",
+        text: "After you fix routing once, lock the behavior in so it does not break on the next deploy. Add a small smoke-test checklist to your release process: open a deep route directly, refresh it, then validate static assets still return JavaScript and CSS (not HTML fallback). Keep that check in CI or a post-deploy routine so future refactors do not silently reintroduce 404 behavior. Also document your rewrite intent in the repo next to vercel.json. Teams often lose context over time, and someone “cleaning up config” can remove the fallback rule because it looks redundant. Finally, keep your sitemap and canonical tags aligned with these clean routes. Routing fixes only create value when discovery signals and URL hygiene follow the same structure."
+      },
+      {
+        heading: "Related reading",
         bullets: [
-          'How I Migrated a React SPA from HashRouter to BrowserRouter for Better SEO',
-          'Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work',
-          'MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered',
-        ],
-      },
-    ],
+          "How I Migrated a React SPA from HashRouter to BrowserRouter for Better SEO",
+          "Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work",
+          "MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered"
+        ]
+      }
+    ]
   },
   {
-    slug: 'how-we-shipped-car-deal-checker-live-with-secure-auth',
-    title: 'How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)',
-    date: '2026-02-08',
-    excerpt:
-      'From blank repo to production launch: private GitHub repo, Vercel deployment, Supabase auth with Google OAuth, backend-only secret handling, and production web app architecture.',
+    slug: "how-we-shipped-car-deal-checker-live-with-secure-auth",
+    title: "How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)",
+    date: "2026-02-08",
+    excerpt: "From blank repo to production launch: private GitHub repo, Vercel deployment, Supabase auth with Google OAuth, backend-only secret handling, and production web app architecture.",
     sections: [
       {
-        heading: 'The goal',
-        text: 'Ship a public used-car buying app that feels real, moves fast, and does not leak secrets. The product needed a proper landing page, login flow, protected app, and reliable API architecture.',
+        heading: "The goal",
+        text: "Ship a public used-car buying app that feels real, moves fast, and does not leak secrets. The product needed a proper landing page, login flow, protected app, and reliable API architecture."
       },
       {
-        heading: 'What we launched',
+        heading: "What we launched",
         bullets: [
-          'VIN decode + recall checks via NHTSA APIs',
-          'Live comps pricing path via MarketCheck with confidence gating',
-          'Login + signup + Google OAuth using Supabase Auth',
-          'Protected API routes using bearer token verification server-side',
-          'History persistence for user deal checks in Supabase',
-          'Vercel production deployment with serverless routing fix',
-        ],
+          "VIN decode + recall checks via NHTSA APIs",
+          "Live comps pricing path via MarketCheck with confidence gating",
+          "Login + signup + Google OAuth using Supabase Auth",
+          "Protected API routes using bearer token verification server-side",
+          "History persistence for user deal checks in Supabase",
+          "Vercel production deployment with serverless routing fix"
+        ]
       },
       {
-        heading: 'Security decisions that mattered',
+        heading: "Security decisions that mattered",
         bullets: [
-          'No secret keys in frontend code (service keys stay server-only)',
-          'Added Helmet security headers + rate limiting + input validation',
-          'Removed trust in client-sent identity and derived user from verified token',
-          'Locked env handling so .env stays out of source control',
-        ],
+          "No secret keys in frontend code (service keys stay server-only)",
+          "Added Helmet security headers + rate limiting + input validation",
+          "Removed trust in client-sent identity and derived user from verified token",
+          "Locked env handling so .env stays out of source control"
+        ]
       },
       {
-        heading: 'Hard lessons during launch',
+        heading: "Hard lessons during launch",
         bullets: [
-          'A blank page can be a CSP mismatch — security headers must match your asset strategy',
-          '404s in production were routing config issues, not app logic',
-          '“Auth not configured” can be a UI state bug even when backend config is correct',
-        ],
+          "A blank page can be a CSP mismatch — security headers must match your asset strategy",
+          "404s in production were routing config issues, not app logic",
+          "“Auth not configured” can be a UI state bug even when backend config is correct"
+        ]
       },
       {
-        heading: 'What I would do next if shipping v2',
-        text: 'The next leverage point is trust and transparency. I would add a small “How we calculated this” panel for each valuation result, so users can understand the confidence level and inputs behind recommendations. I would also add lightweight error telemetry and user-facing diagnostics so production incidents are easier to trace without exposing sensitive internals. Finally, I would prioritize a tighter feedback loop between user actions and product improvements by tagging common workflow drop-off points. These upgrades do not sound flashy, but they are usually what separates a demo app from something users return to and recommend.',
+        heading: "What I would do next if shipping v2",
+        text: "The next leverage point is trust and transparency. I would add a small “How we calculated this” panel for each valuation result, so users can understand the confidence level and inputs behind recommendations. I would also add lightweight error telemetry and user-facing diagnostics so production incidents are easier to trace without exposing sensitive internals. Finally, I would prioritize a tighter feedback loop between user actions and product improvements by tagging common workflow drop-off points. These upgrades do not sound flashy, but they are usually what separates a demo app from something users return to and recommend."
       },
       {
-        heading: 'Bottom line',
-        text: 'Car Deal Checker is now live and production-grade for MVP use: real auth, protected APIs, and deployment wiring that can scale. Next step is tightening valuation quality and adding a lightweight admin diagnostics panel.',
+        heading: "What made this launch stable instead of fragile",
+        text: "The main reason this shipped cleanly was discipline around boundaries: secrets stayed server-side, auth was verified on protected routes, and deployment behavior was tested in production-like conditions instead of only local dev. If you want similar outcomes, treat security and deployment wiring as core product work, not “after launch” work. A practical way is to create a short launch gate with non-negotiables: token verification works, sensitive keys never reach client bundles, error states are user-readable, and one-click rollback is possible. This mindset saves enormous time compared with hotfixing security and routing under live pressure. It also gives users confidence because the first version feels trustworthy, not experimental."
       },
-    ],
+      {
+        heading: "Bottom line",
+        text: "Car Deal Checker is now live and production-grade for MVP use: real auth, protected APIs, and deployment wiring that can scale. Next step is tightening valuation quality and adding a lightweight admin diagnostics panel."
+      }
+    ]
   },
   {
-    slug: 'trading-journal-one-offline-futures-trading-journal',
-    title: 'Trading Journal One: The Offline Futures Trading Journal for Serious Day Traders',
-    date: '2026-02-08',
-    excerpt:
-      'Trading Journal One is a local-first futures trading journal desktop app for day traders to improve discipline, review performance, and protect private trading data.',
+    slug: "trading-journal-one-offline-futures-trading-journal",
+    title: "Trading Journal One: The Offline Futures Trading Journal for Serious Day Traders",
+    date: "2026-02-08",
+    excerpt: "Trading Journal One is a local-first futures trading journal desktop app for day traders to improve discipline, review performance, and protect private trading data.",
     sections: [
       {
-        heading: 'What is Trading Journal One?',
-        text: 'Trading Journal One (FTJournal) is a desktop trading journal for futures traders who want a focused, private workflow. It runs locally on macOS and Windows, uses SQLite with optional encryption, and does not require an account or cloud login.',
+        heading: "What is Trading Journal One?",
+        text: "Trading Journal One (FTJournal) is a desktop trading journal for futures traders who want a focused, private workflow. It runs locally on macOS and Windows, uses SQLite with optional encryption, and does not require an account or cloud login."
       },
       {
-        heading: 'Core features for futures day trading review',
+        heading: "Core features for futures day trading review",
         bullets: [
-          'Trade logging: add, edit, and review completed futures trades',
-          'Rules checklist on every trade to reinforce process discipline',
-          'Calendar-based journal with daily drill-down into trades and notes',
-          'Filters and quick stats by symbol, session, outcome, and date',
-          'CSV import for migrating trade history into one journal',
-          'Local backup and restore so you control your own data lifecycle',
-        ],
+          "Trade logging: add, edit, and review completed futures trades",
+          "Rules checklist on every trade to reinforce process discipline",
+          "Calendar-based journal with daily drill-down into trades and notes",
+          "Filters and quick stats by symbol, session, outcome, and date",
+          "CSV import for migrating trade history into one journal",
+          "Local backup and restore so you control your own data lifecycle"
+        ]
       },
       {
-        heading: 'Why traders use it',
+        heading: "Why traders use it",
         bullets: [
-          'Improve consistency: track whether you followed your setup rules, not just PnL',
-          'Faster weekly review: quickly isolate patterns in winning and losing sessions',
-          'Better execution quality: capture context, notes, and outcomes in one place',
-          'Privacy by design: no cloud dependency, no mandatory account, no sign-in friction',
-        ],
+          "Improve consistency: track whether you followed your setup rules, not just PnL",
+          "Faster weekly review: quickly isolate patterns in winning and losing sessions",
+          "Better execution quality: capture context, notes, and outcomes in one place",
+          "Privacy by design: no cloud dependency, no mandatory account, no sign-in friction"
+        ]
       },
       {
-        heading: 'Who this is best for',
-        text: 'If you are a discretionary futures day trader, prop-style trader, or anyone building a repeatable trading process, Trading Journal One gives you a practical and private way to measure improvement over time.',
+        heading: "Who this is best for",
+        text: "If you are a discretionary futures day trader, prop-style trader, or anyone building a repeatable trading process, Trading Journal One gives you a practical and private way to measure improvement over time."
       },
       {
-        heading: 'How to get better results from this journal',
-        text: 'The biggest gains usually come from consistency, not complexity. Pick one review cadence and keep it—daily for active traders or weekly for part-time traders. During review, focus on repeated behavior patterns rather than single outlier trades. A practical method is to score each trade on rule adherence, execution quality, and emotional control, then compare that score against PnL over time. This turns the journal into a coaching tool instead of a storage tool. Over a month, those behavior metrics often reveal bigger performance leaks than your entry strategy does.',
+        heading: "How to get better results from this journal",
+        text: "The biggest gains usually come from consistency, not complexity. Pick one review cadence and keep it—daily for active traders or weekly for part-time traders. During review, focus on repeated behavior patterns rather than single outlier trades. A practical method is to score each trade on rule adherence, execution quality, and emotional control, then compare that score against PnL over time. This turns the journal into a coaching tool instead of a storage tool. Over a month, those behavior metrics often reveal bigger performance leaks than your entry strategy does."
       },
       {
-        heading: 'Bottom line',
-        text: 'Most traders do not need more indicators; they need better feedback loops. Trading Journal One is built to be that loop: log the trade, review the behavior, and sharpen the process.',
+        heading: "How readers can apply this immediately",
+        text: "If you are evaluating whether a journal will improve your trading, run a two-week trial with a strict review routine. Log every trade with setup, execution quality, and emotional state. At the end of each week, look for recurring behavioral patterns—not just PnL outcomes. You want to find the same mistakes repeating across sessions: early entries, ignored checklist steps, overtrading after losses, or unmanaged risk sizing. Those are the leaks a journal helps close. Keep your process simple enough to sustain daily. Most traders fail not because they lack tools, but because their review system is inconsistent. A local-first journal removes friction and protects privacy, which makes consistency easier."
       },
-    ],
+      {
+        heading: "Bottom line",
+        text: "Most traders do not need more indicators; they need better feedback loops. Trading Journal One is built to be that loop: log the trade, review the behavior, and sharpen the process."
+      }
+    ]
   },
   {
-    slug: 'operating-model-ai-executes-human-reviews',
-    title: 'Operating Model: AI Executes, Human Reviews',
-    date: '2026-02-07',
-    excerpt:
-      'A practical operating model for teams using AI in production: let the agent execute by default, then keep humans focused on review, risk, and quality.',
+    slug: "operating-model-ai-executes-human-reviews",
+    title: "Operating Model: AI Executes, Human Reviews",
+    date: "2026-02-07",
+    excerpt: "A practical operating model for teams using AI in production: let the agent execute by default, then keep humans focused on review, risk, and quality.",
     sections: [
       {
-        heading: 'Why this model works in real teams',
-        text: 'Most teams get stuck when AI is treated like a suggestion engine instead of an execution engine. The momentum comes from flipping that: let AI do the first pass of real work quickly, and let humans spend their energy on final judgment, prioritization, and risk calls.',
+        heading: "Why this model works in real teams",
+        text: "Most teams get stuck when AI is treated like a suggestion engine instead of an execution engine. The momentum comes from flipping that: let AI do the first pass of real work quickly, and let humans spend their energy on final judgment, prioritization, and risk calls."
       },
       {
-        heading: 'The core workflow',
-        text: 'The AI executes by default, humans review outcomes, and user input is requested only when a platform block, policy boundary, or required human action appears. This keeps speed high without ignoring safety or quality control.',
+        heading: "The core workflow",
+        text: "The AI executes by default, humans review outcomes, and user input is requested only when a platform block, policy boundary, or required human action appears. This keeps speed high without ignoring safety or quality control."
       },
       {
-        heading: 'Where teams usually break this pattern',
+        heading: "Where teams usually break this pattern",
         bullets: [
-          'Asking for approval before every low-risk step',
-          'Letting AI produce output without review checkpoints on high-impact actions',
-          'Treating tool access as a substitute for process discipline',
-        ],
+          "Asking for approval before every low-risk step",
+          "Letting AI produce output without review checkpoints on high-impact actions",
+          "Treating tool access as a substitute for process discipline"
+        ]
       },
       {
-        heading: 'How to apply it this week',
+        heading: "How to apply it this week",
         bullets: [
-          'Define which tasks are safe for autonomous execution',
-          'Define review checkpoints for risky or external actions',
-          'Track outcomes weekly and tighten prompts/processes based on misses',
-        ],
+          "Define which tasks are safe for autonomous execution",
+          "Define review checkpoints for risky or external actions",
+          "Track outcomes weekly and tighten prompts/processes based on misses"
+        ]
       },
       {
-        heading: 'A practical rollout plan',
-        text: 'Start small with one workflow your team already runs repeatedly, such as issue triage, status summaries, or deployment checklists. Define what AI can do without approval, what requires human review, and what is blocked by policy. Run the system for two weeks, then audit outcomes with a simple scorecard: speed, quality, and incident rate. If quality drops, tighten prompts and constraints before expanding scope. If quality holds, gradually give the system more execution authority. This staged approach builds trust because people can see the model working in real operations, not just in demos.',
+        heading: "A practical rollout plan",
+        text: "Start small with one workflow your team already runs repeatedly, such as issue triage, status summaries, or deployment checklists. Define what AI can do without approval, what requires human review, and what is blocked by policy. Run the system for two weeks, then audit outcomes with a simple scorecard: speed, quality, and incident rate. If quality drops, tighten prompts and constraints before expanding scope. If quality holds, gradually give the system more execution authority. This staged approach builds trust because people can see the model working in real operations, not just in demos."
       },
       {
-        heading: 'Bottom line',
-        text: 'This model reduces handoff friction and ships faster while keeping humans in charge of what matters most: quality, safety, and final accountability.',
+        heading: "When this model should be adjusted",
+        text: "This model is strongest when task repeatability is high and risk is clearly bounded. If the workflow involves legal exposure, financial execution, or public messaging, tighten review thresholds and add explicit approval checkpoints. The goal is not “AI everywhere,” but the right autonomy level per task. Start with low-risk operational work, measure quality, then expand scope only when outcomes are stable. Teams that skip this staged rollout often create trust problems quickly. Teams that phase autonomy deliberately usually get both speed and reliability. The core principle is simple: automate default execution, keep humans focused where judgment matters, and continuously tune boundaries from real-world results."
       },
-    ],
+      {
+        heading: "Bottom line",
+        text: "This model reduces handoff friction and ships faster while keeping humans in charge of what matters most: quality, safety, and final accountability."
+      }
+    ]
   },
   {
-    slug: 'react-hashrouter-to-browserrouter-seo',
-    title: 'How I Migrated a React SPA from HashRouter to BrowserRouter for Better SEO',
-    date: '2026-02-09',
-    excerpt:
-      'A practical migration from hash URLs to clean routes in React, including Vercel rewrites, sitemap updates, and Search Console reindexing.',
+    slug: "react-hashrouter-to-browserrouter-seo",
+    title: "How I Migrated a React SPA from HashRouter to BrowserRouter for Better SEO",
+    date: "2026-02-09",
+    excerpt: "A practical migration from hash URLs to clean routes in React, including Vercel rewrites, sitemap updates, and Search Console reindexing.",
     sections: [
       {
-        heading: 'The problem: hash routes were blocking discoverability',
-        text: 'My site used HashRouter, which created URLs like /#/blog and /#/posts/slug. That works for client-side navigation, but it weakens indexability because crawlers treat those fragments differently and you end up with less reliable page-level ranking signals.',
+        heading: "The problem: hash routes were blocking discoverability",
+        text: "My site used HashRouter, which created URLs like /#/blog and /#/posts/slug. That works for client-side navigation, but it weakens indexability because crawlers treat those fragments differently and you end up with less reliable page-level ranking signals."
       },
       {
-        heading: 'Start with clean route structure in React Router',
-        text: 'The first move is simple: replace HashRouter with BrowserRouter and keep your route map explicit for pages like /blog, /portfolio, /posts/:slug, and /projects/:slug. Then make sure internal links consistently use clean paths so users and crawlers see one canonical URL shape.',
+        heading: "Start with clean route structure in React Router",
+        text: "The first move is simple: replace HashRouter with BrowserRouter and keep your route map explicit for pages like /blog, /portfolio, /posts/:slug, and /projects/:slug. Then make sure internal links consistently use clean paths so users and crawlers see one canonical URL shape."
       },
       {
-        heading: 'Add Vercel fallback behavior for deep links',
-        text: 'BrowserRouter requires server fallback so direct visits to /posts/some-slug do not 404. I added a Vercel route config that serves index.html for non-file paths after filesystem handling.',
+        heading: "Add Vercel fallback behavior for deep links",
+        text: "BrowserRouter requires server fallback so direct visits to /posts/some-slug do not 404. I added a Vercel route config that serves index.html for non-file paths after filesystem handling."
       },
       {
-        heading: 'Publish a sitemap with only real crawlable URLs',
-        text: 'After the router migration, make the sitemap reflect reality. Remove hash-fragment URLs, include only canonical clean paths, and resubmit the updated sitemap in Search Console so crawl discovery aligns with your production routing.',
+        heading: "Publish a sitemap with only real crawlable URLs",
+        text: "After the router migration, make the sitemap reflect reality. Remove hash-fragment URLs, include only canonical clean paths, and resubmit the updated sitemap in Search Console so crawl discovery aligns with your production routing."
       },
       {
-        heading: 'Strengthen on-page signals so each route can rank',
-        text: 'This is where clean routing turns into real discoverability: assign unique title/description/canonical tags per route, layer in schema by page type, and add internal links between related posts and project pages so topical authority can flow through the site.',
+        heading: "Strengthen on-page signals so each route can rank",
+        text: "This is where clean routing turns into real discoverability: assign unique title/description/canonical tags per route, layer in schema by page type, and add internal links between related posts and project pages so topical authority can flow through the site."
       },
       {
-        heading: 'How to verify indexing after the fix',
+        heading: "How to verify indexing after the fix",
         bullets: [
-          'Submit updated sitemap',
-          'Use URL Inspection on home + key routes',
-          'Request indexing for priority pages',
-          'Monitor Coverage and Performance for 3-7 days before title tuning',
-        ],
+          "Submit updated sitemap",
+          "Use URL Inspection on home + key routes",
+          "Request indexing for priority pages",
+          "Monitor Coverage and Performance for 3-7 days before title tuning"
+        ]
       },
       {
-        heading: 'How to validate this in production without guesswork',
-        text: 'After deploying, test this as a user would: open deep links directly in fresh tabs, refresh those pages, and verify they still load. Then inspect network requests to confirm static assets return properly and are not accidentally rewritten to HTML. In Search Console, re-submit sitemap and inspect your top routes manually. If Google crawls clean routes and canonical tags align, you will usually see indexing improve over the next crawl cycles. This validation loop matters because router changes can look correct in local dev while still failing in real deployment environments.',
+        heading: "How to validate this in production without guesswork",
+        text: "After deploying, test this as a user would: open deep links directly in fresh tabs, refresh those pages, and verify they still load. Then inspect network requests to confirm static assets return properly and are not accidentally rewritten to HTML. In Search Console, re-submit sitemap and inspect your top routes manually. If Google crawls clean routes and canonical tags align, you will usually see indexing improve over the next crawl cycles. This validation loop matters because router changes can look correct in local dev while still failing in real deployment environments."
       },
       {
-        heading: 'What changed after the migration',
-        text: 'The site now exposes clean URLs, proper canonical signals, and crawl-friendly route behavior. That creates a stronger foundation for rankings than any one-off meta tag tweak. If your React app still uses hash routes, this migration is one of the highest-ROI SEO fixes you can make.',
+        heading: "What changed after the migration",
+        text: "The site now exposes clean URLs, proper canonical signals, and crawl-friendly route behavior. That creates a stronger foundation for rankings than any one-off meta tag tweak. If your React app still uses hash routes, this migration is one of the highest-ROI SEO fixes you can make."
       },
-    ],
+      {
+        heading: "Migration checklist for teams with existing traffic",
+        text: "If your site already has indexed pages, migrate carefully to avoid losing signal. First map old URL patterns to new canonical paths and make sure internal links update consistently. Then deploy rewrites and verify key routes manually before requesting reindexing. Keep metadata stable during the same window so Google sees a clean routing change, not a full-page identity change. After deploy, monitor Search Console coverage and crawl stats for a few days before making additional SEO edits. This staged approach reduces churn and makes troubleshooting clearer if anything drops. Treat routing migration like infrastructure work: controlled, observable, and reversible if needed."
+      }
+    ]
   },
   {
-    slug: 'seo-react-vite-canonical-meta-jsonld',
-    title: 'Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work',
-    date: '2026-02-09',
-    excerpt:
-      'A practical SEO setup for React + Vite apps: dynamic meta tags, canonical URLs, Open Graph, Twitter cards, and structured data by page type.',
+    slug: "seo-react-vite-canonical-meta-jsonld",
+    title: "Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work",
+    date: "2026-02-09",
+    excerpt: "A practical SEO setup for React + Vite apps: dynamic meta tags, canonical URLs, Open Graph, Twitter cards, and structured data by page type.",
     sections: [
       {
-        heading: 'Why React SPAs miss rankings even when content is solid',
-        text: 'Most React apps ship with one static index.html title and description. That means every route competes with weak or duplicate metadata, which makes it harder for search engines to understand page intent and rank individual URLs.',
+        heading: "Why React SPAs miss rankings even when content is solid",
+        text: "Most React apps ship with one static index.html title and description. That means every route competes with weak or duplicate metadata, which makes it harder for search engines to understand page intent and rank individual URLs."
       },
       {
-        heading: 'The baseline SEO stack that made the biggest difference',
-        text: 'I kept this intentionally simple: unique titles and descriptions per route, canonical URLs on every page, Open Graph/Twitter tags for better share previews, and clear robots directives for valid vs not-found states.',
+        heading: "The baseline SEO stack that made the biggest difference",
+        text: "I kept this intentionally simple: unique titles and descriptions per route, canonical URLs on every page, Open Graph/Twitter tags for better share previews, and clear robots directives for valid vs not-found states."
       },
       {
-        heading: 'Build a small dynamic SEO helper once',
-        text: 'Instead of hardcoding tags in every component, I used a reusable setPageSeo helper to upsert meta tags, canonical links, and JSON-LD from each page component. This keeps SEO maintainable as routes scale.',
+        heading: "Build a small dynamic SEO helper once",
+        text: "Instead of hardcoding tags in every component, I used a reusable setPageSeo helper to upsert meta tags, canonical links, and JSON-LD from each page component. This keeps SEO maintainable as routes scale."
       },
       {
-        heading: 'Use structured data by page type (not one-size-fits-all)',
-        text: 'Search engines understand context better when schema matches intent. Use WebPage for the homepage, Blog for the listing page, Article for post pages, and CreativeWork for project pages. This clarity helps Google map your content architecture more reliably.',
+        heading: "Use structured data by page type (not one-size-fits-all)",
+        text: "Search engines understand context better when schema matches intent. Use WebPage for the homepage, Blog for the listing page, Article for post pages, and CreativeWork for project pages. This clarity helps Google map your content architecture more reliably."
       },
       {
-        heading: 'Canonical and route hygiene matter more than people think',
-        text: 'Once routes are clean, canonical tags should match the exact preferred URL (no hash fragments, no duplicate variants). Combined with a clean sitemap, this gives crawlers one clear version of every page to index.',
+        heading: "Canonical and route hygiene matter more than people think",
+        text: "Once routes are clean, canonical tags should match the exact preferred URL (no hash fragments, no duplicate variants). Combined with a clean sitemap, this gives crawlers one clear version of every page to index."
       },
       {
-        heading: 'Internal links complete the SEO loop',
-        text: 'Once technical tags are in place, internal links become the force multiplier. Link related posts to each other, connect posts to relevant projects, and use descriptive anchor text so readers and crawlers can follow your topic graph naturally.',
+        heading: "Internal links complete the SEO loop",
+        text: "Once technical tags are in place, internal links become the force multiplier. Link related posts to each other, connect posts to relevant projects, and use descriptive anchor text so readers and crawlers can follow your topic graph naturally."
       },
       {
-        heading: 'Implementation order that minimizes rework',
-        text: 'If you are applying this to an existing project, sequence matters. Start by fixing routing and canonical behavior first, because everything else depends on stable URLs. Then apply dynamic metadata per page, followed by schema, then internal linking. Doing this out of order can create noisy data and duplicate signals in Search Console, which makes debugging harder. Keep each change small and testable, and log what changed before every deployment. That discipline gives you cleaner cause-and-effect when rankings and indexing behavior shift over time.',
+        heading: "Implementation order that minimizes rework",
+        text: "If you are applying this to an existing project, sequence matters. Start by fixing routing and canonical behavior first, because everything else depends on stable URLs. Then apply dynamic metadata per page, followed by schema, then internal linking. Doing this out of order can create noisy data and duplicate signals in Search Console, which makes debugging harder. Keep each change small and testable, and log what changed before every deployment. That discipline gives you cleaner cause-and-effect when rankings and indexing behavior shift over time."
       },
       {
-        heading: 'The practical result',
-        text: 'This setup does not guarantee instant rankings, but it fixes the technical bottlenecks that stop React SPAs from being discovered. Once this foundation is in place, content quality and consistent publishing become the main growth levers.',
+        heading: "The practical result",
+        text: "This setup does not guarantee instant rankings, but it fixes the technical bottlenecks that stop React SPAs from being discovered. Once this foundation is in place, content quality and consistent publishing become the main growth levers."
       },
-    ],
+      {
+        heading: "How to maintain this setup as content grows",
+        text: "The biggest failure mode is entropy: new pages get added faster than metadata and schema stay consistent. Prevent that by standardizing page-level SEO fields in your content model (title, description, slug, canonical path intent). Use one helper to apply tags and schema so behavior stays centralized instead of scattered across components. Then add a lightweight content QA pass before publish: check canonical correctness, title uniqueness, and schema type fit. This turns SEO from a one-time project into an operational habit. The teams that win organic long-term are not the ones with perfect initial setup—they are the ones that keep their implementation clean as the site scales."
+      }
+    ]
   },
   {
-    slug: 'mvp-website-seo-checklist-week-one',
-    title: 'MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered',
-    date: '2026-02-09',
-    excerpt:
-      'A week-one SEO checklist for new websites: indexability, metadata, schema, internal links, Search Console workflows, and performance tracking.',
+    slug: "mvp-website-seo-checklist-week-one",
+    title: "MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered",
+    date: "2026-02-09",
+    excerpt: "A week-one SEO checklist for new websites: indexability, metadata, schema, internal links, Search Console workflows, and performance tracking.",
     sections: [
       {
-        heading: 'Day 1: make sure search engines can actually crawl your pages',
-        text: 'Start with basics that are easy to miss: allow crawling in robots.txt, publish a clean sitemap, and confirm direct route access works in production. Then submit the sitemap in Search Console so Google discovers URLs faster.',
+        heading: "Day 1: make sure search engines can actually crawl your pages",
+        text: "Start with basics that are easy to miss: allow crawling in robots.txt, publish a clean sitemap, and confirm direct route access works in production. Then submit the sitemap in Search Console so Google discovers URLs faster."
       },
       {
-        heading: 'Day 2: publish clear page-level metadata',
-        text: 'Give every important page its own title and description, set canonical URLs, and include Open Graph/Twitter tags for stronger social snippets. This reduces ambiguity and improves click-through potential from both search and social surfaces.',
+        heading: "Day 2: publish clear page-level metadata",
+        text: "Give every important page its own title and description, set canonical URLs, and include Open Graph/Twitter tags for stronger social snippets. This reduces ambiguity and improves click-through potential from both search and social surfaces."
       },
       {
-        heading: 'Day 3: add structured data that matches page intent',
-        text: 'Use schema to remove guesswork for crawlers: WebPage for home, Blog for your listing page, Article for each post, and CreativeWork or Product for project pages. Think of this as explicit labeling for your content model.',
+        heading: "Day 3: add structured data that matches page intent",
+        text: "Use schema to remove guesswork for crawlers: WebPage for home, Blog for your listing page, Article for each post, and CreativeWork or Product for project pages. Think of this as explicit labeling for your content model."
       },
       {
-        heading: 'Day 4: strengthen internal linking',
-        text: 'Search engines discover and prioritize pages through internal links. Add related posts, related projects, and hub links so authority flows through the site instead of pooling on the homepage only.',
+        heading: "Day 4: strengthen internal linking",
+        text: "Search engines discover and prioritize pages through internal links. Add related posts, related projects, and hub links so authority flows through the site instead of pooling on the homepage only."
       },
       {
-        heading: 'Day 5: start a weekly measurement loop',
-        text: 'Use Search Console like a feedback system, not a dashboard you check once. Track indexing coverage, impressions, and CTR weekly, then tune titles and descriptions based on real query data. Keep publishing at least one relevant post per week so momentum compounds.',
+        heading: "Day 5: start a weekly measurement loop",
+        text: "Use Search Console like a feedback system, not a dashboard you check once. Track indexing coverage, impressions, and CTR weekly, then tune titles and descriptions based on real query data. Keep publishing at least one relevant post per week so momentum compounds."
       },
       {
-        heading: 'Common MVP SEO mistakes to avoid',
+        heading: "Common MVP SEO mistakes to avoid",
         bullets: [
-          'Using hash routes in production URLs',
-          'Keeping one generic title for all pages',
-          'Publishing posts without internal links',
-          'Waiting for rankings without publishing new content',
-        ],
+          "Using hash routes in production URLs",
+          "Keeping one generic title for all pages",
+          "Publishing posts without internal links",
+          "Waiting for rankings without publishing new content"
+        ]
       },
       {
-        heading: 'How to keep momentum after week one',
-        text: 'Treat week one as setup, not finish line. In week two and beyond, your priority is consistency: publish one strong article per week, link it into your existing content graph, and review query-level data in Search Console every few days. Identify pages with impressions but low CTR and improve titles/descriptions first before rewriting entire posts. Over time, this repeatable loop outperforms one-time “big SEO pushes.” The sites that grow are usually the ones that keep shipping useful content while continuously tightening technical and editorial quality.',
+        heading: "How to keep momentum after week one",
+        text: "Treat week one as setup, not finish line. In week two and beyond, your priority is consistency: publish one strong article per week, link it into your existing content graph, and review query-level data in Search Console every few days. Identify pages with impressions but low CTR and improve titles/descriptions first before rewriting entire posts. Over time, this repeatable loop outperforms one-time “big SEO pushes.” The sites that grow are usually the ones that keep shipping useful content while continuously tightening technical and editorial quality."
       },
       {
-        heading: 'Bottom line',
-        text: 'Week-one SEO is not about hacks. It is about making your site technically readable, topically clear, and continuously updated. Once those three are in place, discoverability compounds over time.',
+        heading: "What week two and beyond should look like",
+        text: "Once week-one foundations are complete, growth depends on consistency and feedback loops. Publish one strong article each week tied to real search intent, connect it to related posts/projects, and review query-level performance in Search Console. Focus first on pages that already receive impressions but low CTR—title and description improvements can unlock gains quickly. Keep technical hygiene steady (sitemap freshness, canonical consistency, crawlability), then let content breadth expand over time. Discoverability compounds when both the technical layer and publishing rhythm remain stable. Think in months, not days, and optimize from observed behavior rather than assumptions."
       },
-    ],
-  },
+      {
+        heading: "Bottom line",
+        text: "Week-one SEO is not about hacks. It is about making your site technically readable, topically clear, and continuously updated. Once those three are in place, discoverability compounds over time."
+      }
+    ]
+  }
 ]
 
 export const getPostBySlug = (slug) => posts.find((p) => p.slug === slug)
