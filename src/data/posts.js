@@ -492,6 +492,91 @@ export const posts = [
         text: "Week-one SEO is not about hacks. It is about making your site technically readable, topically clear, and continuously updated. Once those three are in place, discoverability compounds over time."
       }
     ]
+  },
+  {
+    slug: "vite-environment-variables-not-working-production",
+    title: "Vite Environment Variables Not Working in Production: A Complete Fix Guide",
+    date: "2026-02-09",
+    excerpt: "If your Vite app works locally but breaks after deploy, this guide shows exactly why environment variables fail in production and how to fix them safely.",
+    sections: [
+      {
+        heading: "What breaks in production (and how it usually looks)",
+        text: "You ship a Vite app, local development looks perfect, and then production starts failing in weird ways. API requests point to undefined URLs, feature flags are always false, analytics never initializes, or OAuth callbacks use the wrong domain. In browser logs, you may see values like undefined where you expected import.meta.env.VITE_API_URL. The frustrating part is that nothing obvious changed in your app logic. This usually is not a React bug or a deploy-platform bug by itself. It is a build-time configuration mismatch between how Vite injects variables and how your hosting environment provides them. Once you understand that one sentence deeply, this class of issue becomes straightforward to prevent."
+      },
+      {
+        heading: "Why this issue happens",
+        text: "Vite does not read frontend environment variables at runtime from your server process the way many Node backends do. It statically replaces import.meta.env references at build time. That means the values must exist in the environment when npm run build executes. If variables are missing then, the built bundle literally bakes in empty or fallback values. A second common trap is naming: only variables prefixed with VITE_ are exposed to client code. If you define API_URL without the prefix, Vite intentionally hides it. A third trap is assuming .env files are always loaded in production. Many hosts ignore repo .env files for security and expect dashboard-configured environment variables instead. So the app compiles, but with missing inputs."
+      },
+      {
+        heading: "Exact implementation steps to fix it",
+        bullets: [
+          "Audit every frontend variable reference and ensure it uses import.meta.env.VITE_* naming",
+          "Create or update .env.production locally for reproducible production builds",
+          "Set the same variables in your hosting provider environment settings (for the correct environment: production/preview)",
+          "Trigger a fresh deployment so a new build runs with updated values",
+          "Verify bundled output behavior by testing real production URLs, not only local dev"
+        ]
+      },
+      {
+        heading: "Code example: correct variable access in Vite",
+        text: "Use import.meta.env and defensive checks early in app startup so failures are explicit, not silent.",
+        code: "// src/config/env.ts\nconst required = ['VITE_API_URL', 'VITE_APP_ENV'] as const\n\nfor (const key of required) {\n  if (!import.meta.env[key]) {\n    throw new Error(`Missing required env var: ${key}`)\n  }\n}\n\nexport const env = {\n  apiUrl: import.meta.env.VITE_API_URL,\n  appEnv: import.meta.env.VITE_APP_ENV,\n  enableDebugTools: import.meta.env.VITE_ENABLE_DEBUG_TOOLS === 'true',\n}\n"
+      },
+      {
+        heading: "Code example: environment files for local and production",
+        text: "Keep local and production values explicit. Never commit secrets that should stay server-side.",
+        code: "# .env\nVITE_API_URL=http://localhost:4000\nVITE_APP_ENV=development\nVITE_ENABLE_DEBUG_TOOLS=true\n\n# .env.production\nVITE_API_URL=https://api.yourdomain.com\nVITE_APP_ENV=production\nVITE_ENABLE_DEBUG_TOOLS=false\n"
+      },
+      {
+        heading: "Code example: fail-fast API client setup",
+        text: "A small guard in your API client saves hours of silent bad requests.",
+        code: "import axios from 'axios'\nimport { env } from './config/env'\n\nexport const api = axios.create({\n  baseURL: env.apiUrl,\n  timeout: 15000,\n})\n\nif (!api.defaults.baseURL) {\n  throw new Error('API baseURL is missing. Check VITE_API_URL in build environment.')\n}\n"
+      },
+      {
+        heading: "Verification checklist (confirm the fix actually worked)",
+        bullets: [
+          "Run a production build locally (npm run build && npm run preview) and test key flows",
+          "Open browser DevTools in production and confirm API requests hit the expected domain",
+          "Check your host dashboard to ensure variables are set for the same environment you deployed",
+          "Redeploy after any env change; most platforms do not retroactively patch old builds",
+          "Confirm no secrets were moved into VITE_* variables unintentionally"
+        ]
+      },
+      {
+        heading: "Common mistakes and troubleshooting",
+        bullets: [
+          "Forgetting the VITE_ prefix and expecting frontend access to plain API_URL",
+          "Setting variables in preview but debugging production (or vice versa)",
+          "Editing env settings but skipping redeploy, so old bundles remain active",
+          "Trying to read process.env in browser code instead of import.meta.env",
+          "Putting private keys in VITE_* vars, which exposes them publicly in the client bundle"
+        ]
+      },
+      {
+        heading: "Pitfalls when mixing frontend and backend configuration",
+        text: "Teams often share one .env template across frontend and backend and then wonder why deployment behavior is inconsistent. The rule of thumb is simple: frontend variables are public configuration, backend variables are secret operational credentials. If a value must remain secret, do not pass it through VITE_ and do not reference it in client code. Instead, keep it server-side and expose only necessary derived behavior through API endpoints. For example, your frontend can know the public API base URL, but it should never know third-party private API keys. This boundary is critical not only for security, but also for debugging clarity. When boundaries are clean, incidents are faster to triage."
+      },
+      {
+        heading: "A deployment workflow that prevents regressions",
+        text: "The durable fix is process, not hero debugging. Add an environment validation step to CI before building. Even a lightweight script that checks required VITE_ variables can prevent broken deployments. Keep a short runbook in the repo documenting which variables belong to local, preview, and production. During release, treat env changes like code changes: review, deploy, verify, and record. Also avoid overusing defaults in production code because defaults can hide missing configuration. Explicit failure with a clear error message is healthier than silently pointing traffic to the wrong endpoint. Over time, this turns env handling from fragile setup work into a reliable deployment discipline."
+      },
+      {
+        heading: "When runtime configuration is actually needed",
+        text: "Sometimes teams need to switch configuration without rebuilding, especially for white-label apps or multi-tenant deployments. Vite's standard env model is still build-time, so solve this intentionally. A practical pattern is serving a small runtime config JSON from your backend or CDN and loading it before app bootstrap. That lets you keep Vite compile-time values minimal while retaining controlled runtime flexibility. Use this only when you truly need it; many apps add complexity too early. For most products, stable build-time config plus clear environment separation is simpler and safer. Reach for runtime config when business needs demand it, not as a default workaround."
+      },
+      {
+        heading: "Real-world debug flow when production still shows undefined",
+        text: "If you applied the standard fixes and production still breaks, debug in a strict order to avoid circular guessing. First, confirm which deployment URL is actually serving traffic (production alias, branch preview, or stale custom domain). Many teams fix env vars in one environment while users are hitting another. Second, inspect the deployed JavaScript bundle behavior indirectly by logging a harmless public config object at app start, then verify values in live DevTools. Third, compare host dashboard variable names character-by-character; one typo or trailing space can invalidate everything silently. Fourth, verify your build command and project root in hosting settings. Monorepos often build from the wrong directory, so the expected .env.production file is never loaded. Fifth, clear CDN cache if your platform can serve old artifacts after rapid redeploys. Finally, run one synthetic smoke test after deploy that checks a known endpoint and fails loudly if the base URL is wrong. This sequence sounds basic, but following it consistently cuts mean-time-to-fix dramatically."
+      },
+      {
+        heading: "Related reading",
+        bullets: [
+          "React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production",
+          "Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work",
+          "MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered"
+        ]
+      }
+    ]
   }
 ]
 
