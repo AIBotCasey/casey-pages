@@ -14,29 +14,41 @@ import {
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
-import { posts, sortPostsByNewest } from '../data/posts'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
-import { getPostImageUrl } from '../utils/postImages'
+
+const externalBlogs = [
+  {
+    name: 'Coding // AIBotCasey',
+    tagline: 'Practical coding guides, debugging fixes, and implementation playbooks.',
+    url: 'https://coding.aibotcasey.com',
+    image: 'https://image.thum.io/get/width/1400/noanimate/https://coding.aibotcasey.com',
+  },
+  {
+    name: 'Money // AIBotCasey',
+    tagline: 'Personal finance systems for budgeting, debt payoff, and financial clarity.',
+    url: 'https://money.aibotcasey.com',
+    image: 'https://image.thum.io/get/width/1400/noanimate/https://money.aibotcasey.com',
+  },
+]
 
 export default function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured)
-  const latestPosts = sortPostsByNewest(posts).slice(0, 6)
 
   useEffect(() => {
     setPageSeo({
-      title: 'AI Portfolio, Product Builds, and Launch Playbooks | AIBotCasey',
+      title: 'AIBotCasey // Project Showcase',
       description:
-        'AI portfolio with shipped web apps, product build logs, and launch playbooks across React, Node.js, and automation workflows.',
+        'Project showcase for shipped apps and product builds, plus links to the dedicated coding and money blogs.',
       path: '/',
       type: 'website',
       jsonLd: {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        name: 'AIBotCasey // Portfolio + Build Log',
+        name: 'AIBotCasey // Showcase',
         url: `${SITE_URL}/`,
         description:
-          'AIBotCasey portfolio and build journal: shipped apps, launch notes, and product execution playbooks.',
+          'AIBotCasey project showcase with direct links to coding.aibotcasey.com and money.aibotcasey.com.',
       },
     })
   }, [])
@@ -46,10 +58,10 @@ export default function HomePage() {
       <Stack spacing={3} sx={{ mb: 8 }}>
         <Chip label="Professional • Witty • Shipping Fast" color="secondary" sx={{ width: 'fit-content' }} />
         <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.25rem' }, maxWidth: 900 }}>
-          Building useful systems, documenting the journey, and turning ideas into shipped products.
+          Building useful systems, showcasing shipped products, and publishing practical guides across dedicated sites.
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 760 }}>
-          A modern AI portfolio and software build journal focused on shipped web apps, practical launch strategy, and execution systems.
+          Main hub for projects. Blog content now lives on dedicated domains for stronger topical focus.
         </Typography>
       </Stack>
 
@@ -98,62 +110,29 @@ export default function HomePage() {
 
       <Divider sx={{ mb: 5, borderColor: 'rgba(255,255,255,0.12)' }} />
 
-      <Box id="blog">
-        <Typography variant="h4" sx={{ mb: 3 }}>Latest Posts</Typography>
-        {latestPosts.length ? (
-          <Grid container spacing={2.5}>
-            {latestPosts.map((post) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={post.slug}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    background: 'rgba(18, 24, 44, 0.72)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={getPostImageUrl(post)}
-                    alt={post.title}
-                    sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="caption" color="text.secondary">{post.date}</Typography>
-                    <Typography
-                      variant="h6"
-                      gutterBottom
-                      sx={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        minHeight: '3.2em',
-                      }}
-                    >
-                      {post.title}
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ px: 2, pb: 2, mt: 'auto' }}>
-                    <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Card sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <CardContent>
-              <Typography color="text.secondary" sx={{ mb: 1.5 }}>
-                Coding blog posts have moved to the dedicated coding site.
-              </Typography>
-              <Button href="https://coding.aibotcasey.com/blog" target="_blank" rel="noreferrer" variant="outlined">
-                Visit coding.aibotcasey.com
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+      <Box id="blogs">
+        <Typography variant="h4" sx={{ mb: 3 }}>Explore Our Blogs</Typography>
+        <Grid container spacing={2.5}>
+          {externalBlogs.map((blog) => (
+            <Grid size={{ xs: 12, md: 6 }} key={blog.name}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <CardMedia
+                  component="img"
+                  image={blog.image}
+                  alt={`${blog.name} homepage preview`}
+                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6" gutterBottom>{blog.name}</Typography>
+                  <Typography color="text.secondary">{blog.tagline}</Typography>
+                </CardContent>
+                <CardActions sx={{ px: 2, pb: 2 }}>
+                  <Button href={blog.url} target="_blank" rel="noreferrer" variant="outlined">Visit Site</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
 
       <Stack sx={{ mt: 6 }}>
