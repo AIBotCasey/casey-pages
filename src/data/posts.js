@@ -16,7 +16,7 @@ export const posts = [
       {
         heading: "Code example: vercel.json rewrite for SPA routes",
         text: "This rewrite catches app routes but avoids touching asset files like CSS, JS, or images.",
-        code: "{\n  \rewrites\: [\n    {\n      \source\: \"/((?!.*..*).*)\",\n      \destination\: \"/index.html\"\n    }\n  ]\n}"
+        code: "{\n  \rewrites: [\n    {\n      source: \"/((?!.*..*).*)\",\n      destination: \"/index.html\"\n    }\n  ]\n}"
       },
       {
         heading: "Code example: BrowserRouter route map",
@@ -56,6 +56,18 @@ export const posts = [
           "Practical SEO for React + Vite: Canonical URLs, Meta Tags, and JSON-LD That Actually Work",
           "MVP Website SEO Checklist: What to Do in Week 1 So Your Site Can Actually Be Discovered"
         ]
+      },
+      {
+        heading: "Full troubleshooting matrix for stubborn production 404s",
+        text: "If the rewrite is in place and you still see intermittent 404s, check environment-specific causes in a fixed order. First validate domain-level routing: custom domain aliases can point to an older deployment while preview URLs are correct. Second validate cache behavior at the CDN edge; stale config can make one region behave differently from another. Third confirm your app does not generate malformed links during runtime (for example, missing leading slash or duplicated path segments) because those can bypass your expected route map. Fourth verify that your not-found UI is not being mistaken for a true 404 response: instrument both server status codes and client-side route state so you can tell which layer actually failed. Finally, test in incognito and on mobile networks to avoid local cache artifacts. Most teams solve this faster when they write down each check and expected outcome instead of debugging ad hoc."
+      },
+      {
+        heading: "Production hardening checklist before closing the issue",
+        text: "A robust fix is more than “page now loads.” Add one regression test path for every major content route (home, blog index, one post, one project). Include refresh tests, direct-entry tests, and copy-paste URL tests because users arrive through all three. Keep a release note entry describing why rewrites are required, and include a short comment in vercel.json so future contributors do not remove the rule by accident. If your team uses incident tracking, tag this class of issue as routing/infrastructure so future alerts are searchable. Also monitor Search Console coverage in the days after deploy; crawl anomalies can surface route problems that users did not report yet. This turns a one-off patch into a durable operational fix."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "Teams often ask whether this fix hurts performance or caching. In practice, performance impact is negligible when rewrites are scoped correctly because static assets still resolve directly and only route-like paths fall back to index.html. Another common question is whether this conflicts with API routes: it should not if your rewrite excludes file/API patterns intentionally. For multi-app setups, verify each app has explicit domain and route boundaries to avoid overlapping rules. If your deployment platform changes, replicate the same logical behavior (serve shell for app routes, preserve static/API handling) rather than copying provider-specific syntax blindly. Finally, document this behavior in onboarding docs. Routing failures are expensive precisely because people rediscover them under deadline pressure. A short runbook saves hours later."
       }
     ]
   },
@@ -106,6 +118,26 @@ export const posts = [
         text: "The main reason this shipped cleanly was discipline around boundaries: secrets stayed server-side, auth was verified on protected routes, and deployment behavior was tested in production-like conditions instead of only local dev. If you want similar outcomes, treat security and deployment wiring as core product work, not “after launch” work. A practical way is to create a short launch gate with non-negotiables: token verification works, sensitive keys never reach client bundles, error states are user-readable, and one-click rollback is possible. This mindset saves enormous time compared with hotfixing security and routing under live pressure. It also gives users confidence because the first version feels trustworthy, not experimental."
       },
       {
+        heading: "Architecture decisions that reduced launch risk",
+        text: "A key launch lesson is that architecture choices made early determine whether you can ship quickly later. Keeping auth verification server-side removed an entire class of trust bugs where client claims could be spoofed. Isolating secrets in backend-only paths meant frontend iteration could continue without security regressions every time UI code changed. Separating valuation logic from transport logic made debugging far easier: when output looked wrong, we could inspect data quality independently from route handling. This separation also made it simpler to add guardrails like confidence thresholds, because business logic remained centralized. Teams often move faster when they intentionally choose boring, testable patterns over clever shortcuts during MVP phase."
+      },
+      {
+        heading: "Operational playbook for maintaining quality after launch",
+        text: "Shipping is day one, not done. Post-launch, the most useful routine is a weekly quality pass: inspect auth logs for unusual failures, sample valuation results for obvious outliers, and review rate-limit hits to catch abuse or configuration drift. Keep a visible backlog of user-friction moments—slow lookups, unclear error messages, and confusing confidence output—then ship one quality improvement every sprint. This creates steady trust growth without large rewrites. Add synthetic checks for critical routes so deploy issues are caught automatically. Over time, users care less about your internal stack and more about reliability: fast responses, clear reasoning, and consistent outcomes. This maintenance rhythm is what preserves product credibility."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "A frequent question after launch is where to spend effort first: more features or more reliability. For products with real users, reliability usually wins. Add clearer error messages, instrument key flows, and tighten data confidence presentation before expanding surface area. Another question is whether strict backend-only secret handling slows development; usually it speeds teams up long-term because boundaries are clear and audits are simpler. People also ask if MVP security is “too much” this early. In practice, lightweight guardrails are cheaper than emergency cleanup after adoption. The key is proportional controls: protect secrets, verify identity server-side, and log enough context to debug safely. This balance keeps velocity high while avoiding trust-breaking failures."
+      },
+      {
+        heading: "Implementation recap",
+        text: "If you are applying this pattern to your own app, treat launch readiness as a checklist with ownership, not a vague milestone. Assign one owner for auth correctness, one for deployment behavior, and one for observability. Run a full user journey from signup to protected actions on production URLs before announcing publicly. Keep a rollback note with the exact steps and who executes them. This reduces decision latency during incidents. Clear ownership and rehearsal are what make launches feel controlled rather than chaotic."
+      },
+      {
+        heading: "Final takeaway",
+        text: "This launch pattern is repeatable for other products: secure defaults, explicit ownership, and production-first testing."
+      },
+      {
         heading: "Bottom line",
         text: "Car Deal Checker is now live and production-grade for MVP use: real auth, protected APIs, and deployment wiring that can scale. Next step is tightening valuation quality and adding a lightweight admin diagnostics panel."
       }
@@ -154,6 +186,30 @@ export const posts = [
         text: "If you are evaluating whether a journal will improve your trading, run a two-week trial with a strict review routine. Log every trade with setup, execution quality, and emotional state. At the end of each week, look for recurring behavioral patterns—not just PnL outcomes. You want to find the same mistakes repeating across sessions: early entries, ignored checklist steps, overtrading after losses, or unmanaged risk sizing. Those are the leaks a journal helps close. Keep your process simple enough to sustain daily. Most traders fail not because they lack tools, but because their review system is inconsistent. A local-first journal removes friction and protects privacy, which makes consistency easier."
       },
       {
+        heading: "Framework for weekly review that actually changes behavior",
+        text: "A useful review is structured and repeatable. Start by grouping trades by setup type, then compare execution quality before comparing profit and loss. This helps you identify whether performance comes from edge or luck. Next, classify losses into avoidable versus acceptable losses; avoidable losses usually map to rule violations, emotional overreaction, or poor sizing discipline. Then review your notes for language patterns—phrases like “felt rushed” or “chased move” often correlate with repeated mistakes. Finish with one behavioral adjustment for next week, not five. Small consistent adjustments outperform aggressive strategy changes because they are easier to execute under pressure. This is where journaling creates compounding value."
+      },
+      {
+        heading: "Practical data fields that improve decision quality",
+        text: "Many traders track too little context and then wonder why reviews feel vague. In addition to entry/exit and PnL, log planned setup, invalidation level, expected holding time, and whether the trade matched pre-session intent. Add one emotional field before entry and one after exit; this reveals whether emotional state predicts execution quality. Capture market context too: volatility regime, session timing, and key levels can explain why a setup underperforms in certain conditions. The goal is not more data for its own sake, but better feedback loops. Good journaling turns subjective memory into measurable behavior patterns you can improve deliberately."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "Readers also ask whether manual journaling is worth the effort versus broker exports alone. Broker exports are useful for raw trade data, but they rarely capture decision context, emotional state, and rule adherence—the exact variables that drive behavior change. Another common concern is “what if I miss entries?” The answer is to optimize for consistency over perfection: log essentials first, enrich during review sessions. Some traders worry that too much analysis causes hesitation. A good framework prevents that by separating trading time from review time; execution stays simple while analysis happens post-session. Finally, privacy matters more than many expect: local-first tools reduce account friction and make honest journaling easier because users feel ownership over their data."
+      },
+      {
+        heading: "Implementation recap",
+        text: "For long-term benefit, pair journaling with one monthly retrospective. Compare your best week and worst week and identify the behavior difference, not just market conditions. This helps you design rules that survive different environments. Keep templates simple and repeatable so review does not become a burden. The goal is sustained improvement, not perfect documentation."
+      },
+      {
+        heading: "Final takeaway",
+        text: "The real edge is disciplined review behavior sustained over time."
+      },
+      {
+        heading: "Practical adoption note",
+        text: "If you want this to become a long-term habit, reduce friction aggressively. Use fixed templates, pre-filled tags, and one review ritual that fits your real schedule. The point is to make reflection unavoidable but lightweight. When journaling becomes easy to maintain, insights accumulate naturally and your execution quality improves with less emotional volatility."
+      },
+      {
         heading: "Bottom line",
         text: "Most traders do not need more indicators; they need better feedback loops. Trading Journal One is built to be that loop: log the trade, review the behavior, and sharpen the process."
       }
@@ -196,6 +252,34 @@ export const posts = [
       {
         heading: "When this model should be adjusted",
         text: "This model is strongest when task repeatability is high and risk is clearly bounded. If the workflow involves legal exposure, financial execution, or public messaging, tighten review thresholds and add explicit approval checkpoints. The goal is not “AI everywhere,” but the right autonomy level per task. Start with low-risk operational work, measure quality, then expand scope only when outcomes are stable. Teams that skip this staged rollout often create trust problems quickly. Teams that phase autonomy deliberately usually get both speed and reliability. The core principle is simple: automate default execution, keep humans focused where judgment matters, and continuously tune boundaries from real-world results."
+      },
+      {
+        heading: "Governance layer: how to keep speed without losing control",
+        text: "Execution-first AI models work best when governance is explicit. Define three action tiers: low-risk autonomous actions, medium-risk actions requiring asynchronous review, and high-risk actions requiring explicit approval. Document examples for each tier so decisions are predictable across teammates. Add simple audit logs for autonomous actions so reviewers can quickly see what happened and why. Use a rollback mindset: any automated step should be reversible where possible. This does not slow teams down; it removes ambiguity and prevents panic when something unexpected occurs. Speed and oversight are not opposites when boundaries are clearly designed."
+      },
+      {
+        heading: "Metrics that show whether the model is working",
+        text: "Measure this model with operational metrics, not vibes. Track cycle time reduction, rework rate, and incident frequency per workflow. A healthy rollout shows faster completion with stable or improving quality. If output volume rises but rework rises faster, autonomy is likely too high for current prompt/process quality. Add a weekly review where failures are categorized into prompt gaps, tool limitations, or policy boundary issues. Then address one root cause per cycle. Over several weeks, this creates measurable improvement and stronger trust in the system. Teams succeed when they tune the process continuously rather than debating AI in the abstract."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "Common pushback is that this model sounds risky for critical operations. The practical answer is to scope autonomy by risk tier, not apply one policy everywhere. Another question is whether teams lose expertise when AI executes more. In healthy systems, the opposite happens: humans spend less time on repetitive mechanics and more time on architecture, review quality, and exception handling. People also ask how to onboard new teammates; provide concrete examples of approved autonomous actions, review-required actions, and blocked actions. Keep those examples updated from real incidents. The model works best when expectations are explicit and learnings are documented quickly. Over time, teams that operationalize this approach tend to ship faster with fewer bottlenecks and clearer accountability."
+      },
+      {
+        heading: "Implementation recap",
+        text: "To make adoption smooth, publish a one-page operating guide in plain language and revisit it after each incident review. Teams align faster when they can see concrete examples of acceptable autonomy and review expectations. This reduces debate in the moment and keeps execution velocity consistent across contributors."
+      },
+      {
+        heading: "Final takeaway",
+        text: "Keep the model simple: automate routine execution, review high-impact outcomes, and improve boundaries every cycle with evidence."
+      },
+      {
+        heading: "Practical adoption note",
+        text: "Adoption gets easier when leaders model the behavior publicly. Share examples where AI handled routine execution and humans focused on critical judgment. Celebrate both speed gains and quality wins, and be transparent about misses plus fixes. This builds confidence that the model is practical, not theoretical, and encourages healthy experimentation without reducing accountability."
+      },
+      {
+        heading: "One-sentence operating rule",
+        text: "Automate repeatable execution by default, require human review for high-impact outcomes, and continuously tighten boundaries based on observed quality and risk. Keep the review loop short so learning compounds quickly each week."
       },
       {
         heading: "Bottom line",
@@ -249,6 +333,26 @@ export const posts = [
       {
         heading: "Migration checklist for teams with existing traffic",
         text: "If your site already has indexed pages, migrate carefully to avoid losing signal. First map old URL patterns to new canonical paths and make sure internal links update consistently. Then deploy rewrites and verify key routes manually before requesting reindexing. Keep metadata stable during the same window so Google sees a clean routing change, not a full-page identity change. After deploy, monitor Search Console coverage and crawl stats for a few days before making additional SEO edits. This staged approach reduces churn and makes troubleshooting clearer if anything drops. Treat routing migration like infrastructure work: controlled, observable, and reversible if needed."
+      },
+      {
+        heading: "Migration plan for live sites with existing backlinks",
+        text: "When migrating an already-indexed site, protect link equity carefully. Inventory your highest-traffic pages first and validate their new clean routes before broader rollout. Keep canonical tags stable and aligned with the new path strategy from day one. Update internal navigation, footer links, and any hardcoded references in markdown content so crawlers and users reinforce the same URL shape. If external backlinks still point to old formats, keep graceful handling where possible and monitor crawl reports for unexpected soft-404 behavior. The migration should feel boring to users: everything still works, but URLs are cleaner and more index-friendly."
+      },
+      {
+        heading: "Post-migration monitoring signals that matter most",
+        text: "After launch, focus on leading indicators rather than waiting for ranking jumps. Check crawl stats, indexed page counts, and coverage warnings first. Then review query impressions for key routes to confirm Google is attributing traffic to the new canonical URLs. Watch for duplicate title/description alerts that can appear when migration and metadata changes overlap. If you see indexing volatility, avoid large additional edits for a few days; isolate variables so you can diagnose accurately. This monitoring discipline turns migration from a risky one-time event into a controlled SEO improvement project."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "A common concern is whether this migration should be done all at once or incrementally. If your traffic is meaningful, incremental is safer: migrate core routes, verify indexing behavior, then expand. Another question is whether old hash links need permanent support. In many cases, yes—at least temporarily—through graceful redirects or clear navigation pathways so existing bookmarks do not become dead ends. Teams also ask how long to wait before judging impact; usually a few crawl cycles are needed before conclusions are reliable. Avoid making large simultaneous changes to content, metadata, and routing if you want clear attribution. Treat migration as controlled infrastructure change, measure calmly, and iterate with evidence rather than assumptions."
+      },
+      {
+        heading: "Implementation recap",
+        text: "As a final safeguard, add one automated end-to-end check that opens a deep route and asserts successful render after refresh. Automated checks catch routing regressions earlier than manual QA and make your migration benefits durable across future releases."
+      },
+      {
+        heading: "Final takeaway",
+        text: "Treat routing changes as infrastructure: plan, validate, monitor, and document."
       }
     ]
   },
@@ -293,6 +397,26 @@ export const posts = [
       {
         heading: "How to maintain this setup as content grows",
         text: "The biggest failure mode is entropy: new pages get added faster than metadata and schema stay consistent. Prevent that by standardizing page-level SEO fields in your content model (title, description, slug, canonical path intent). Use one helper to apply tags and schema so behavior stays centralized instead of scattered across components. Then add a lightweight content QA pass before publish: check canonical correctness, title uniqueness, and schema type fit. This turns SEO from a one-time project into an operational habit. The teams that win organic long-term are not the ones with perfect initial setup—they are the ones that keep their implementation clean as the site scales."
+      },
+      {
+        heading: "Editorial workflow that keeps metadata quality high",
+        text: "As the blog grows, metadata quality often decays unless ownership is clear. A practical approach is to treat title, excerpt, and canonical intent as required fields in the content workflow. Before publishing, run a quick review pass: does this page have a unique angle, does the title match user intent, and does the description promise the core value clearly? This takes minutes but prevents weak SERP snippets that suppress CTR. Keep a simple log of title changes and their performance impact, so your team learns what framing actually drives clicks in your niche. Over time, this creates institutional SEO judgment rather than one-off optimization efforts."
+      },
+      {
+        heading: "Schema implementation pitfalls and how to avoid them",
+        text: "Structured data helps only when it is accurate and consistent. Common mistakes include using the wrong schema type for page intent, forgetting to update dateModified on meaningful edits, and publishing conflicting URLs between schema and canonical tags. Another subtle issue is duplicating stale schema in static templates while also injecting dynamic schema at runtime. Keep one clear source of truth and validate output periodically with testing tools. Schema should clarify your content model, not create conflicting signals. When implemented cleanly, it improves crawl interpretation and supports richer understanding of your pages."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "People frequently ask if this stack is enough without SSR. For many product and portfolio sites, yes—if routing, metadata, schema, and internal linking are consistent and content quality is strong. Another question is how often to update metadata after publish. The best trigger is data: adjust titles/descriptions when impressions rise but CTR underperforms, or when search intent shifts. Teams also wonder whether schema needs to be perfect from day one. Start with correct type mapping and valid structure, then refine as content matures. The practical goal is coherence, not complexity. A stable technical foundation plus continuous editorial improvement outperforms one-time “advanced SEO” efforts in most real projects."
+      },
+      {
+        heading: "Implementation recap",
+        text: "A simple monthly SEO maintenance pass keeps this system healthy: validate schema output, spot-check canonical tags, and review low-CTR pages for title improvements. Small recurring maintenance beats occasional large cleanups."
+      },
+      {
+        heading: "Final takeaway",
+        text: "Centralized implementation plus recurring maintenance is the winning combination."
       }
     ]
   },
@@ -338,6 +462,30 @@ export const posts = [
       {
         heading: "What week two and beyond should look like",
         text: "Once week-one foundations are complete, growth depends on consistency and feedback loops. Publish one strong article each week tied to real search intent, connect it to related posts/projects, and review query-level performance in Search Console. Focus first on pages that already receive impressions but low CTR—title and description improvements can unlock gains quickly. Keep technical hygiene steady (sitemap freshness, canonical consistency, crawlability), then let content breadth expand over time. Discoverability compounds when both the technical layer and publishing rhythm remain stable. Think in months, not days, and optimize from observed behavior rather than assumptions."
+      },
+      {
+        heading: "How to prioritize when time is limited",
+        text: "If you can only do a few things in week one, prioritize in this order: crawlability, stable routing, unique metadata, and internal linking. Many teams spend too much time on cosmetic tweaks while missing indexability blockers that prevent discovery altogether. Use a simple priority rule: fix what affects all pages before optimizing individual pages. A broken routing/canonical setup can invalidate great content work. Once foundations are stable, choose one high-intent topic and publish a thorough resource article that solves a concrete problem. Depth plus technical hygiene is a stronger growth combo than publishing many thin posts quickly."
+      },
+      {
+        heading: "30-day follow-through plan after initial setup",
+        text: "Weeks two through four should be execution, not reinvention. Publish consistently on one topic cluster, interlink each post to related pages, and review Search Console every week for impression and CTR movement. When you find pages with impressions but low clicks, revise titles and descriptions first because that is usually the fastest lift. When you find pages with low impressions, improve topic targeting and internal links. Keep your sitemap updated as new posts go live. By day 30, you should have a clearer signal about which themes attract demand, and that data should drive your next content calendar."
+      },
+      {
+        heading: "Reader FAQ and edge cases",
+        text: "Another frequent question is whether this checklist applies to tiny sites with only a few pages. It does—small sites benefit even more because each page carries more weight. Teams also ask when backlinks should become a focus. Start outreach after technical basics and a few high-quality resource posts are live; otherwise, new visitors arrive to weak foundations. There is also concern about moving too slowly by doing setup first. In practice, a few days of technical setup prevents weeks of confusion later. The best approach is parallel momentum: lock fundamentals early, then publish consistently with measurable goals. The combination of clean infrastructure and sustained useful content is what creates durable discoverability over time."
+      },
+      {
+        heading: "Implementation recap",
+        text: "If your team is tiny, keep the system lightweight: one publishing cadence, one analytics review day, one optimization focus each week. The consistency of this loop is more valuable than sophisticated tooling during early growth stages."
+      },
+      {
+        heading: "Final takeaway",
+        text: "Strong foundations plus consistent publishing is what compounds discoverability."
+      },
+      {
+        heading: "Practical adoption note",
+        text: "Remember that discoverability is a systems outcome. Technical setup, publishing cadence, and iteration discipline all matter. If one part is missing, growth stalls. Keep the loop simple, repeatable, and measurable, and your site becomes more useful and more visible over time."
       },
       {
         heading: "Bottom line",

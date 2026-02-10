@@ -2,8 +2,8 @@ import { posts } from '../src/data/posts.js'
 
 const MIN_WORDS = 900
 
-// Baseline legacy content. New posts must pass strict rules.
-const LEGACY_EXEMPT_SLUGS = new Set([
+// Legacy posts are exempt from code/raw-route checks only.
+const LEGACY_FORMAT_EXEMPT_SLUGS = new Set([
   'react-router-vercel-404-fix',
   'how-we-shipped-car-deal-checker-live-with-secure-auth',
   'trading-journal-one-offline-futures-trading-journal',
@@ -45,17 +45,17 @@ function validatePost(post) {
   }
 
   const rawRouteLeak = JSON.stringify(post).match(/\/(posts|projects)\//)
-  if (!LEGACY_EXEMPT_SLUGS.has(post.slug) && rawRouteLeak) {
+  if (!LEGACY_FORMAT_EXEMPT_SLUGS.has(post.slug) && rawRouteLeak) {
     errors.push('contains raw route string in content; use human-readable titles instead')
   }
 
   const codeSections = (post.sections || []).filter((s) => s.code).length
-  if (!LEGACY_EXEMPT_SLUGS.has(post.slug) && codeSections < 2) {
+  if (!LEGACY_FORMAT_EXEMPT_SLUGS.has(post.slug) && codeSections < 2) {
     errors.push('must include at least 2 code sections')
   }
 
   const wc = wordCount(getPostText(post))
-  if (!LEGACY_EXEMPT_SLUGS.has(post.slug) && wc < MIN_WORDS) {
+  if (wc < MIN_WORDS) {
     errors.push(`word count ${wc} is below minimum ${MIN_WORDS}`)
   }
 
