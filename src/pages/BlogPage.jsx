@@ -83,7 +83,7 @@ export default function BlogPage() {
 
       {visiblePosts.length === 0 ? (
         <Typography color="text.secondary" sx={{ mt: 3 }}>
-          No posts found for “{query}”. Try a broader keyword.
+          {query ? `No posts found for “${query}”. Try a broader keyword.` : 'Coding posts now live at coding.aibotcasey.com/blog.'}
         </Typography>
       ) : null}
     </Box>

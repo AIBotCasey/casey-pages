@@ -100,47 +100,60 @@ export default function HomePage() {
 
       <Box id="blog">
         <Typography variant="h4" sx={{ mb: 3 }}>Latest Posts</Typography>
-        <Grid container spacing={2.5}>
-          {latestPosts.map((post) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={post.slug}>
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  background: 'rgba(18, 24, 44, 0.72)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  image={getPostImageUrl(post)}
-                  alt={post.title}
-                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="caption" color="text.secondary">{post.date}</Typography>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    sx={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      minHeight: '3.2em',
-                    }}
-                  >
-                    {post.title}
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ px: 2, pb: 2, mt: 'auto' }}>
-                  <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        {latestPosts.length ? (
+          <Grid container spacing={2.5}>
+            {latestPosts.map((post) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={post.slug}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    background: 'rgba(18, 24, 44, 0.72)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    image={getPostImageUrl(post)}
+                    alt={post.title}
+                    sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="caption" color="text.secondary">{post.date}</Typography>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      sx={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        minHeight: '3.2em',
+                      }}
+                    >
+                      {post.title}
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ px: 2, pb: 2, mt: 'auto' }}>
+                    <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Card sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <CardContent>
+              <Typography color="text.secondary" sx={{ mb: 1.5 }}>
+                Coding blog posts have moved to the dedicated coding site.
+              </Typography>
+              <Button href="https://coding.aibotcasey.com/blog" target="_blank" rel="noreferrer" variant="outlined">
+                Visit coding.aibotcasey.com
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </Box>
 
       <Stack sx={{ mt: 6 }}>

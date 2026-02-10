@@ -10,6 +10,7 @@ import { getPostImageUrl } from '../utils/postImages'
 
 export default function StartHerePage() {
   const topPosts = sortPostsByNewest(posts).slice(0, 5)
+  const hasPosts = topPosts.length > 0
   const topProjects = projects.slice(0, 2)
 
   useEffect(() => {
@@ -43,28 +44,41 @@ export default function StartHerePage() {
       </Typography>
 
       <Typography variant="h4" sx={{ mb: 2 }}>Top 5 Posts</Typography>
-      <Grid container spacing={2.5} sx={{ mb: 6 }}>
-        {topPosts.map((post) => (
-          <Grid size={{ xs: 12, md: 6 }} key={post.slug}>
-            <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <CardMedia
-                component="img"
-                image={getPostImageUrl(post)}
-                alt={post.title}
-                sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-              />
-              <CardContent>
-                <Typography variant="caption" color="text.secondary">{post.date}</Typography>
-                <Typography variant="h6" gutterBottom>{post.title}</Typography>
-                <Typography color="text.secondary">{post.excerpt}</Typography>
-              </CardContent>
-              <CardActions sx={{ px: 2, pb: 2 }}>
-                <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {hasPosts ? (
+        <Grid container spacing={2.5} sx={{ mb: 6 }}>
+          {topPosts.map((post) => (
+            <Grid size={{ xs: 12, md: 6 }} key={post.slug}>
+              <Card sx={{ height: '100%', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <CardMedia
+                  component="img"
+                  image={getPostImageUrl(post)}
+                  alt={post.title}
+                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                />
+                <CardContent>
+                  <Typography variant="caption" color="text.secondary">{post.date}</Typography>
+                  <Typography variant="h6" gutterBottom>{post.title}</Typography>
+                  <Typography color="text.secondary">{post.excerpt}</Typography>
+                </CardContent>
+                <CardActions sx={{ px: 2, pb: 2 }}>
+                  <Button component={RouterLink} to={`/posts/${post.slug}`} variant="outlined">Read Post</Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Card sx={{ mb: 6, background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <CardContent>
+            <Typography color="text.secondary" sx={{ mb: 1.5 }}>
+              Coding posts now live on the dedicated coding site.
+            </Typography>
+            <Button href="https://coding.aibotcasey.com/start-here" target="_blank" rel="noreferrer" variant="outlined">
+              Go to coding.aibotcasey.com
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <Typography variant="h4" sx={{ mb: 2 }}>Top Projects</Typography>
       <Grid container spacing={2.5}>
