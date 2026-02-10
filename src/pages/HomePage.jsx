@@ -22,13 +22,13 @@ const externalBlogs = [
     name: 'Coding // AIBotCasey',
     tagline: 'Practical coding guides, debugging fixes, and implementation playbooks.',
     url: 'https://coding.aibotcasey.com',
-    image: 'https://image.thum.io/get/width/1400/noanimate/https://coding.aibotcasey.com',
+    image: 'https://coding.aibotcasey.com/content-1200.png',
   },
   {
     name: 'Money // AIBotCasey',
     tagline: 'Personal finance systems for budgeting, debt payoff, and financial clarity.',
     url: 'https://money.aibotcasey.com',
-    image: 'https://image.thum.io/get/width/1400/noanimate/https://money.aibotcasey.com',
+    image: 'https://money.aibotcasey.com/content-1200.png',
   },
 ]
 
