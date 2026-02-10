@@ -657,6 +657,94 @@ export const posts = [
         ]
       }
     ]
+  },
+  {
+    slug: "supabase-auth-redirect-url-not-working",
+    title: "Supabase Auth Redirect URL Not Working? Fix OAuth Callback Mismatches Fast",
+    date: "2026-02-10",
+    excerpt: "If Supabase login keeps sending users to localhost, the wrong domain, or an auth-code error page, this guide walks through the exact redirect URL fixes for dev and production.",
+    sections: [
+      {
+        heading: "What breaks (and what users usually report)",
+        text: "You click \"Continue with Google\" (or GitHub), the provider flow looks normal, and then the app lands on the wrong URL. Sometimes users get dumped on localhost in production. Sometimes they return to your domain but with an auth-code error. Sometimes they authenticate successfully but your app never picks up a session and looks logged out. This failure is one of the most common Supabase Auth launch blockers because every environment variable and dashboard URL can look almost right while still being wrong. The symptoms are noisy, but the root cause is usually narrow: your callback URLs do not match exactly across Supabase settings, provider settings, and the frontend sign-in request."
+      },
+      {
+        heading: "Why this issue happens",
+        text: "Supabase OAuth relies on strict URL matching and environment-aware configuration. If your Site URL points to one domain but redirectTo points to another, callbacks can fail or route unexpectedly. If your provider (Google, GitHub, etc.) has a different authorized callback URL than Supabase expects, the provider may reject or partially complete the auth handshake. Teams also get burned by trailing slash mismatches, wrong protocol (http vs https), and stale preview domains after redeploys. Another common issue is leaving localhost values in production env vars. Finally, some apps complete OAuth correctly but fail to exchange code for a session because the callback route does not run the right Supabase client logic."
+      },
+      {
+        heading: "Exact implementation/fix steps",
+        bullets: [
+          "Set Supabase Auth Site URL to your canonical production app origin",
+          "Add all valid callback targets to Supabase Redirect URLs (local + production)",
+          "Ensure OAuth provider authorized redirect URI matches Supabase callback endpoint exactly",
+          "Pass redirectTo explicitly from frontend when environment-specific behavior is required",
+          "Handle auth callback route in the app and wait for session exchange before routing away",
+          "Retest full login/logout flow in both local and production after every URL change"
+        ]
+      },
+      {
+        heading: "Code example: safe signInWithOAuth redirect setup",
+        text: "Use one helper that builds redirectTo from runtime origin to avoid hardcoded localhost leaks.",
+        code: "import { createClient } from '@supabase/supabase-js'\n\nconst supabase = createClient(\n  import.meta.env.VITE_SUPABASE_URL,\n  import.meta.env.VITE_SUPABASE_ANON_KEY\n)\n\nexport async function signInWithGoogle() {\n  const redirectTo = `${window.location.origin}/auth/callback`\n\n  const { data, error } = await supabase.auth.signInWithOAuth({\n    provider: 'google',\n    options: { redirectTo },\n  })\n\n  if (error) throw error\n  return data\n}\n"
+      },
+      {
+        heading: "Code example: callback route that finalizes the session",
+        text: "After provider redirect, parse the auth response and only then forward the user to the app.",
+        code: "import { useEffect } from 'react'\nimport { useNavigate } from 'react-router-dom'\nimport { supabase } from '../lib/supabaseClient'\n\nexport default function AuthCallbackPage() {\n  const navigate = useNavigate()\n\n  useEffect(() => {\n    async function finishAuth() {\n      const { error } = await supabase.auth.exchangeCodeForSession(window.location.href)\n\n      if (error) {\n        navigate('/login?error=oauth_callback_failed')\n        return\n      }\n\n      navigate('/dashboard')\n    }\n\n    finishAuth()\n  }, [navigate])\n\n  return <p>Signing you in…</p>\n}\n"
+      },
+      {
+        heading: "Code example: environment variables for predictable redirects",
+        text: "Keep these values explicit per environment and avoid mixing preview/prod domains accidentally.",
+        code: "# .env.local\nVITE_APP_URL=http://localhost:5173\nVITE_SUPABASE_URL=https://your-project-ref.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key\n\n# .env.production\nVITE_APP_URL=https://app.yourdomain.com\nVITE_SUPABASE_URL=https://your-project-ref.supabase.co\nVITE_SUPABASE_ANON_KEY=your-anon-key\n"
+      },
+      {
+        heading: "Verification checklist (how to confirm the fix works)",
+        bullets: [
+          "Start login from production and confirm browser returns to https://your-domain/... not localhost",
+          "Confirm the callback route receives code/state params and completes session exchange",
+          "Run a hard refresh on the destination page and verify user remains authenticated",
+          "Test logout then login again to confirm auth state transitions are stable",
+          "Validate one local login flow and one production flow after each config update",
+          "Check Supabase Auth logs for callback or provider errors during test runs"
+        ]
+      },
+      {
+        heading: "Troubleshooting and common mistakes",
+        bullets: [
+          "Site URL set to marketing domain while app actually runs on a subdomain",
+          "Using http in one system and https in another",
+          "Missing /auth/callback route in the client router",
+          "Forgetting to add both localhost and production URLs to allowed redirects",
+          "Deploying env var changes without rebuilding frontend artifacts",
+          "Redirecting immediately before exchangeCodeForSession completes"
+        ]
+      },
+      {
+        heading: "Provider-specific pitfalls that waste hours",
+        text: "Google and GitHub both require exact callback URI matches, but each dashboard UX can hide small differences. In Google Cloud, one extra slash or outdated redirect path can quietly invalidate your latest deployment. In GitHub OAuth app settings, teams often update homepage URL and forget to update Authorization callback URL. If you use multiple environments, keep a small table in your repo listing local, preview, and production callback values for Supabase and each provider. During incident response, compare those values line-by-line before touching app code. Most redirect bugs are configuration drift, not runtime logic defects."
+      },
+      {
+        heading: "How to prevent this from breaking again",
+        text: "Treat auth redirects like deployment infrastructure, not one-time setup. Keep all auth URL values documented in version control, and include a post-deploy smoke test that performs a full OAuth login in the deployed environment. Use one canonical app domain for production wherever possible; every extra alias increases mismatch risk. If preview environments are required, define whether they are allowed to authenticate or intentionally blocked. Also log callback errors with enough context to identify environment and provider quickly. These guardrails turn a fragile onboarding flow into a predictable system and prevent late-night auth outages."
+      },
+      {
+        heading: "A practical debug sequence when redirects still fail",
+        text: "When the bug survives initial fixes, debug in one strict order. First, capture the exact URL where login starts and the exact URL where callback lands. Second, compare those URLs against Supabase Site URL and Redirect URLs word-for-word, including trailing slash and protocol. Third, confirm provider dashboard callback values still match your Supabase project region endpoint after any project migration. Fourth, inspect network logs for the callback request and verify your app actually renders the callback route component. Fifth, log auth events (SIGNED_IN, TOKEN_REFRESHED) so you can separate redirect issues from state management bugs. Finally, test on an incognito browser and mobile device to rule out stale session cookies. This sequence removes guesswork and usually identifies the mismatch in minutes instead of hours."
+      },
+      {
+        heading: "Reader FAQ",
+        text: "Do you always need redirectTo in signInWithOAuth? Not always, but it is safer when your app runs across multiple environments because it makes intent explicit at runtime. Should you allow wildcard redirects for convenience? No. Wildcards increase account takeover risk and make debugging harder because unexpected domains may receive auth responses. What if your app has both www and non-www domains? Pick one canonical auth domain and redirect the other at the edge before users start OAuth. Can this issue happen even when user login appears successful? Yes. Providers may authenticate correctly while your app fails to finish session exchange, which looks like an instant logout."
+      },
+      {
+        heading: "Related reading",
+        bullets: [
+          "How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)",
+          "Vite Environment Variables Not Working in Production: A Complete Fix Guide",
+          "CORS Error on Fetch API? Fix It in Express Without Breaking Security"
+        ]
+      }
+    ]
   }
 ]
 
