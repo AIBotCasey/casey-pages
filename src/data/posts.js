@@ -577,6 +577,86 @@ export const posts = [
         ]
       }
     ]
+  },
+  {
+    slug: "cors-error-fetch-api-fix-express",
+    title: "CORS Error on Fetch API? Fix It in Express Without Breaking Security",
+    date: "2026-02-10",
+    excerpt: "Seeing 'blocked by CORS policy' in your browser console? Here’s the exact Express setup to fix preflight failures, credentials issues, and origin mismatches in production.",
+    sections: [
+      {
+        heading: "What breaks (and how this usually shows up)",
+        text: "You ship a frontend and backend on different domains, everything feels fine in Postman, then your browser starts yelling: 'Access to fetch at ... has been blocked by CORS policy.' Sometimes the request never reaches your route handler. Sometimes GET works but POST fails. Sometimes local works and production fails only after you add cookies or auth headers. This is the classic CORS trap: your API is healthy, but the browser rejects the cross-origin response because required headers are missing, too broad, or inconsistent. The key point is that CORS is not an API-server permission system; it is a browser enforcement layer. If you treat it like app auth, you will keep fixing the wrong thing."
+      },
+      {
+        heading: "Why this issue happens",
+        text: "CORS fails in Express for a few predictable reasons. First, the API does not return Access-Control-Allow-Origin for the exact requesting origin. Second, requests with custom headers, JSON bodies, or methods like PUT and DELETE trigger a preflight OPTIONS request, and that preflight is not handled correctly. Third, credentials mode is misconfigured: if your frontend sends cookies or Authorization headers with credentials: 'include', you cannot use wildcard '*' for allowed origin. Fourth, middleware order is wrong, so CORS headers are added after route errors or not added to OPTIONS responses at all. Finally, teams often whitelist localhost in development and forget to add production origins, causing a late-stage deploy surprise."
+      },
+      {
+        heading: "Exact implementation/fix steps",
+        bullets: [
+          "Install and enable the cors middleware before your routes",
+          "Use an explicit origin allowlist (dev + production domains)",
+          "Handle preflight OPTIONS requests globally",
+          "Set credentials correctly on both frontend and backend when using cookies/sessions",
+          "Return stable CORS headers on error responses too, so browser diagnostics are clear",
+          "Validate behavior with real browser requests, not only curl/Postman"
+        ]
+      },
+      {
+        heading: "Code example: secure Express CORS setup with allowlist",
+        text: "This pattern is strict enough for production and flexible enough for local development.",
+        code: "import express from 'express'\nimport cors from 'cors'\n\nconst app = express()\n\nconst allowedOrigins = [\n  'http://localhost:5173',\n  'https://app.yourdomain.com',\n  'https://www.yourdomain.com',\n]\n\nconst corsOptions = {\n  origin(origin, callback) {\n    // Allow server-to-server requests without an Origin header\n    if (!origin) return callback(null, true)\n\n    if (allowedOrigins.includes(origin)) {\n      return callback(null, true)\n    }\n\n    return callback(new Error(`CORS blocked for origin: ${origin}`))\n  },\n  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],\n  allowedHeaders: ['Content-Type', 'Authorization'],\n  credentials: true,\n  maxAge: 86400,\n}\n\napp.use(cors(corsOptions))\napp.options('*', cors(corsOptions))\napp.use(express.json())\n"
+      },
+      {
+        heading: "Code example: frontend fetch call for cookie/session auth",
+        text: "If you rely on cookies, both sides must opt in. Missing one flag causes silent auth failures that look like CORS issues.",
+        code: "const response = await fetch('https://api.yourdomain.com/v1/profile', {\n  method: 'GET',\n  credentials: 'include',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n})\n\nif (!response.ok) {\n  throw new Error(`Request failed: ${response.status}`)\n}\n\nconst data = await response.json()\n"
+      },
+      {
+        heading: "Code example: environment-based origin config",
+        text: "Hardcoding origins directly in middleware is how regressions happen. Keep origin lists in environment variables so deploy config is explicit.",
+        code: "// .env\nCORS_ORIGINS=http://localhost:5173,https://app.yourdomain.com\n\n// config/cors.js\nexport const allowedOrigins = (process.env.CORS_ORIGINS || '')\n  .split(',')\n  .map((v) => v.trim())\n  .filter(Boolean)\n"
+      },
+      {
+        heading: "Verification checklist (how to confirm the fix works)",
+        bullets: [
+          "Open DevTools Network, trigger the failing request, and confirm OPTIONS preflight returns 200/204",
+          "Confirm Access-Control-Allow-Origin matches your exact frontend origin (not '*' when using credentials)",
+          "Confirm Access-Control-Allow-Credentials is true when cookies are required",
+          "Repeat tests on localhost and production domains",
+          "Verify one error path (401/403/500) still includes CORS headers so frontend receives readable errors",
+          "Run one end-to-end login or protected endpoint flow in a fresh browser session"
+        ]
+      },
+      {
+        heading: "Troubleshooting and common mistakes",
+        bullets: [
+          "Using origin: '*' while also sending credentials: 'include'",
+          "Forgetting to allow OPTIONS, so preflight fails before your actual route runs",
+          "Adding CORS middleware after route definitions or error middleware",
+          "Allowing only one domain and forgetting www/non-www variants",
+          "Trusting Postman results; CORS is enforced by browsers, not Postman",
+          "Returning redirect responses from API auth routes that strip or bypass expected CORS headers"
+        ]
+      },
+      {
+        heading: "Pitfalls with proxies, CDNs, and serverless platforms",
+        text: "Even with correct Express config, infrastructure can still break CORS behavior. Reverse proxies may strip headers, edge platforms may cache responses across origins incorrectly, and serverless adapters may handle OPTIONS differently than local Node does. If symptoms appear only in production, inspect response headers at the final public URL, not just the app server layer. Also validate that your proxy forwards Origin and Access-Control-Request-* headers intact. If your CDN caches API responses, include Vary: Origin where appropriate to prevent cross-origin header mix-ups. Finally, avoid stacking CORS logic in multiple places unless intentional. Two overlapping CORS policies often produce inconsistent headers and hard-to-debug failures."
+      },
+      {
+        heading: "A hardening pattern that keeps CORS stable over time",
+        text: "Once fixed, codify this so it does not break next sprint. Keep CORS configuration centralized in one module, source allowed origins from environment config, and add a smoke test that runs preflight + authenticated request against production after deploy. Document the credential rule clearly for teammates: no wildcard origin when cookies are included. Add lightweight logging for blocked origins so you can distinguish attacks from legitimate misconfigurations. During incident review, treat CORS breaks as deployment/config regressions, not random frontend bugs. Teams that do this stop firefighting the same issue repeatedly and ship cross-origin features with much less risk."
+      },
+      {
+        heading: "Related reading",
+        bullets: [
+          "Vite Environment Variables Not Working in Production: A Complete Fix Guide",
+          "React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production",
+          "How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)"
+        ]
+      }
+    ]
   }
 ]
 
