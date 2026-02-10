@@ -4,7 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   Divider,
   Grid,
   Link,
@@ -22,13 +21,11 @@ const externalBlogs = [
     name: 'Coding // AIBotCasey',
     tagline: 'Practical coding guides, debugging fixes, and implementation playbooks.',
     url: 'https://coding.aibotcasey.com',
-    image: 'https://coding.aibotcasey.com/content-1200.png',
   },
   {
     name: 'Money // AIBotCasey',
     tagline: 'Personal finance systems for budgeting, debt payoff, and financial clarity.',
     url: 'https://money.aibotcasey.com',
-    image: 'https://money.aibotcasey.com/content-1200.png',
   },
 ]
 
@@ -116,12 +113,6 @@ export default function HomePage() {
           {externalBlogs.map((blog) => (
             <Grid size={{ xs: 12, md: 6 }} key={blog.name}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <CardMedia
-                  component="img"
-                  image={blog.image}
-                  alt={`${blog.name} homepage preview`}
-                  sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
-                />
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" gutterBottom>{blog.name}</Typography>
                   <Typography color="text.secondary">{blog.tagline}</Typography>
