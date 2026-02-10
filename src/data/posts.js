@@ -1,5 +1,96 @@
 export const posts = [
   {
+    slug: 'react-router-vercel-404-fix',
+    title: 'React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production',
+    date: '2026-02-09',
+    excerpt:
+      'Fix React Router BrowserRouter 404 errors on Vercel with a clean rewrite rule, plus deployment checks to verify deep links and refreshes work on every route.',
+    sections: [
+      {
+        heading: 'Problem/context: why React Router works locally but 404s on Vercel',
+        text: 'In local dev, Vite serves index.html for unknown paths, so routes like /posts/my-article load fine. In production, Vercel first looks for a matching file. Without an SPA fallback, refreshing or opening a deep link returns a 404 even though the route exists in your React app.',
+      },
+      {
+        heading: 'Implementation steps: production-safe BrowserRouter deployment',
+        bullets: [
+          'Confirm your app uses BrowserRouter (not HashRouter) for clean URLs',
+          'Add a Vercel rewrite fallback to index.html for non-file routes',
+          'Deploy and test direct URL access for nested routes',
+          'Validate sitemap URLs match live, crawlable routes',
+        ],
+      },
+      {
+        heading: 'Code example: Vercel rewrite config for SPA routes',
+        text: 'Create or update vercel.json at your project root so Vercel serves index.html for app routes while still serving real files first.',
+        code: `{
+  "rewrites": [
+    {
+      "source": "/((?!.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}`,
+      },
+      {
+        heading: 'Code example: React Router setup with nested post route',
+        text: 'Make sure your router defines every route you expect to deep-link into. If it is not declared in the client router, rewrites alone will not fix navigation.',
+        code: `import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import BlogPage from './pages/BlogPage'
+import PostPage from './pages/PostPage'
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/posts/:slug" element={<PostPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}`,
+      },
+      {
+        heading: 'Troubleshooting/common mistakes',
+        bullets: [
+          'Using redirects instead of rewrites: redirects change URL behavior and can break expected SPA handling',
+          'Wrong regex in rewrite source: if assets like /assets/main.js are rewritten, your app can render blank',
+          'Forgetting to redeploy after config changes: vercel.json edits require a new deployment',
+          'Mixing hash links and BrowserRouter paths: internal links should consistently use clean routes',
+        ],
+      },
+      {
+        heading: 'Related internal resources',
+        bullets: [
+          'Router migration walkthrough: /posts/react-hashrouter-to-browserrouter-seo',
+          'React SPA technical SEO setup: /posts/seo-react-vite-canonical-meta-jsonld',
+          'Week-one SEO checklist for route/indexability audits: /posts/mvp-website-seo-checklist-week-one',
+          'Production architecture example: /posts/how-we-shipped-car-deal-checker-live-with-secure-auth',
+        ],
+      },
+      {
+        heading: 'Quick demo flow',
+        bullets: [
+          'Open /blog in production and verify normal load',
+          'Paste a deep link like /posts/react-router-vercel-404-fix into a new tab',
+          'Refresh the page and confirm no 404 appears',
+          'Open DevTools Network and verify JS/CSS files return 200, not HTML fallback',
+        ],
+      },
+      {
+        heading: 'Video walkthrough outline',
+        bullets: [
+          '00:00 Problem reproduction: direct URL refresh causes Vercel 404',
+          '00:40 Why BrowserRouter needs server rewrite fallback',
+          '01:25 Add vercel.json rewrite rule and explain regex',
+          '02:30 Redeploy and retest deep links + refresh behavior',
+          '03:15 Final checklist: sitemap, internal links, and route QA',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'how-we-shipped-car-deal-checker-live-with-secure-auth',
     title: 'How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)',
     date: '2026-02-08',
