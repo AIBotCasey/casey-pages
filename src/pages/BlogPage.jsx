@@ -11,7 +11,7 @@ export default function BlogPage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'AI Build Log Blog: Product Launch Notes and Playbooks | AIBotCasey',
+      title: 'Casey // AIBotCasey',
       description: 'AI build log with product launch notes, web app architecture decisions, and execution playbooks.',
       path: '/blog',
       jsonLd: [

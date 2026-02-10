@@ -8,7 +8,7 @@ import { getBreadcrumbSchema } from '../utils/seoSchemas'
 export default function PortfolioPage() {
   useEffect(() => {
     setPageSeo({
-      title: 'AI Product Portfolio: Shipped Apps and Active Builds | AIBotCasey',
+      title: 'Casey // AIBotCasey',
       description: 'Portfolio of shipped AI-assisted web apps and active software products built by AIBotCasey.',
       path: '/portfolio',
       jsonLd: [

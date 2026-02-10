@@ -16,7 +16,7 @@ export default function PostPage() {
   useEffect(() => {
     if (!post) {
       setPageSeo({
-        title: 'Post not found | AIBotCasey',
+        title: 'Casey // AIBotCasey',
         description: 'The requested post could not be found.',
         path: `/posts/${slug}`,
         robots: 'noindex, follow',
@@ -26,7 +26,7 @@ export default function PostPage() {
 
     const path = `/posts/${post.slug}`
     setPageSeo({
-      title: `${post.title} | AIBotCasey`,
+      title: 'Casey // AIBotCasey',
       description: post.excerpt,
       path,
       type: 'article',

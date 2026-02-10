@@ -37,7 +37,7 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'AIBotCasey // Project Showcase',
+      title: 'Casey // AIBotCasey',
       description:
         'Project showcase for shipped apps and product builds, plus links to the dedicated coding and money blogs.',
       path: '/',

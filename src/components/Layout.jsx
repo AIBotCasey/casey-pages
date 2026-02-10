@@ -16,7 +16,11 @@ import { Link as RouterLink } from 'react-router-dom'
 import { useMemo } from 'react'
 import CookieConsent from './CookieConsent'
 
-function AnimatedBackground() {
+function AnimatedBackground({ moneySite }) {
+  const background = moneySite
+    ? 'radial-gradient(circle at 20% 20%, rgba(0,200,140,0.24), transparent 35%), radial-gradient(circle at 80% 30%, rgba(0,171,145,0.18), transparent 38%), radial-gradient(circle at 40% 80%, rgba(156,204,101,0.14), transparent 34%), linear-gradient(130deg, #05110f 0%, #0a1916 48%, #06100d 100%)'
+    : 'radial-gradient(circle at 20% 20%, rgba(124,77,255,0.30), transparent 38%), radial-gradient(circle at 80% 30%, rgba(0,229,255,0.25), transparent 40%), radial-gradient(circle at 40% 80%, rgba(255,64,129,0.20), transparent 35%), linear-gradient(130deg, #070a14 0%, #0c1226 50%, #060912 100%)'
+
   return (
     <Box
       sx={{
@@ -28,8 +32,7 @@ function AnimatedBackground() {
           content: '""',
           position: 'absolute',
           inset: '-20%',
-          background:
-            'radial-gradient(circle at 20% 20%, rgba(124,77,255,0.30), transparent 38%), radial-gradient(circle at 80% 30%, rgba(0,229,255,0.25), transparent 40%), radial-gradient(circle at 40% 80%, rgba(255,64,129,0.20), transparent 35%), linear-gradient(130deg, #070a14 0%, #0c1226 50%, #060912 100%)',
+          background,
           animation: 'floatBg 28s ease-in-out infinite alternate',
           transformOrigin: 'center',
         },
@@ -38,15 +41,15 @@ function AnimatedBackground() {
   )
 }
 
-export default function Layout({ children }) {
+export default function Layout({ children, moneySite = false }) {
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
           mode: 'dark',
-          primary: { main: '#7c4dff' },
-          secondary: { main: '#00e5ff' },
-          background: { default: '#070a14', paper: 'rgba(16, 21, 38, 0.7)' },
+          primary: { main: moneySite ? '#2e7d32' : '#7c4dff' },
+          secondary: { main: moneySite ? '#4dd0a8' : '#00e5ff' },
+          background: { default: moneySite ? '#05110f' : '#070a14', paper: moneySite ? 'rgba(10, 24, 20, 0.72)' : 'rgba(16, 21, 38, 0.7)' },
         },
         shape: { borderRadius: 16 },
         typography: {
@@ -56,19 +59,19 @@ export default function Layout({ children }) {
           h3: { fontWeight: 700 },
         },
       }),
-    [],
+    [moneySite],
   )
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AnimatedBackground />
+      <AnimatedBackground moneySite={moneySite} />
       <AppBar
         position="sticky"
         elevation={0}
         sx={{
           backdropFilter: 'blur(8px)',
-          background: 'rgba(7, 10, 20, 0.55)',
+          background: moneySite ? 'rgba(5, 17, 15, 0.58)' : 'rgba(7, 10, 20, 0.55)',
           borderBottom: '1px solid rgba(255,255,255,0.08)',
         }}
       >
@@ -89,14 +92,14 @@ export default function Layout({ children }) {
               to="/"
               sx={{ textDecoration: 'none', color: 'inherit', fontSize: { xs: '1rem', sm: '1.25rem' } }}
             >
-              Casey // Build Log
+              {moneySite ? 'Casey // Money' : 'Casey // AIBotCasey'}
             </Typography>
           </Stack>
           <Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} alignItems="center" flexWrap="wrap" useFlexGap>
             <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button>
             <Button color="inherit" size="small" component={RouterLink} to="/start-here">Start Here</Button>
             <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button>
-            <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button>
+            {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button> : null}
           </Stack>
         </Toolbar>
       </AppBar>

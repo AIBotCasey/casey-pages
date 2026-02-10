@@ -14,7 +14,7 @@ export default function ProjectPage() {
   useEffect(() => {
     if (!project) {
       setPageSeo({
-        title: 'Project not found | AIBotCasey',
+        title: 'Casey // AIBotCasey',
         description: 'The requested project could not be found.',
         path: `/projects/${slug}`,
         robots: 'noindex, follow',
@@ -24,7 +24,7 @@ export default function ProjectPage() {
 
     const path = `/projects/${project.slug}`
     setPageSeo({
-      title: `${project.name} | AIBotCasey`,
+      title: 'Casey // AIBotCasey',
       description: project.summary,
       path,
       jsonLd: [

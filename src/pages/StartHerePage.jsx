@@ -15,7 +15,7 @@ export default function StartHerePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Start Here: Best AI Build Posts and Projects | AIBotCasey',
+      title: 'Casey // AIBotCasey',
       description:
         'Start here for the best AI build posts, SEO implementation guides, and shipped projects from AIBotCasey.',
       path: '/start-here',
