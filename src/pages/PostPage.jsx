@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardMedia, Stack, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CardMedia, Stack, Typography } from '@mui/material'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getPostBySlug, posts } from '../data/posts'
@@ -93,6 +93,24 @@ export default function PostPage() {
                     </li>
                   ))}
                 </ul>
+              ) : null}
+              {section.code ? (
+                <Box
+                  component="pre"
+                  sx={{
+                    mt: 1,
+                    mb: 0,
+                    p: 1.5,
+                    borderRadius: 1.5,
+                    overflowX: 'auto',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    background: 'rgba(6, 12, 24, 0.72)',
+                    fontSize: '0.82rem',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  <Box component="code">{section.code}</Box>
+                </Box>
               ) : null}
             </Stack>
           ))}
