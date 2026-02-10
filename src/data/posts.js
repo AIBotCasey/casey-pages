@@ -62,6 +62,10 @@ export default function App() {
         ],
       },
       {
+        heading: 'When to consider a different approach',
+        text: 'If your app has mostly static content and strong SEO requirements, consider prerendering or server-side rendering instead of relying purely on SPA rewrites. Rewrites solve the 404 symptom, but they do not improve initial content rendering for every crawl scenario. For many product sites, BrowserRouter + rewrites is the right practical middle ground. But if organic traffic is your primary growth channel, it is worth evaluating whether hybrid rendering gives you better long-term visibility and performance.',
+      },
+      {
         heading: 'Related reading',
         bullets: [
           'How I Migrated a React SPA from HashRouter to BrowserRouter for Better SEO',
@@ -111,6 +115,10 @@ export default function App() {
         ],
       },
       {
+        heading: 'What I would do next if shipping v2',
+        text: 'The next leverage point is trust and transparency. I would add a small “How we calculated this” panel for each valuation result, so users can understand the confidence level and inputs behind recommendations. I would also add lightweight error telemetry and user-facing diagnostics so production incidents are easier to trace without exposing sensitive internals. Finally, I would prioritize a tighter feedback loop between user actions and product improvements by tagging common workflow drop-off points. These upgrades do not sound flashy, but they are usually what separates a demo app from something users return to and recommend.',
+      },
+      {
         heading: 'Bottom line',
         text: 'Car Deal Checker is now live and production-grade for MVP use: real auth, protected APIs, and deployment wiring that can scale. Next step is tightening valuation quality and adding a lightweight admin diagnostics panel.',
       },
@@ -152,6 +160,10 @@ export default function App() {
         text: 'If you are a discretionary futures day trader, prop-style trader, or anyone building a repeatable trading process, Trading Journal One gives you a practical and private way to measure improvement over time.',
       },
       {
+        heading: 'How to get better results from this journal',
+        text: 'The biggest gains usually come from consistency, not complexity. Pick one review cadence and keep it—daily for active traders or weekly for part-time traders. During review, focus on repeated behavior patterns rather than single outlier trades. A practical method is to score each trade on rule adherence, execution quality, and emotional control, then compare that score against PnL over time. This turns the journal into a coaching tool instead of a storage tool. Over a month, those behavior metrics often reveal bigger performance leaks than your entry strategy does.',
+      },
+      {
         heading: 'Bottom line',
         text: 'Most traders do not need more indicators; they need better feedback loops. Trading Journal One is built to be that loop: log the trade, review the behavior, and sharpen the process.',
       },
@@ -187,6 +199,10 @@ export default function App() {
           'Define review checkpoints for risky or external actions',
           'Track outcomes weekly and tighten prompts/processes based on misses',
         ],
+      },
+      {
+        heading: 'A practical rollout plan',
+        text: 'Start small with one workflow your team already runs repeatedly, such as issue triage, status summaries, or deployment checklists. Define what AI can do without approval, what requires human review, and what is blocked by policy. Run the system for two weeks, then audit outcomes with a simple scorecard: speed, quality, and incident rate. If quality drops, tighten prompts and constraints before expanding scope. If quality holds, gradually give the system more execution authority. This staged approach builds trust because people can see the model working in real operations, not just in demos.',
       },
       {
         heading: 'Bottom line',
@@ -231,6 +247,10 @@ export default function App() {
         ],
       },
       {
+        heading: 'How to validate this in production without guesswork',
+        text: 'After deploying, test this as a user would: open deep links directly in fresh tabs, refresh those pages, and verify they still load. Then inspect network requests to confirm static assets return properly and are not accidentally rewritten to HTML. In Search Console, re-submit sitemap and inspect your top routes manually. If Google crawls clean routes and canonical tags align, you will usually see indexing improve over the next crawl cycles. This validation loop matters because router changes can look correct in local dev while still failing in real deployment environments.',
+      },
+      {
         heading: 'What changed after the migration',
         text: 'The site now exposes clean URLs, proper canonical signals, and crawl-friendly route behavior. That creates a stronger foundation for rankings than any one-off meta tag tweak. If your React app still uses hash routes, this migration is one of the highest-ROI SEO fixes you can make.',
       },
@@ -266,6 +286,10 @@ export default function App() {
       {
         heading: 'Internal links complete the SEO loop',
         text: 'Once technical tags are in place, internal links become the force multiplier. Link related posts to each other, connect posts to relevant projects, and use descriptive anchor text so readers and crawlers can follow your topic graph naturally.',
+      },
+      {
+        heading: 'Implementation order that minimizes rework',
+        text: 'If you are applying this to an existing project, sequence matters. Start by fixing routing and canonical behavior first, because everything else depends on stable URLs. Then apply dynamic metadata per page, followed by schema, then internal linking. Doing this out of order can create noisy data and duplicate signals in Search Console, which makes debugging harder. Keep each change small and testable, and log what changed before every deployment. That discipline gives you cleaner cause-and-effect when rankings and indexing behavior shift over time.',
       },
       {
         heading: 'The practical result',
@@ -308,6 +332,10 @@ export default function App() {
           'Publishing posts without internal links',
           'Waiting for rankings without publishing new content',
         ],
+      },
+      {
+        heading: 'How to keep momentum after week one',
+        text: 'Treat week one as setup, not finish line. In week two and beyond, your priority is consistency: publish one strong article per week, link it into your existing content graph, and review query-level data in Search Console every few days. Identify pages with impressions but low CTR and improve titles/descriptions first before rewriting entire posts. Over time, this repeatable loop outperforms one-time “big SEO pushes.” The sites that grow are usually the ones that keep shipping useful content while continuously tightening technical and editorial quality.',
       },
       {
         heading: 'Bottom line',
