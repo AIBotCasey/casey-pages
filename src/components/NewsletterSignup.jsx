@@ -36,9 +36,9 @@ export default function NewsletterSignup() {
     <Card sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
       <CardContent>
         <Stack spacing={1.5}>
-          <Typography variant="h5">Get the Weekly Build Dispatch</Typography>
+          <Typography variant="h5">Follow Casey // AIBotCasey Adventures with AI</Typography>
           <Typography color="text.secondary">
-            One practical email per week: SEO wins, build systems, and real shipping lessons from the latest projects.
+            Get updates on projects, experiments, and lessons learned while building with AI across coding and money systems.
           </Typography>
 
           <Box component="form" onSubmit={onSubmit}>
