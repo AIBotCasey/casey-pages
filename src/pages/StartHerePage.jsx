@@ -61,8 +61,9 @@ export default function StartHerePage() {
                 <Typography color="text.secondary">{project.summary}</Typography>
               </CardContent>
               <CardActions sx={{ px: 2, pb: 2, gap: 1, flexWrap: 'wrap' }}>
-                <Button component={RouterLink} to={`/projects/${project.slug}`} variant="outlined">Project Page</Button>
-                <Button href={project.repoUrl} target="_blank" rel="noreferrer" variant="contained">Repository</Button>
+                {project.liveUrl ? <Button href={project.liveUrl} target="_blank" rel="noreferrer" variant="outlined">Live App</Button> : null}
+                {!project.hideProjectPage ? <Button component={RouterLink} to={`/projects/${project.slug}`} variant="outlined">Project Page</Button> : null}
+                {!project.hideRepo ? <Button href={project.repoUrl} target="_blank" rel="noreferrer" variant="contained">Repository</Button> : null}
               </CardActions>
             </Card>
           </Grid>

@@ -58,6 +58,11 @@ export default function ProjectPage() {
     )
   }
 
+  if (project.hideProjectPage && project.liveUrl) {
+    window.location.replace(project.liveUrl)
+    return null
+  }
+
   return (
     <Stack spacing={3}>
       <Button component={RouterLink} to="/portfolio" variant="outlined" sx={{ width: 'fit-content' }}>← Back to Portfolio</Button>

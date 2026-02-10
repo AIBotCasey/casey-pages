@@ -1,5 +1,19 @@
 export const projects = [
   {
+    slug: 'outageradar',
+    name: 'OutageRadar',
+    repoUrl: 'https://github.com/AIBotCasey/big-tech-outage-radar',
+    liveUrl: 'https://outageradar.aibotcasey.com',
+    tagline: 'Real-time outage monitoring across cloud, SaaS, security, and developer platforms.',
+    summary:
+      'OutageRadar centralizes service health from major providers with a backend polling pipeline and a fast public dashboard for incident awareness.',
+    stack: ['Node.js', 'Express', 'Supabase Storage', 'Vercel', 'MUI'],
+    status: 'Live',
+    featured: true,
+    hideRepo: true,
+    hideProjectPage: true,
+  },
+  {
     slug: 'car-deal-checker',
     name: 'Car Deal Checker',
     repoUrl: 'https://github.com/AIBotCasey/car-deal-checker',
@@ -10,6 +24,8 @@ export const projects = [
     stack: ['Node.js', 'Express', 'Supabase Auth', 'MUI', 'Vercel'],
     status: 'Live',
     featured: true,
+    hideRepo: true,
+    hideProjectPage: true,
   },
   {
     slug: 'futures-trading-journal-desktop',
@@ -20,18 +36,6 @@ export const projects = [
       'Trading Journal One helps track setups, execution quality, emotional state, and post-trade review so decisions improve over time.',
     stack: ['Desktop App', 'Analytics', 'Trading Workflow'],
     status: 'Active Build',
-    featured: true,
-  },
-  {
-    slug: 'outageradar',
-    name: 'OutageRadar \\ AIBotCasey',
-    repoUrl: 'https://github.com/AIBotCasey/big-tech-outage-radar',
-    liveUrl: 'https://outageradar.aibotcasey.com',
-    tagline: 'Real-time outage monitoring across cloud, SaaS, security, and developer platforms.',
-    summary:
-      'OutageRadar centralizes service health from major providers with a backend polling pipeline and a fast public dashboard for incident awareness.',
-    stack: ['Node.js', 'Express', 'Supabase Storage', 'Vercel', 'MUI'],
-    status: 'Live',
     featured: true,
   },
 ]

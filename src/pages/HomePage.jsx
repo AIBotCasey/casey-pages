@@ -93,11 +93,15 @@ export default function HomePage() {
                   <Typography color="text.secondary">{project.tagline}</Typography>
                 </CardContent>
                 <CardActions sx={{ px: 2, pb: 2, mt: 'auto', gap: 0.75, flexWrap: 'nowrap' }}>
-                  <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
                   {project.liveUrl ? (
                     <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
                   ) : null}
-                  <Button size="small" variant="outlined" component={RouterLink} to={`/projects/${project.slug}`}>Project Page</Button>
+                  {!project.hideRepo ? (
+                    <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
+                  ) : null}
+                  {!project.hideProjectPage ? (
+                    <Button size="small" variant="outlined" component={RouterLink} to={`/projects/${project.slug}`}>Project Page</Button>
+                  ) : null}
                 </CardActions>
               </Card>
             </Grid>

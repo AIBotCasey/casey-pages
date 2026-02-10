@@ -46,9 +46,9 @@ export default function PortfolioPage() {
                 </Stack>
               </CardContent>
               <CardActions sx={{ px: 2, pb: 2, gap: 1, flexWrap: 'wrap' }}>
-                <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">Repo</Button>
                 {project.liveUrl ? <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live</Button> : null}
-                <Button size="small" variant="outlined" component={RouterLink} to={`/projects/${project.slug}`}>Details</Button>
+                {!project.hideRepo ? <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">Repo</Button> : null}
+                {!project.hideProjectPage ? <Button size="small" variant="outlined" component={RouterLink} to={`/projects/${project.slug}`}>Details</Button> : null}
               </CardActions>
             </Card>
           </Grid>
