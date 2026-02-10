@@ -1,5 +1,78 @@
 export const posts = [
   {
+    slug: "react-mui-responsive-card-layout-equal-height",
+    title: "React + MUI Responsive Card Layout with Equal Height: A Practical Fix That Actually Holds Up",
+    date: "2026-02-10",
+    excerpt: "If your MUI cards look uneven across breakpoints, this guide shows why it happens and how to build a stable equal-height layout with Grid and flex patterns.",
+    sections: [
+      {
+        heading: "What breaks in real projects",
+        text: "You ship a nice card grid in React + MUI, then the layout falls apart the moment real content lands. One card has a long title, another has two lines of description, another includes a badge row, and suddenly every card is a different height. On desktop it looks messy. On tablet it feels jagged. On mobile the CTA buttons bounce around because they do not align vertically. This is one of those UI issues that seems cosmetic until you realize it hurts scanability and click behavior. People compare options faster when content blocks align predictably. Uneven cards add visual noise and make the interface feel unpolished, even when the underlying product is solid."
+      },
+      {
+        heading: "Why this issue happens",
+        text: "The root problem is that many card layouts rely on natural content height without giving the parent and child containers a shared stretch strategy. MUI Grid handles columns, but it does not force equal-height cards by default. If each card only grows to fit its own content, different text lengths produce different heights. Then if your button sits directly under content (instead of being pushed to the bottom with flex), CTAs end up misaligned too. Another common trap is trying to force a fixed pixel height. That can look okay in one viewport but break badly when content or font scaling changes. The robust fix is not hardcoding heights. It is creating a flex-based card structure where each grid item stretches, each card fills available height, and the action row is anchored consistently."
+      },
+      {
+        heading: "Exact implementation: equal-height cards with MUI Grid + flex",
+        text: "Use three layers intentionally: (1) grid container for responsive columns, (2) grid item set to stretch, and (3) card set to display flex with column direction and full height. Inside the card, place content in CardContent and move the action area into CardActions with marginTop: 'auto' so it sticks to the bottom. This gives you equal card heights per row while keeping content dynamic and accessible."
+      },
+      {
+        heading: "Code example: responsive card grid with stable equal heights",
+        text: "This pattern works well for blog lists, pricing options, feature cards, and portfolio tiles.",
+        code: "import { Grid, Card, CardContent, CardActions, Typography, Button, Box } from '@mui/material'\n\nconst items = [\n  { id: 1, title: 'Fast API Setup', desc: 'Ship a secure Express endpoint with auth checks and predictable errors.' },\n  { id: 2, title: 'Deployment Guide', desc: 'Step-by-step Vercel deploy notes with rollback safety and verification.' },\n  { id: 3, title: 'Observability Basics', desc: 'Logging, tracing, and alerts for production apps that need real uptime.' },\n]\n\nexport default function ResourceGrid() {\n  return (\n    <Grid container spacing={3} alignItems=\"stretch\">\n      {items.map((item) => (\n        <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }} sx={{ display: 'flex' }}>\n          <Card\n            elevation={2}\n            sx={{\n              display: 'flex',\n              flexDirection: 'column',\n              width: '100%',\n              height: '100%',\n              borderRadius: 3,\n            }}\n          >\n            <CardContent sx={{ flexGrow: 1 }}>\n              <Typography variant=\"h6\" gutterBottom>{item.title}</Typography>\n              <Typography variant=\"body2\" color=\"text.secondary\">\n                {item.desc}\n              </Typography>\n            </CardContent>\n\n            <CardActions sx={{ mt: 'auto', px: 2, pb: 2 }}>\n              <Button variant=\"contained\" fullWidth>Read guide</Button>\n            </CardActions>\n          </Card>\n        </Grid>\n      ))}\n    </Grid>\n  )\n}"
+      },
+      {
+        heading: "Code example: handling unpredictable content lengths safely",
+        text: "If one card can contain significantly more text than others, clamp text to preserve rhythm and avoid giant outlier cards.",
+        code: "<Typography\n  variant=\"body2\"\n  color=\"text.secondary\"\n  sx={{\n    display: '-webkit-box',\n    WebkitLineClamp: 3,\n    WebkitBoxOrient: 'vertical',\n    overflow: 'hidden',\n  }}\n>\n  {item.desc}\n</Typography>"
+      },
+      {
+        heading: "Code example: cards with media without breaking equal height",
+        text: "Media often creates another mismatch. Keep media ratio consistent and continue using flex column so body and actions align.",
+        code: "import { CardMedia } from '@mui/material'\n\n<Card sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>\n  <CardMedia\n    component=\"img\"\n    image={item.image}\n    alt={item.title}\n    sx={{ aspectRatio: '16 / 9', objectFit: 'cover' }}\n  />\n\n  <CardContent sx={{ flexGrow: 1 }}>\n    {/* title + description */}\n  </CardContent>\n\n  <CardActions sx={{ mt: 'auto' }}>\n    <Button size=\"small\">Open</Button>\n  </CardActions>\n</Card>"
+      },
+      {
+        heading: "Verification checklist: confirm the fix actually works",
+        bullets: [
+          "Test with intentionally uneven content (short, medium, long titles/descriptions)",
+          "Check xs, sm, md, and lg breakpoints in DevTools responsive mode",
+          "Confirm card bottoms align within each row and CTA buttons sit on the same baseline",
+          "Increase browser zoom to 125% and 150% to catch text-wrap edge cases",
+          "Test with at least one card that includes an image and one without",
+          "Run keyboard navigation to ensure focus order still follows DOM order"
+        ]
+      },
+      {
+        heading: "Troubleshooting common mistakes",
+        bullets: [
+          "Using fixed heights like 320px to force uniformity. This usually breaks on localization, zoom, or dynamic content.",
+          "Applying height: '100%' on Card but not giving the Grid item a flex context.",
+          "Keeping CardActions in normal flow instead of anchoring it with mt: 'auto'.",
+          "Mixing legacy Grid props and new size syntax inconsistently in the same layout.",
+          "Trying to solve row alignment with JavaScript height calculations instead of CSS layout primitives.",
+          "Forgetting that equal height is per row in wrapped grids; very tall content in one item can still expand that row."
+        ]
+      },
+      {
+        heading: "When you should use CSS Grid instead of MUI Grid",
+        text: "If your layout requires strict masonry-like behavior, explicit row/column spanning, or more complex placement rules, native CSS Grid may be a better foundation. But for most product cards in React apps, MUI Grid plus flex cards is simpler and easier for teams to maintain. The key is choosing one system and documenting your pattern. Many teams lose time because different contributors use different card structures in different screens, which reintroduces alignment bugs every sprint. Create one reusable CardList component with the equal-height defaults baked in. Then every feature team gets consistent behavior automatically."
+      },
+      {
+        heading: "Production implementation notes that prevent regressions",
+        text: "Treat this as a reusable UI pattern, not a one-off page fix. Add a Storybook (or equivalent) story with extreme content cases: one-line title, four-line title, with and without media, and long CTA labels. Snapshots catch visual drift early when someone later tweaks spacing or typography tokens. Also keep spacing and typography in theme-level tokens instead of inline random values. Consistent token usage keeps card heights predictable across pages. If your app supports localization, run this component in at least one longer-language scenario because German and French strings often expose clipping or overflow bugs quickly. Finally, include one visual QA checkpoint in release notes for card-heavy pages. It takes minutes and prevents obvious UX regressions from reaching users."
+      },
+      {
+        heading: "Related reading",
+        bullets: [
+          "React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production",
+          "Vite Environment Variables Not Working in Production: A Complete Fix Guide",
+          "How We Shipped Car Deal Checker Live with Secure Auth (in One Sprint)"
+        ]
+      }
+    ]
+  },
+  {
     slug: "react-router-vercel-404-fix",
     title: "React Router + Vercel 404 Fix: Make Direct URL Visits Work in Production",
     date: "2026-02-09",
