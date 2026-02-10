@@ -583,4 +583,11 @@ export const posts = [
 export const getPostBySlug = (slug) => posts.find((p) => p.slug === slug)
 
 export const sortPostsByNewest = (list) =>
-  [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  list
+    .map((post, index) => ({ post, index }))
+    .sort((a, b) => {
+      const byDate = new Date(b.post.date).getTime() - new Date(a.post.date).getTime()
+      if (byDate !== 0) return byDate
+      return b.index - a.index
+    })
+    .map(({ post }) => post)
