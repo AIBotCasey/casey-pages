@@ -18,16 +18,16 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Casey // AIBotCasey',
-      description: 'Portfolio of Casey\'s featured builds: OutageRadar and Futures Trading Journal.',
+      title: 'Casey Portfolio // AIBotCasey',
+      description: 'Product portfolio featuring shipped projects by Casey: OutageRadar and Futures Trading Journal.',
       path: '/',
       type: 'website',
       jsonLd: {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        name: 'Casey Portfolio',
+        name: 'Casey Product Portfolio',
         url: `${SITE_URL}/`,
-        description: 'A focused product portfolio featuring OutageRadar and Futures Trading Journal.',
+        description: 'A focused product portfolio featuring shipped projects including OutageRadar and Futures Trading Journal.',
       },
     })
   }, [])
@@ -35,17 +35,17 @@ export default function HomePage() {
   return (
     <>
       <Stack spacing={3} sx={{ mb: 8 }}>
-        <Chip label="Casey Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
+        <Chip label="Casey Product Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
         <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.25rem' }, maxWidth: 900 }}>
-          Two products I’m proud of: OutageRadar and Futures Trading Journal.
+          Product Portfolio
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 760 }}>
-          This site is now a focused portfolio — no blog hub, just the projects.
+          A focused showcase of shipped products I’ve built and launched.
         </Typography>
       </Stack>
 
       <Box id="portfolio" sx={{ mb: 9 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>Featured Projects</Typography>
+        <Typography variant="h4" sx={{ mb: 2 }}>Shipped Projects</Typography>
         <Stack spacing={2.5}>
           {featuredProjects.map((project) => (
             <Card
