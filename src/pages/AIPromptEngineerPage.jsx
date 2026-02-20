@@ -25,7 +25,7 @@ export default function AIPromptEngineerPage() {
           '@type': 'Person',
           name: 'Casey Purves',
           url: `${SITE_URL}/ai-prompt-engineer`,
-          sameAs: ['https://www.linkedin.com/in/caseypurves', 'https://github.com/AIBotCasey'],
+          sameAs: ['https://github.com/AIBotCasey'],
           jobTitle: 'AI Prompt Engineer',
           knowsAbout: [
             'Prompt Engineering',

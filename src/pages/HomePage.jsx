@@ -30,7 +30,7 @@ export default function HomePage() {
           '@type': 'Person',
           name: 'Casey Purves',
           url: `${SITE_URL}/`,
-          sameAs: ['https://www.linkedin.com/in/caseypurves', 'https://github.com/AIBotCasey'],
+          sameAs: ['https://github.com/AIBotCasey'],
           jobTitle: 'AI Prompt Engineer',
           knowsAbout: [
             'Prompt Engineering',
@@ -66,7 +66,7 @@ export default function HomePage() {
         <Stack direction="row" spacing={1.25} flexWrap="wrap" useFlexGap>
           <Button variant="contained" component={RouterLink} to="/portfolio">View Portfolio</Button>
           <Button variant="outlined" component={RouterLink} to="/ai-prompt-engineer">AI Prompt Engineer</Button>
-          <Button variant="outlined" href="https://www.linkedin.com/in/caseypurves" target="_blank" rel="noreferrer">LinkedIn</Button>
+          <Button variant="outlined" href="mailto:support@aibotcasey.com">Contact</Button>
         </Stack>
       </Stack>
 
