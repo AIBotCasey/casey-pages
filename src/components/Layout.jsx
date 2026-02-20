@@ -99,6 +99,7 @@ export default function Layout({ children, moneySite = false }) {
             <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button>
             {moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button> : null}
+            {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/ai-prompt-engineer">AI Prompt Engineer</Button> : null}
           </Stack>
         </Toolbar>
       </AppBar>

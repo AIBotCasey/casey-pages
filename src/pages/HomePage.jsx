@@ -9,6 +9,7 @@ import {
   Chip,
   Link,
 } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
@@ -18,30 +19,55 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Casey Portfolio // AIBotCasey',
-      description: 'Product portfolio featuring shipped projects by Casey: Outagely and Futures Trading Journal.',
+      title: 'Casey Purves — AI Prompt Engineer & AI Product Builder',
+      description:
+        'Casey Purves portfolio: AI Prompt Engineer and AI Product Builder shipping real-world products like Outagely, prompt systems, and automation workflows.',
       path: '/',
       type: 'website',
-      jsonLd: {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        name: 'Casey Product Portfolio',
-        url: `${SITE_URL}/`,
-        description: 'A focused product portfolio featuring shipped projects including Outagely and Futures Trading Journal.'
-      },
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: 'Casey Purves',
+          url: `${SITE_URL}/`,
+          sameAs: ['https://www.linkedin.com/in/caseypurves', 'https://github.com/AIBotCasey'],
+          jobTitle: 'AI Prompt Engineer',
+          knowsAbout: [
+            'Prompt Engineering',
+            'AI Workflow Automation',
+            'LLM System Design',
+            'Incident Response Tooling',
+            'Product Engineering',
+          ],
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Casey Purves Portfolio',
+          url: `${SITE_URL}/`,
+          description:
+            'Portfolio showcasing shipped AI products, prompt systems, and automation workflows built by Casey Purves.',
+        },
+      ],
     })
   }, [])
 
   return (
     <>
       <Stack spacing={3} sx={{ mb: 8 }}>
-        <Chip label="Casey Product Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
-        <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.25rem' }, maxWidth: 900 }}>
-          Product Portfolio
+        <Chip label="Casey Purves Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
+        <Typography variant="h1" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, maxWidth: 980 }}>
+          AI Prompt Engineer & AI Product Builder
         </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 760 }}>
-          A focused showcase of shipped products I’ve built and launched.
+        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860 }}>
+          I design prompt systems, AI automations, and production-ready products. Recent shipped work includes Outagely,
+          a real-time SaaS outage monitoring platform built for faster incident response.
         </Typography>
+        <Stack direction="row" spacing={1.25} flexWrap="wrap" useFlexGap>
+          <Button variant="contained" component={RouterLink} to="/portfolio">View Portfolio</Button>
+          <Button variant="outlined" component={RouterLink} to="/ai-prompt-engineer">AI Prompt Engineer</Button>
+          <Button variant="outlined" href="https://www.linkedin.com/in/caseypurves" target="_blank" rel="noreferrer">LinkedIn</Button>
+        </Stack>
       </Stack>
 
       <Box id="portfolio" sx={{ mb: 9 }}>
@@ -73,7 +99,11 @@ export default function HomePage() {
         </Stack>
       </Box>
 
-      <Stack sx={{ mt: 6 }}>
+      <Stack spacing={1} sx={{ mt: 6 }}>
+        <Typography variant="h5">Core Skills</Typography>
+        <Typography color="text.secondary">
+          Prompt engineering, AI workflow automation, product architecture, and practical IT systems troubleshooting.
+        </Typography>
         <Link href="https://github.com/AIBotCasey" target="_blank" rel="noreferrer" underline="hover" color="secondary">
           GitHub Profile
         </Link>
