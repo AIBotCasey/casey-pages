@@ -19,7 +19,7 @@ export default function HomePage() {
   useEffect(() => {
     setPageSeo({
       title: 'Casey Portfolio // AIBotCasey',
-      description: 'Product portfolio featuring shipped projects by Casey: OutageRadar and Futures Trading Journal.',
+      description: 'Product portfolio featuring shipped projects by Casey: Outagely and Futures Trading Journal.',
       path: '/',
       type: 'website',
       jsonLd: {
@@ -27,7 +27,7 @@ export default function HomePage() {
         '@type': 'WebPage',
         name: 'Casey Product Portfolio',
         url: `${SITE_URL}/`,
-        description: 'A focused product portfolio featuring shipped projects including OutageRadar and Futures Trading Journal.',
+        description: 'A focused product portfolio featuring shipped projects including Outagely and Futures Trading Journal.'
       },
     })
   }, [])

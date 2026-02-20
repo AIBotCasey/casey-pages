@@ -1,12 +1,12 @@
 export const projects = [
   {
-    slug: 'outageradar',
-    name: 'OutageRadar',
+    slug: 'outagely',
+    name: 'Outagely',
     repoUrl: 'https://github.com/AIBotCasey/big-tech-outage-radar',
-    liveUrl: 'https://outageradar.aibotcasey.com',
-    tagline: 'Real-time outage monitoring across cloud, SaaS, security, and developer platforms.',
+    liveUrl: 'https://www.outagely.com',
+    tagline: 'Real-time SaaS outage monitoring, service status tracking, and downtime alerts.',
     summary:
-      'OutageRadar centralizes service health from major providers with a backend polling pipeline and a fast public dashboard for incident awareness.',
+      'Outagely tracks live disruptions and recoveries across major cloud and SaaS providers, helping teams accelerate incident response with timely status-page intelligence.',
     stack: ['Node.js', 'Express', 'Supabase Storage', 'Vercel', 'MUI'],
     status: 'Live',
     featured: true,
