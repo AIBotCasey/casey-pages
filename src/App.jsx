@@ -13,6 +13,7 @@ import { isMoneySubdomain } from './utils/siteMode'
 
 const ToolsLibraryPage = lazy(() => import('./pages/ToolsLibraryPage'))
 const ToolPage = lazy(() => import('./pages/ToolPage'))
+const ToolSuitePage = lazy(() => import('./pages/ToolSuitePage'))
 
 export default function App() {
   const moneySite = isMoneySubdomain()
@@ -28,6 +29,8 @@ export default function App() {
           <Route path="/posts/:slug" element={<PostPage />} />
           {!moneySite ? <Route path="/projects/:slug" element={<ProjectPage />} /> : null}
           {!moneySite ? <Route path="/tools" element={<Suspense fallback={null}><ToolsLibraryPage /></Suspense>} /> : null}
+          {!moneySite ? <Route path="/tools/image-suite" element={<Suspense fallback={null}><ToolSuitePage suite="image" /></Suspense>} /> : null}
+          {!moneySite ? <Route path="/tools/pdf-suite" element={<Suspense fallback={null}><ToolSuitePage suite="pdf" /></Suspense>} /> : null}
           {!moneySite ? <Route path="/tools/:slug" element={<Suspense fallback={null}><ToolPage /></Suspense>} /> : null}
         </Routes>
       </Layout>

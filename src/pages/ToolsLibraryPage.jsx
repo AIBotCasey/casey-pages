@@ -13,7 +13,7 @@ export default function ToolsLibraryPage() {
   useEffect(() => {
     setPageSeo({
       title: 'Free Browser Tools Library | AIBotCasey',
-      description: 'SEO-friendly clustered browser tools for PDF, image, developer/data, calculators, and utility/security workflows.',
+      description: 'All-in-one Image Suite and PDF Suite plus clustered browser tools for editing, conversion, and productivity workflows.',
       path: '/tools',
       jsonLd: [
         {
@@ -28,7 +28,11 @@ export default function ToolsLibraryPage() {
           '@context': 'https://schema.org',
           '@type': 'ItemList',
           name: 'AIBotCasey Tools Library',
-          itemListElement: tools.map((tool, idx) => ({ '@type': 'ListItem', position: idx + 1, url: `${SITE_URL}/tools/${tool.slug}`, name: tool.name })),
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, url: `${SITE_URL}/tools/image-suite`, name: 'Image Suite' },
+            { '@type': 'ListItem', position: 2, url: `${SITE_URL}/tools/pdf-suite`, name: 'PDF Suite' },
+            ...tools.map((tool, idx) => ({ '@type': 'ListItem', position: idx + 3, url: `${SITE_URL}/tools/${tool.slug}`, name: tool.name })),
+          ],
         },
       ],
     })
@@ -50,6 +54,30 @@ export default function ToolsLibraryPage() {
       <Chip label="Tools Library" color="secondary" sx={{ width: 'fit-content' }} />
       <Typography variant="h3">Clustered browser tools for fast workflows</Typography>
       <Typography color="text.secondary">All tools run in your browser with privacy-first processing.</Typography>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 2 }}>
+        <Card sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <CardContent>
+            <Chip size="small" color="secondary" label="Suite" sx={{ mb: 1 }} />
+            <Typography variant="h6">Image Suite</Typography>
+            <Typography color="text.secondary">Photoshop-style workspace for crop, compress, resize, convert, Base64, and color picking in one flow.</Typography>
+          </CardContent>
+          <CardActions>
+            <Button component={RouterLink} to="/tools/image-suite" variant="contained" size="small">Open Image Suite</Button>
+          </CardActions>
+        </Card>
+
+        <Card sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <CardContent>
+            <Chip size="small" color="secondary" label="Suite" sx={{ mb: 1 }} />
+            <Typography variant="h6">PDF Suite</Typography>
+            <Typography color="text.secondary">Single workspace for merge, split, rotate, compress, page count, and JPG-to-PDF tasks with faster switching.</Typography>
+          </CardContent>
+          <CardActions>
+            <Button component={RouterLink} to="/tools/pdf-suite" variant="contained" size="small">Open PDF Suite</Button>
+          </CardActions>
+        </Card>
+      </Box>
+
       <TextField label="Search tools" value={query} onChange={(e) => setQuery(e.target.value)} />
 
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
