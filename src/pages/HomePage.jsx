@@ -15,7 +15,18 @@ import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function HomePage() {
-  const featuredProjects = projects.filter((p) => p.featured)
+  const featuredProjects = [
+    ...projects.filter((p) => p.featured),
+    {
+      slug: 'free-web-tools',
+      name: 'Free Web Tools',
+      tagline: 'Browser-based utility suite for fast everyday tasks',
+      summary:
+        'A growing library of privacy-first tools for PDF workflows, image utilities, calculators, generators, and developer helpers. Built to run client-side with minimal data handling.',
+      liveUrl: '/tools',
+      hideRepo: true,
+    },
+  ]
 
   useEffect(() => {
     setPageSeo({
@@ -70,19 +81,6 @@ export default function HomePage() {
         </Stack>
       </Stack>
 
-      <Box sx={{ mb: 8 }}>
-        <Typography variant="h4" sx={{ mb: 1.2 }}>Dashboard: Tool Quick Access</Typography>
-        <Typography color="text.secondary" sx={{ mb: 2 }}>Jump straight to the tool you need. All tools are browser-based and privacy-first.</Typography>
-        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 1 }}>
-          <Button size="small" variant="outlined" component={RouterLink} to="/tools/pdf-merge">PDF Merge</Button>
-          <Button size="small" variant="outlined" component={RouterLink} to="/tools/image-compressor">Image Compressor</Button>
-          <Button size="small" variant="outlined" component={RouterLink} to="/tools/qr-generator">QR Generator</Button>
-          <Button size="small" variant="outlined" component={RouterLink} to="/tools/json-formatter">JSON Formatter</Button>
-          <Button size="small" variant="outlined" component={RouterLink} to="/tools/loan-calculator">Loan Calculator</Button>
-        </Stack>
-        <Button component={RouterLink} to="/tools" variant="contained">Browse All Tools</Button>
-      </Box>
-
       <Box id="portfolio" sx={{ mb: 9 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>Shipped Projects</Typography>
         <Stack spacing={2.5}>
@@ -101,7 +99,11 @@ export default function HomePage() {
               </CardContent>
               <CardActions sx={{ px: 2, pb: 2, gap: 1, flexWrap: 'wrap' }}>
                 {project.liveUrl ? (
-                  <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
+                  project.liveUrl.startsWith('/') ? (
+                    <Button size="small" variant="outlined" component={RouterLink} to={project.liveUrl}>Open</Button>
+                  ) : (
+                    <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
+                  )
                 ) : null}
                 {!project.hideRepo ? (
                   <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
