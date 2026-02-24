@@ -1,5 +1,6 @@
 import { Alert, Box, Button, Chip, Slider, Stack, TextField, Typography } from '@mui/material'
-import { useMemo, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import QRCode from 'qrcode'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { getTool } from '../data/tools'
 import { setPageSeo } from '../utils/seo'
@@ -47,8 +48,15 @@ function JsonFormatter() {
 
 function QrGenerator() {
   const [text, setText] = useState('https://aibotcasey.com')
-  const src = useMemo(() => `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(text)}`, [text])
-  return <Stack spacing={1.2}><TextField label="Text or URL" value={text} onChange={(e) => setText(e.target.value)} /><Box component="img" src={src} alt="QR code" sx={{ width: 220, height: 220, borderRadius: 1 }} /></Stack>
+  const [src, setSrc] = useState('')
+
+  useEffect(() => {
+    QRCode.toDataURL(text || ' ', { width: 220, margin: 1 })
+      .then((url) => setSrc(url))
+      .catch(() => setSrc(''))
+  }, [text])
+
+  return <Stack spacing={1.2}><TextField label="Text or URL" value={text} onChange={(e) => setText(e.target.value)} />{src ? <Box component="img" src={src} alt="QR code" sx={{ width: 220, height: 220, borderRadius: 1 }} /> : null}</Stack>
 }
 
 function ImageCompressor() {
