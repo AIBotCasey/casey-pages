@@ -30,9 +30,9 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Casey Purves — AI Prompt Engineer & AI Product Builder',
+      title: 'Casey // AIBotCasey',
       description:
-        'Casey Purves portfolio: AI Prompt Engineer and AI Product Builder shipping real-world products like Outagely, prompt systems, and automation workflows.',
+        'Casey Purves portfolio: trust-forward IT builder shipping practical AI products, automation systems, and reliability tooling like Outagely.',
       path: '/',
       type: 'website',
       jsonLd: [
@@ -42,9 +42,9 @@ export default function HomePage() {
           name: 'Casey Purves',
           url: `${SITE_URL}/`,
           sameAs: ['https://github.com/AIBotCasey'],
-          jobTitle: 'AI Prompt Engineer',
+          jobTitle: 'IT Professional & Product Builder',
           knowsAbout: [
-            'Prompt Engineering',
+            'AI Systems Design',
             'AI Workflow Automation',
             'LLM System Design',
             'Incident Response Tooling',
@@ -68,11 +68,11 @@ export default function HomePage() {
       <Stack spacing={3} sx={{ mb: 8 }}>
         <Chip label="Casey Purves Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
         <Typography variant="h1" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, maxWidth: 980 }}>
-          AI Prompt Engineer & AI Product Builder
+          IT Professional, Builder, and Creative Technologist
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860 }}>
-          I design prompt systems, AI automations, and production-ready products. Recent shipped work includes Outagely,
-          a real-time SaaS outage monitoring platform built for faster incident response.
+          I build practical AI and IT systems that teams can trust in production — from workflow automation to outage monitoring.
+          Recent shipped work includes Outagely, a real-time SaaS status platform built to speed up incident response and customer communication.
         </Typography>
         <Stack direction="row" spacing={1.25} flexWrap="wrap" useFlexGap>
           <Button variant="contained" component={RouterLink} to="/portfolio">View Portfolio</Button>
@@ -117,7 +117,7 @@ export default function HomePage() {
       <Stack spacing={1} sx={{ mt: 6 }}>
         <Typography variant="h5">Core Skills</Typography>
         <Typography color="text.secondary">
-          Prompt engineering, AI workflow automation, product architecture, and practical IT systems troubleshooting.
+          AI systems design, workflow automation, product architecture, and practical IT troubleshooting that delivers measurable outcomes.
         </Typography>
         <Link href="https://github.com/AIBotCasey" target="_blank" rel="noreferrer" underline="hover" color="secondary">
           GitHub Profile
