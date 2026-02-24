@@ -1,7 +1,8 @@
 import { Alert, Box, Button, FormControlLabel, LinearProgress, Slider, Stack, Switch, TextField, Typography } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import QRCode from 'qrcode'
-import { PDFDocument } from 'pdf-lib'
+import { marked } from 'marked'
+import { PDFDocument, degrees } from 'pdf-lib'
 
 function downloadBlob(blob, fileName) {
   const url = URL.createObjectURL(blob)
@@ -401,6 +402,123 @@ function PdfSplit() {
   )
 }
 
+function PdfRotate() {
+  const [file, setFile] = useState(null)
+  const [range, setRange] = useState('all')
+  const [rotation, setRotation] = useState(90)
+  const [pages, setPages] = useState(0)
+
+  const onFile = async (nextFile) => {
+    setFile(nextFile)
+    if (!nextFile) return
+    const pdf = await PDFDocument.load(await nextFile.arrayBuffer())
+    setPages(pdf.getPageCount())
+  }
+
+  const rotatePdf = async () => {
+    if (!file) return
+    const pdf = await PDFDocument.load(await file.arrayBuffer())
+    const total = pdf.getPageCount()
+    const selected = range.trim().toLowerCase() === 'all' ? Array.from({ length: total }, (_, i) => i + 1) : parseRange(range, total)
+    const selectedSet = new Set(selected.map((p) => p - 1))
+    pdf.getPages().forEach((page, i) => {
+      if (!selectedSet.has(i)) return
+      const current = page.getRotation().angle || 0
+      page.setRotation(degrees((current + Number(rotation)) % 360))
+    })
+    downloadBlob(new Blob([await pdf.save()], { type: 'application/pdf' }), 'rotated.pdf')
+  }
+
+  return (
+    <Stack spacing={1.2}>
+      <Button variant="contained" component="label">Choose PDF<input hidden type="file" accept="application/pdf" onChange={(e) => onFile(e.target.files?.[0])} /></Button>
+      {file ? <Alert severity="info">{file.name} · {pages} pages</Alert> : null}
+      <TextField label="Pages (all or 1-3,5)" value={range} onChange={(e) => setRange(e.target.value)} />
+      <TextField select SelectProps={{ native: true }} label="Rotate" value={rotation} onChange={(e) => setRotation(Number(e.target.value))}>
+        <option value={90}>90° clockwise</option>
+        <option value={180}>180°</option>
+        <option value={270}>270° clockwise</option>
+      </TextField>
+      <Button variant="contained" onClick={rotatePdf} disabled={!file}>Rotate PDF</Button>
+    </Stack>
+  )
+}
+
+function PdfCompress() {
+  const [file, setFile] = useState(null)
+  const [quality, setQuality] = useState(75)
+  const [outBytes, setOutBytes] = useState(0)
+  const [busy, setBusy] = useState(false)
+
+  const optimize = async () => {
+    if (!file) return
+    setBusy(true)
+    try {
+      const srcBytes = await file.arrayBuffer()
+      const srcPdf = await PDFDocument.load(srcBytes)
+      const outPdf = await PDFDocument.create()
+      const scale = quality >= 90 ? 1 : quality >= 70 ? 0.85 : quality >= 50 ? 0.7 : 0.55
+      for (let i = 0; i < srcPdf.getPageCount(); i += 1) {
+        const [page] = await outPdf.copyPages(srcPdf, [i])
+        const { width, height } = page.getSize()
+        const newPage = outPdf.addPage([width, height])
+        newPage.drawPage(page, {
+          x: (width - width * scale) / 2,
+          y: (height - height * scale) / 2,
+          width: width * scale,
+          height: height * scale,
+        })
+      }
+      const out = await outPdf.save({ useObjectStreams: true, addDefaultPage: false, objectsPerTick: 50 })
+      setOutBytes(out.length)
+      downloadBlob(new Blob([out], { type: 'application/pdf' }), 'optimized.pdf')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Stack spacing={1.2}>
+      <Alert severity="warning">Browser-side best effort: this optimizes structure and optionally downscales page content. It is not equivalent to full server-grade PDF recompression.</Alert>
+      <Button variant="contained" component="label">Choose PDF<input hidden type="file" accept="application/pdf" onChange={(e) => setFile(e.target.files?.[0] || null)} /></Button>
+      {file ? <Alert severity="info">Original: {bytesToKB(file.size)}</Alert> : null}
+      <Typography>Optimization strength: {quality}%</Typography>
+      <Slider min={30} max={100} value={quality} onChange={(_, v) => setQuality(v)} />
+      <Button variant="contained" onClick={optimize} disabled={!file || busy}>{busy ? 'Optimizing…' : 'Optimize PDF'}</Button>
+      {outBytes ? <Alert severity="success">Output: {bytesToKB(outBytes)} · change: {((1 - outBytes / file.size) * 100).toFixed(1)}%</Alert> : null}
+    </Stack>
+  )
+}
+
+function PdfPageCounter() {
+  const [rows, setRows] = useState([])
+
+  const onFiles = async (list) => {
+    const files = Array.from(list || [])
+    const next = []
+    for (const file of files) {
+      try {
+        const pdf = await PDFDocument.load(await file.arrayBuffer())
+        next.push({ name: file.name, size: file.size, pages: pdf.getPageCount() })
+      } catch {
+        next.push({ name: file.name, size: file.size, pages: 'Error' })
+      }
+    }
+    setRows(next)
+  }
+
+  const summary = rows.map((r) => `${r.name}: ${r.pages} pages (${bytesToKB(r.size)})`).join('\n')
+
+  return (
+    <Stack spacing={1.2}>
+      <Button variant="contained" component="label">Choose PDF files<input hidden type="file" accept="application/pdf" multiple onChange={(e) => onFiles(e.target.files)} /></Button>
+      {rows.length ? <Alert severity="info">Files: {rows.length} · Total pages: {rows.reduce((a, b) => a + (Number(b.pages) || 0), 0)}</Alert> : null}
+      {rows.map((row) => <Alert key={row.name} severity="success">{row.name} · {row.pages} pages · {bytesToKB(row.size)}</Alert>)}
+      <Button variant="outlined" disabled={!rows.length} onClick={() => navigator.clipboard.writeText(summary)}>Copy Summary</Button>
+    </Stack>
+  )
+}
+
 function ImageCropper() {
   const [src, setSrc] = useState('')
   const [x, setX] = useState(0)
@@ -480,6 +598,77 @@ function ImageFormatConverter() {
   )
 }
 
+function ImageToBase64() {
+  const [dataUrl, setDataUrl] = useState('')
+  const [base64, setBase64] = useState('')
+
+  return (
+    <Stack spacing={1.2}>
+      <Button variant="contained" component="label">Choose image<input hidden type="file" accept="image/*" onChange={(e) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = () => {
+          const next = String(reader.result || '')
+          setDataUrl(next)
+          setBase64(next.split(',')[1] || '')
+        }
+        reader.readAsDataURL(file)
+      }} /></Button>
+      {dataUrl ? <Box component="img" src={dataUrl} sx={{ maxWidth: 280, borderRadius: 1 }} /> : null}
+      {base64 ? <Alert severity="info">Encoded length: {base64.length.toLocaleString()} chars</Alert> : null}
+      <TextField multiline minRows={8} label="Base64 output" value={base64} InputProps={{ readOnly: true }} />
+      <Stack direction="row" spacing={1}>
+        <Button variant="outlined" disabled={!base64} onClick={() => navigator.clipboard.writeText(base64)}>Copy Base64</Button>
+        <Button variant="outlined" disabled={!dataUrl} onClick={() => navigator.clipboard.writeText(dataUrl)}>Copy Data URL</Button>
+      </Stack>
+    </Stack>
+  )
+}
+
+function ImageColorPicker() {
+  const [src, setSrc] = useState('')
+  const [hex, setHex] = useState('')
+  const [rgb, setRgb] = useState('')
+
+  const pick = (e) => {
+    const img = e.target
+    const rect = img.getBoundingClientRect()
+    const sx = img.naturalWidth / rect.width
+    const sy = img.naturalHeight / rect.height
+    const x = Math.floor((e.clientX - rect.left) * sx)
+    const y = Math.floor((e.clientY - rect.top) * sy)
+    const canvas = document.createElement('canvas')
+    canvas.width = img.naturalWidth
+    canvas.height = img.naturalHeight
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img, 0, 0)
+    const [r, g, b] = ctx.getImageData(x, y, 1, 1).data
+    const h = `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('').toUpperCase()}`
+    setHex(h)
+    setRgb(`rgb(${r}, ${g}, ${b})`)
+  }
+
+  return (
+    <Stack spacing={1.2}>
+      <Button variant="contained" component="label">Choose image<input hidden type="file" accept="image/*" onChange={(e) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = () => setSrc(String(reader.result || ''))
+        reader.readAsDataURL(file)
+      }} /></Button>
+      {src ? <Box component="img" src={src} onClick={pick} sx={{ maxWidth: 320, cursor: 'crosshair', borderRadius: 1 }} /> : null}
+      {hex ? <Alert severity="success">HEX: {hex} · RGB: {rgb}</Alert> : <Alert severity="info">Click image to sample a color.</Alert>}
+      <Stack direction="row" spacing={1}>
+        <Button variant="outlined" disabled={!hex} onClick={() => navigator.clipboard.writeText(hex)}>Copy HEX</Button>
+        <Button variant="outlined" disabled={!rgb} onClick={() => navigator.clipboard.writeText(rgb)}>Copy RGB</Button>
+      </Stack>
+      {hex ? <Box sx={{ width: 56, height: 56, borderRadius: 1, border: '1px solid #666', bgcolor: hex }} /> : null}
+    </Stack>
+  )
+}
+
 function PercentageCalculator() {
   const [a, setA] = useState(100)
   const [b, setB] = useState(15)
@@ -502,6 +691,114 @@ function DateDifferenceCalculator() {
       <TextField type="date" label="From" InputLabelProps={{ shrink: true }} value={from} onChange={(e) => setFrom(e.target.value)} />
       <TextField type="date" label="To" InputLabelProps={{ shrink: true }} value={to} onChange={(e) => setTo(e.target.value)} />
       {from && to ? <Alert severity="info">Difference: {days} day(s) ({Math.floor(days / 7)} week(s), {Math.floor(days / 30)} month(s) approx.)</Alert> : null}
+    </Stack>
+  )
+}
+
+function BmiCalculator() {
+  const [mode, setMode] = useState('metric')
+  const [heightCm, setHeightCm] = useState(175)
+  const [weightKg, setWeightKg] = useState(72)
+  const [feet, setFeet] = useState(5)
+  const [inches, setInches] = useState(10)
+  const [lbs, setLbs] = useState(160)
+
+  const bmi = useMemo(() => {
+    if (mode === 'metric') {
+      const m = Number(heightCm) / 100
+      if (!m || !weightKg) return 0
+      return Number(weightKg) / (m * m)
+    }
+    const totalInches = Number(feet) * 12 + Number(inches)
+    if (!totalInches || !lbs) return 0
+    return (703 * Number(lbs)) / (totalInches * totalInches)
+  }, [mode, heightCm, weightKg, feet, inches, lbs])
+
+  const category = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : bmi < 30 ? 'Overweight' : 'Obesity'
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField select SelectProps={{ native: true }} label="Mode" value={mode} onChange={(e) => setMode(e.target.value)}>
+        <option value="metric">Metric (cm/kg)</option>
+        <option value="imperial">Imperial (ft/in/lbs)</option>
+      </TextField>
+      {mode === 'metric' ? (
+        <Stack direction="row" spacing={1}>
+          <TextField type="number" label="Height (cm)" value={heightCm} onChange={(e) => setHeightCm(e.target.value)} />
+          <TextField type="number" label="Weight (kg)" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} />
+        </Stack>
+      ) : (
+        <Stack direction="row" spacing={1}>
+          <TextField type="number" label="Feet" value={feet} onChange={(e) => setFeet(e.target.value)} />
+          <TextField type="number" label="Inches" value={inches} onChange={(e) => setInches(e.target.value)} />
+          <TextField type="number" label="Weight (lbs)" value={lbs} onChange={(e) => setLbs(e.target.value)} />
+        </Stack>
+      )}
+      {bmi ? <Alert severity="info">BMI: {bmi.toFixed(1)} · Category: {category}</Alert> : null}
+    </Stack>
+  )
+}
+
+function UnitConverter() {
+  const [type, setType] = useState('length')
+  const [value, setValue] = useState(1)
+  const num = Number(value || 0)
+
+  const values = useMemo(() => {
+    if (type === 'length') {
+      const meters = num
+      return {
+        'Meters (m)': meters,
+        'Kilometers (km)': meters / 1000,
+        'Feet (ft)': meters * 3.28084,
+        'Inches (in)': meters * 39.3701,
+        'Miles (mi)': meters / 1609.344,
+      }
+    }
+    if (type === 'weight') {
+      const kg = num
+      return {
+        'Kilograms (kg)': kg,
+        'Grams (g)': kg * 1000,
+        'Pounds (lb)': kg * 2.20462,
+        'Ounces (oz)': kg * 35.274,
+      }
+    }
+    const c = num
+    return {
+      'Celsius (°C)': c,
+      'Fahrenheit (°F)': (c * 9) / 5 + 32,
+      'Kelvin (K)': c + 273.15,
+    }
+  }, [num, type])
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField select SelectProps={{ native: true }} label="Category" value={type} onChange={(e) => setType(e.target.value)}>
+        <option value="length">Length (input in meters)</option>
+        <option value="weight">Weight (input in kilograms)</option>
+        <option value="temperature">Temperature (input in celsius)</option>
+      </TextField>
+      <TextField type="number" label="Input value" value={value} onChange={(e) => setValue(e.target.value)} />
+      {Object.entries(values).map(([label, v]) => <Alert key={label} severity="info">{label}: {v.toFixed(4).replace(/\.?0+$/, '')}</Alert>)}
+    </Stack>
+  )
+}
+
+function TipCalculator() {
+  const [bill, setBill] = useState(100)
+  const [tip, setTip] = useState(18)
+  const [people, setPeople] = useState(2)
+  const tipAmount = (Number(bill) || 0) * ((Number(tip) || 0) / 100)
+  const total = (Number(bill) || 0) + tipAmount
+  const split = total / Math.max(1, Number(people) || 1)
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField type="number" label="Bill amount" value={bill} onChange={(e) => setBill(e.target.value)} />
+      <TextField type="number" label="Tip %" value={tip} onChange={(e) => setTip(e.target.value)} />
+      <TextField type="number" label="People" value={people} onChange={(e) => setPeople(e.target.value)} />
+      <Alert severity="info">Tip: ${tipAmount.toFixed(2)} · Total: ${total.toFixed(2)} · Per person: ${split.toFixed(2)}</Alert>
     </Stack>
   )
 }
@@ -552,6 +849,194 @@ function CsvToJson() {
   )
 }
 
+function JsonToCsv() {
+  const [input, setInput] = useState('[{"name":"Casey","age":32}]')
+  const [output, setOutput] = useState('')
+  const [error, setError] = useState('')
+
+  const convert = () => {
+    try {
+      const arr = JSON.parse(input)
+      if (!Array.isArray(arr) || !arr.length || typeof arr[0] !== 'object') throw new Error('Input must be a JSON array of objects.')
+      const headers = [...new Set(arr.flatMap((obj) => Object.keys(obj || {})))]
+      const esc = (v) => {
+        const str = v == null ? '' : String(v)
+        return /[",\n]/.test(str) ? `"${str.replaceAll('"', '""')}"` : str
+      }
+      const rows = [headers.join(','), ...arr.map((obj) => headers.map((h) => esc(obj[h])).join(','))]
+      setOutput(rows.join('\n'))
+      setError('')
+    } catch (e) {
+      setError(e.message)
+      setOutput('')
+    }
+  }
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField multiline minRows={8} label="JSON array input" value={input} onChange={(e) => setInput(e.target.value)} />
+      <Stack direction="row" spacing={1}>
+        <Button variant="contained" onClick={convert}>Convert to CSV</Button>
+        <Button variant="outlined" disabled={!output} onClick={() => navigator.clipboard.writeText(output)}>Copy</Button>
+        <Button variant="outlined" disabled={!output} onClick={() => downloadBlob(new Blob([output], { type: 'text/csv;charset=utf-8' }), 'output.csv')}>Download CSV</Button>
+      </Stack>
+      {error ? <Alert severity="error">{error}</Alert> : null}
+      <TextField multiline minRows={8} label="CSV output" value={output} InputProps={{ readOnly: true }} />
+    </Stack>
+  )
+}
+
+function UrlEncoderDecoder() {
+  const [input, setInput] = useState('https://example.com?q=hello world')
+  const [output, setOutput] = useState('')
+  const [error, setError] = useState('')
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField multiline minRows={4} label="Input" value={input} onChange={(e) => setInput(e.target.value)} />
+      <Stack direction="row" spacing={1}>
+        <Button variant="contained" onClick={() => { setOutput(encodeURIComponent(input)); setError('') }}>Encode</Button>
+        <Button variant="outlined" onClick={() => {
+          try {
+            setOutput(decodeURIComponent(input))
+            setError('')
+          } catch {
+            setError('Invalid encoded URI component.')
+          }
+        }}>Decode</Button>
+        <Button variant="outlined" disabled={!output} onClick={() => navigator.clipboard.writeText(output)}>Copy</Button>
+      </Stack>
+      {error ? <Alert severity="error">{error}</Alert> : null}
+      <TextField multiline minRows={4} label="Output" value={output} InputProps={{ readOnly: true }} />
+    </Stack>
+  )
+}
+
+function MarkdownPreview() {
+  const [input, setInput] = useState('# Markdown Preview\n\n- Fast\n- Browser-only\n\n**Bold** text here.')
+  const html = useMemo(() => marked.parse(input || ''), [input])
+
+  return (
+    <Stack spacing={1.2}>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.2}>
+        <TextField multiline minRows={12} fullWidth label="Markdown" value={input} onChange={(e) => setInput(e.target.value)} />
+        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, p: 1.5, width: '100%', overflow: 'auto' }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Preview</Typography>
+          <Box sx={{ '& p': { my: 0.75 }, '& h1,& h2,& h3': { my: 1 } }} dangerouslySetInnerHTML={{ __html: html }} />
+        </Box>
+      </Stack>
+      <Stack direction="row" spacing={1}>
+        <Button variant="outlined" onClick={() => navigator.clipboard.writeText(input)}>Copy Markdown</Button>
+        <Button variant="outlined" onClick={() => navigator.clipboard.writeText(html)}>Copy HTML</Button>
+      </Stack>
+    </Stack>
+  )
+}
+
+async function digestText(algorithm, text) {
+  const data = new TextEncoder().encode(text)
+  const hashBuffer = await crypto.subtle.digest(algorithm, data)
+  return [...new Uint8Array(hashBuffer)].map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+function HashGenerator() {
+  const [input, setInput] = useState('')
+  const [algorithm, setAlgorithm] = useState('SHA-256')
+  const [output, setOutput] = useState('')
+
+  const run = async () => setOutput(await digestText(algorithm, input))
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField multiline minRows={5} label="Input text" value={input} onChange={(e) => setInput(e.target.value)} />
+      <TextField select SelectProps={{ native: true }} label="Algorithm" value={algorithm} onChange={(e) => setAlgorithm(e.target.value)}>
+        <option value="SHA-256">SHA-256</option>
+        <option value="SHA-384">SHA-384</option>
+        <option value="SHA-512">SHA-512</option>
+      </TextField>
+      <Stack direction="row" spacing={1}>
+        <Button variant="contained" onClick={run}>Generate Hash</Button>
+        <Button variant="outlined" onClick={() => navigator.clipboard.writeText(output)} disabled={!output}>Copy</Button>
+      </Stack>
+      <TextField multiline minRows={4} label="Digest" value={output} InputProps={{ readOnly: true }} />
+    </Stack>
+  )
+}
+
+function UuidGenerator() {
+  const [count, setCount] = useState(5)
+  const [list, setList] = useState([])
+  const generate = () => setList(Array.from({ length: Math.max(1, Math.min(100, Number(count) || 1)) }, () => crypto.randomUUID()))
+  useEffect(() => { generate() }, [])
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField type="number" label="Quantity (1-100)" value={count} onChange={(e) => setCount(e.target.value)} />
+      <Stack direction="row" spacing={1}>
+        <Button variant="contained" onClick={generate}>Generate</Button>
+        <Button variant="outlined" disabled={!list.length} onClick={() => navigator.clipboard.writeText(list.join('\n'))}>Copy All</Button>
+      </Stack>
+      <TextField multiline minRows={8} value={list.join('\n')} InputProps={{ readOnly: true }} />
+    </Stack>
+  )
+}
+
+function TextDiffChecker() {
+  const [oldText, setOldText] = useState('line 1\nline 2')
+  const [newText, setNewText] = useState('line 1\nline changed\nline 3')
+
+  const { lines, added, removed } = useMemo(() => {
+    const a = oldText.split('\n')
+    const b = newText.split('\n')
+    const max = Math.max(a.length, b.length)
+    const out = []
+    let plus = 0
+    let minus = 0
+    for (let i = 0; i < max; i += 1) {
+      if (a[i] === b[i]) out.push({ type: 'same', text: a[i] ?? '' })
+      else {
+        if (a[i] != null) { out.push({ type: 'removed', text: a[i] }); minus += 1 }
+        if (b[i] != null) { out.push({ type: 'added', text: b[i] }); plus += 1 }
+      }
+    }
+    return { lines: out, added: plus, removed: minus }
+  }, [oldText, newText])
+
+  return (
+    <Stack spacing={1.2}>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.2}>
+        <TextField multiline minRows={8} fullWidth label="Old text" value={oldText} onChange={(e) => setOldText(e.target.value)} />
+        <TextField multiline minRows={8} fullWidth label="New text" value={newText} onChange={(e) => setNewText(e.target.value)} />
+      </Stack>
+      <Alert severity="info">Added: {added} · Removed: {removed}</Alert>
+      <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, p: 1, fontFamily: 'monospace', fontSize: 13 }}>
+        {lines.map((line, i) => (
+          <Box key={`${line.type}-${i}`} sx={{ color: line.type === 'added' ? 'success.light' : line.type === 'removed' ? 'error.light' : 'text.primary' }}>
+            {line.type === 'added' ? '+ ' : line.type === 'removed' ? '- ' : '  '}{line.text}
+          </Box>
+        ))}
+      </Box>
+    </Stack>
+  )
+}
+
+function WordCounter() {
+  const [text, setText] = useState('')
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0
+  const charsWithSpaces = text.length
+  const charsNoSpaces = text.replace(/\s/g, '').length
+  const paragraphs = text.trim() ? text.trim().split(/\n\s*\n/).length : 0
+  const readingMin = words / 200
+
+  return (
+    <Stack spacing={1.2}>
+      <TextField multiline minRows={10} label="Text" value={text} onChange={(e) => setText(e.target.value)} />
+      <Alert severity="info">Words: {words} · Characters: {charsWithSpaces} · No spaces: {charsNoSpaces} · Paragraphs: {paragraphs} · Read time: {readingMin < 1 ? '<1' : readingMin.toFixed(1)} min</Alert>
+      <Button variant="outlined" onClick={() => setText('')}>Reset</Button>
+    </Stack>
+  )
+}
+
 export const toolRenderers = {
   'loan-calculator': LoanCalculator,
   'password-generator': PasswordGenerator,
@@ -562,10 +1047,25 @@ export const toolRenderers = {
   'pdf-merge': PdfMerge,
   'jpg-to-pdf': JpgToPdf,
   'pdf-split': PdfSplit,
+  'pdf-rotate': PdfRotate,
+  'pdf-compress': PdfCompress,
+  'pdf-page-counter': PdfPageCounter,
   'image-cropper': ImageCropper,
   'image-format-converter': ImageFormatConverter,
+  'image-to-base64': ImageToBase64,
+  'image-color-picker': ImageColorPicker,
   'percentage-calculator': PercentageCalculator,
   'date-difference-calculator': DateDifferenceCalculator,
+  'bmi-calculator': BmiCalculator,
+  'unit-converter': UnitConverter,
+  'tip-calculator': TipCalculator,
   'base64-encode-decode': Base64EncodeDecode,
   'csv-to-json': CsvToJson,
+  'json-to-csv': JsonToCsv,
+  'url-encoder-decoder': UrlEncoderDecoder,
+  'markdown-preview': MarkdownPreview,
+  'hash-generator': HashGenerator,
+  'uuid-generator': UuidGenerator,
+  'text-diff-checker': TextDiffChecker,
+  'word-counter': WordCounter,
 }
