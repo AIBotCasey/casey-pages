@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { PDFDocument } from 'pdf-lib'
 import { Link as RouterLink, useParams } from 'react-router-dom'
-import { getTool } from '../data/tools'
+import { getTool, tools } from '../data/tools'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 import AdblockGate from '../components/AdblockGate'
 
@@ -251,6 +251,7 @@ function PdfMerge() {
 export default function ToolPage() {
   const { slug } = useParams()
   const tool = getTool(slug)
+  const relatedTools = tools.filter((t) => t.slug !== slug).slice(0, 4)
 
   useEffect(() => {
     if (!tool) return
@@ -333,6 +334,17 @@ export default function ToolPage() {
       <AdblockGate>
         {renderTool()}
       </AdblockGate>
+
+      <Box>
+        <Typography variant="h5" sx={{ mb: 1 }}>Related free tools</Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          {relatedTools.map((item) => (
+            <Button key={item.slug} size="small" variant="outlined" component={RouterLink} to={`/tools/${item.slug}`}>
+              {item.name}
+            </Button>
+          ))}
+        </Stack>
+      </Box>
 
       <Box>
         <Typography variant="h5" sx={{ mb: 1 }}>{tool.name} FAQ</Typography>

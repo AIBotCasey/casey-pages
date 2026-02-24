@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import Layout from './components/Layout'
@@ -8,9 +9,10 @@ import PortfolioPage from './pages/PortfolioPage'
 import MoneyHomePage from './pages/MoneyHomePage'
 import MoneyBlogPage from './pages/MoneyBlogPage'
 import MoneyStartHerePage from './pages/MoneyStartHerePage'
-import ToolsLibraryPage from './pages/ToolsLibraryPage'
-import ToolPage from './pages/ToolPage'
 import { isMoneySubdomain } from './utils/siteMode'
+
+const ToolsLibraryPage = lazy(() => import('./pages/ToolsLibraryPage'))
+const ToolPage = lazy(() => import('./pages/ToolPage'))
 
 export default function App() {
   const moneySite = isMoneySubdomain()
@@ -25,8 +27,8 @@ export default function App() {
           <Route path="/start-here" element={moneySite ? <MoneyStartHerePage /> : <Navigate to="/" replace />} />
           <Route path="/posts/:slug" element={<PostPage />} />
           {!moneySite ? <Route path="/projects/:slug" element={<ProjectPage />} /> : null}
-          {!moneySite ? <Route path="/tools" element={<ToolsLibraryPage />} /> : null}
-          {!moneySite ? <Route path="/tools/:slug" element={<ToolPage />} /> : null}
+          {!moneySite ? <Route path="/tools" element={<Suspense fallback={null}><ToolsLibraryPage /></Suspense>} /> : null}
+          {!moneySite ? <Route path="/tools/:slug" element={<Suspense fallback={null}><ToolPage /></Suspense>} /> : null}
         </Routes>
       </Layout>
       <Analytics />
