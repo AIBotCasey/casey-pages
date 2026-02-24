@@ -70,6 +70,19 @@ export default function HomePage() {
         </Stack>
       </Stack>
 
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h4" sx={{ mb: 1.2 }}>Dashboard: Tool Quick Access</Typography>
+        <Typography color="text.secondary" sx={{ mb: 2 }}>Jump straight to the tool you need. All tools are browser-based and privacy-first.</Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 1 }}>
+          <Button size="small" variant="outlined" component={RouterLink} to="/tools/pdf-merge">PDF Merge</Button>
+          <Button size="small" variant="outlined" component={RouterLink} to="/tools/image-compressor">Image Compressor</Button>
+          <Button size="small" variant="outlined" component={RouterLink} to="/tools/qr-generator">QR Generator</Button>
+          <Button size="small" variant="outlined" component={RouterLink} to="/tools/json-formatter">JSON Formatter</Button>
+          <Button size="small" variant="outlined" component={RouterLink} to="/tools/loan-calculator">Loan Calculator</Button>
+        </Stack>
+        <Button component={RouterLink} to="/tools" variant="contained">Browse All Tools</Button>
+      </Box>
+
       <Box id="portfolio" sx={{ mb: 9 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>Shipped Projects</Typography>
         <Stack spacing={2.5}>
