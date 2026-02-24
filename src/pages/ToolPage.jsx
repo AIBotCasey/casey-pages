@@ -1,10 +1,10 @@
-import { Alert, Box, Button, Chip, FormControlLabel, Slider, Stack, Switch, TextField, Typography } from '@mui/material'
+import { Alert, Box, Breadcrumbs, Button, Chip, FormControlLabel, Slider, Stack, Switch, TextField, Typography, Link } from '@mui/material'
 import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { PDFDocument } from 'pdf-lib'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { getTool } from '../data/tools'
-import { setPageSeo } from '../utils/seo'
+import { setPageSeo, SITE_URL } from '../utils/seo'
 import AdblockGate from '../components/AdblockGate'
 
 function downloadBlob(blob, fileName) {
@@ -254,7 +254,42 @@ export default function ToolPage() {
 
   useEffect(() => {
     if (!tool) return
-    setPageSeo({ title: `${tool.name} | AIBotCasey Tools`, description: tool.description, path: `/tools/${tool.slug}` })
+    setPageSeo({
+      title: `${tool.name} | AIBotCasey Tools`,
+      description: tool.description,
+      path: `/tools/${tool.slug}`,
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+            { '@type': 'ListItem', position: 2, name: 'Tools', item: `${SITE_URL}/tools` },
+            { '@type': 'ListItem', position: 3, name: tool.name, item: `${SITE_URL}/tools/${tool.slug}` },
+          ],
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: tool.name,
+          applicationCategory: `${tool.category}Application`,
+          operatingSystem: 'Web Browser',
+          isAccessibleForFree: true,
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+          description: tool.description,
+          url: `${SITE_URL}/tools/${tool.slug}`,
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: (tool.faqs || []).map((faq) => ({
+            '@type': 'Question',
+            name: faq.q,
+            acceptedAnswer: { '@type': 'Answer', text: faq.a },
+          })),
+        },
+      ],
+    })
   }, [tool])
 
   if (!tool) return <Stack spacing={2}><Alert severity="error">Tool not found.</Alert><Button component={RouterLink} to="/tools">Back to tools</Button></Stack>
@@ -274,14 +309,39 @@ export default function ToolPage() {
 
   return (
     <Stack spacing={2.5}>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link component={RouterLink} underline="hover" color="inherit" to="/">Home</Link>
+        <Link component={RouterLink} underline="hover" color="inherit" to="/tools">Tools</Link>
+        <Typography color="text.primary">{tool.name}</Typography>
+      </Breadcrumbs>
+
       <Button component={RouterLink} to="/tools" variant="text" sx={{ width: 'fit-content' }}>← Back to Tools Library</Button>
       <Chip label={tool.category} sx={{ width: 'fit-content' }} />
       <Typography variant="h3">{tool.name}</Typography>
       <Typography color="text.secondary">{tool.description}</Typography>
       <Alert severity="success">Privacy-first: this tool runs in your browser and only uses data needed for your result.</Alert>
+
+      <Box>
+        <Typography variant="h5" sx={{ mb: 1 }}>How to use {tool.name}</Typography>
+        <Stack spacing={0.8}>
+          {(tool.instructions || []).map((step, idx) => (
+            <Typography key={step} color="text.secondary">{idx + 1}. {step}</Typography>
+          ))}
+        </Stack>
+      </Box>
+
       <AdblockGate>
         {renderTool()}
       </AdblockGate>
+
+      <Box>
+        <Typography variant="h5" sx={{ mb: 1 }}>{tool.name} FAQ</Typography>
+        <Stack spacing={1}>
+          {(tool.faqs || []).map((faq) => (
+            <Typography key={faq.q} color="text.secondary"><strong>{faq.q}</strong> {faq.a}</Typography>
+          ))}
+        </Stack>
+      </Box>
     </Stack>
   )
 }
