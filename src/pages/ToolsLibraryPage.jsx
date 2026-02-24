@@ -6,11 +6,14 @@ import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function ToolsLibraryPage() {
   const [query, setQuery] = useState('')
+  const [cluster, setCluster] = useState('All')
+
+  const categories = ['All', ...new Set(tools.map((t) => t.category))]
 
   useEffect(() => {
     setPageSeo({
       title: 'Free Browser Tools Library | AIBotCasey',
-      description: 'Free browser-based PDF, image, QR, calculator, password, and JSON tools. Fast, privacy-first, and no upload required for core features.',
+      description: 'SEO-friendly clustered browser tools for PDF, image, developer/data, calculators, and utility/security workflows.',
       path: '/tools',
       jsonLd: [
         {
@@ -25,18 +28,17 @@ export default function ToolsLibraryPage() {
           '@context': 'https://schema.org',
           '@type': 'ItemList',
           name: 'AIBotCasey Tools Library',
-          itemListElement: tools.map((tool, idx) => ({
-            '@type': 'ListItem',
-            position: idx + 1,
-            url: `${SITE_URL}/tools/${tool.slug}`,
-            name: tool.name,
-          })),
+          itemListElement: tools.map((tool, idx) => ({ '@type': 'ListItem', position: idx + 1, url: `${SITE_URL}/tools/${tool.slug}`, name: tool.name })),
         },
       ],
     })
   }, [])
 
-  const filtered = useMemo(() => tools.filter((t) => `${t.name} ${t.category} ${t.description}`.toLowerCase().includes(query.toLowerCase())), [query])
+  const filtered = useMemo(() => tools.filter((t) => {
+    const textMatch = `${t.name} ${t.category} ${t.description}`.toLowerCase().includes(query.toLowerCase())
+    const clusterMatch = cluster === 'All' || t.category === cluster
+    return textMatch && clusterMatch
+  }), [query, cluster])
 
   return (
     <Stack spacing={2.5}>
@@ -46,9 +48,15 @@ export default function ToolsLibraryPage() {
       </Breadcrumbs>
 
       <Chip label="Tools Library" color="secondary" sx={{ width: 'fit-content' }} />
-      <Typography variant="h3">Pick a tool and get it done fast</Typography>
-      <Typography color="text.secondary">All tools run in your browser. We only use what’s needed to generate the result.</Typography>
+      <Typography variant="h3">Clustered browser tools for fast workflows</Typography>
+      <Typography color="text.secondary">All tools run in your browser with privacy-first processing.</Typography>
       <TextField label="Search tools" value={query} onChange={(e) => setQuery(e.target.value)} />
+
+      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+        {categories.map((cat) => (
+          <Chip key={cat} label={cat} clickable color={cluster === cat ? 'primary' : 'default'} onClick={() => setCluster(cat)} />
+        ))}
+      </Stack>
 
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 2 }}>
         {filtered.map((tool) => (
@@ -63,20 +71,6 @@ export default function ToolsLibraryPage() {
             </CardActions>
           </Card>
         ))}
-      </Box>
-
-      <Box sx={{ mt: 1 }}>
-        <Typography variant="h5" sx={{ mb: 1 }}>How to use this tools library</Typography>
-        <Typography color="text.secondary">1) Search by task, 2) open your tool, 3) complete the action in-browser, 4) download your result.</Typography>
-      </Box>
-
-      <Box>
-        <Typography variant="h5" sx={{ mb: 1 }}>Tools FAQ</Typography>
-        <Stack spacing={1}>
-          <Typography color="text.secondary"><strong>Are these tools free?</strong> Yes, all tools in this library are free to use.</Typography>
-          <Typography color="text.secondary"><strong>Do I need to create an account?</strong> No account is required for core tools.</Typography>
-          <Typography color="text.secondary"><strong>Do you store my files?</strong> Core tool processing is browser-based and privacy-first.</Typography>
-        </Stack>
       </Box>
     </Stack>
   )
