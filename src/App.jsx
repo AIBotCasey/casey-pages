@@ -8,7 +8,6 @@ import PortfolioPage from './pages/PortfolioPage'
 import MoneyHomePage from './pages/MoneyHomePage'
 import MoneyBlogPage from './pages/MoneyBlogPage'
 import MoneyStartHerePage from './pages/MoneyStartHerePage'
-import AIPromptEngineerPage from './pages/AIPromptEngineerPage'
 import ToolsLibraryPage from './pages/ToolsLibraryPage'
 import ToolPage from './pages/ToolPage'
 import { isMoneySubdomain } from './utils/siteMode'
@@ -26,7 +25,6 @@ export default function App() {
           <Route path="/start-here" element={moneySite ? <MoneyStartHerePage /> : <Navigate to="/" replace />} />
           <Route path="/posts/:slug" element={<PostPage />} />
           {!moneySite ? <Route path="/projects/:slug" element={<ProjectPage />} /> : null}
-          {!moneySite ? <Route path="/ai-prompt-engineer" element={<AIPromptEngineerPage />} /> : null}
           {!moneySite ? <Route path="/tools" element={<ToolsLibraryPage />} /> : null}
           {!moneySite ? <Route path="/tools/:slug" element={<ToolPage />} /> : null}
         </Routes>

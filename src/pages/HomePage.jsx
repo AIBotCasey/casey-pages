@@ -65,7 +65,7 @@ export default function HomePage() {
         </Typography>
         <Stack direction="row" spacing={1.25} flexWrap="wrap" useFlexGap>
           <Button variant="contained" component={RouterLink} to="/portfolio">View Portfolio</Button>
-          <Button variant="outlined" component={RouterLink} to="/ai-prompt-engineer">AI Prompt Engineer</Button>
+          <Button variant="outlined" component={RouterLink} to="/tools">Browse Tools</Button>
           <Button variant="outlined" href="mailto:support@aibotcasey.com">Contact</Button>
         </Stack>
       </Stack>
