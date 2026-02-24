@@ -1,5 +1,5 @@
 import { Alert, Box, Button, FormControlLabel, LinearProgress, Slider, Stack, Switch, TextField, Typography } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import { marked } from 'marked'
 import { PDFDocument, degrees } from 'pdf-lib'
@@ -526,33 +526,134 @@ function ImageCropper() {
   const [w, setW] = useState(300)
   const [h, setH] = useState(300)
   const [out, setOut] = useState('')
+  const [imgInfo, setImgInfo] = useState({ naturalW: 0, naturalH: 0, displayW: 0, displayH: 0 })
+
+  const dragRef = useRef({ active: false, offsetX: 0, offsetY: 0 })
+
+  const clamp = (val, min, max) => Math.max(min, Math.min(Number(val) || 0, max))
+
+  const applyCropBounds = (nextX, nextY, nextW, nextH) => {
+    const maxW = imgInfo.naturalW || nextW
+    const maxH = imgInfo.naturalH || nextH
+    const width = clamp(nextW, 1, maxW)
+    const height = clamp(nextH, 1, maxH)
+    const left = clamp(nextX, 0, Math.max(0, maxW - width))
+    const top = clamp(nextY, 0, Math.max(0, maxH - height))
+    setX(left)
+    setY(top)
+    setW(width)
+    setH(height)
+  }
+
+  const handleImageLoad = (e) => {
+    const img = e.currentTarget
+    const next = {
+      naturalW: img.naturalWidth,
+      naturalH: img.naturalHeight,
+      displayW: img.clientWidth,
+      displayH: img.clientHeight,
+    }
+    setImgInfo(next)
+    const defaultW = Math.max(40, Math.round(next.naturalW * 0.5))
+    const defaultH = Math.max(40, Math.round(next.naturalH * 0.5))
+    applyCropBounds(Math.round((next.naturalW - defaultW) / 2), Math.round((next.naturalH - defaultH) / 2), defaultW, defaultH)
+  }
+
+  const updateDisplaySize = (e) => {
+    const img = e.currentTarget
+    setImgInfo((prev) => ({ ...prev, displayW: img.clientWidth, displayH: img.clientHeight }))
+  }
 
   const crop = () => {
     if (!src) return
     const img = new Image()
     img.onload = () => {
       const canvas = document.createElement('canvas')
-      canvas.width = Number(w)
-      canvas.height = Number(h)
+      const cw = Math.max(1, Number(w) || 1)
+      const ch = Math.max(1, Number(h) || 1)
+      canvas.width = cw
+      canvas.height = ch
       const ctx = canvas.getContext('2d')
-      ctx.drawImage(img, Number(x), Number(y), Number(w), Number(h), 0, 0, Number(w), Number(h))
+      ctx.drawImage(img, Number(x), Number(y), cw, ch, 0, 0, cw, ch)
       setOut(canvas.toDataURL('image/png'))
     }
     img.src = src
   }
 
+  const scaleX = imgInfo.naturalW && imgInfo.displayW ? imgInfo.displayW / imgInfo.naturalW : 1
+  const scaleY = imgInfo.naturalH && imgInfo.displayH ? imgInfo.displayH / imgInfo.naturalH : 1
+
+  const beginDrag = (e) => {
+    e.preventDefault()
+    dragRef.current.active = true
+    dragRef.current.offsetX = e.clientX - Number(x) * scaleX
+    dragRef.current.offsetY = e.clientY - Number(y) * scaleY
+    window.addEventListener('mousemove', onDrag)
+    window.addEventListener('mouseup', endDrag)
+  }
+
+  const onDrag = (e) => {
+    if (!dragRef.current.active || !imgInfo.displayW || !imgInfo.displayH) return
+    const nextDisplayX = e.clientX - dragRef.current.offsetX
+    const nextDisplayY = e.clientY - dragRef.current.offsetY
+    const nextX = nextDisplayX / scaleX
+    const nextY = nextDisplayY / scaleY
+    applyCropBounds(nextX, nextY, Number(w), Number(h))
+  }
+
+  const endDrag = () => {
+    dragRef.current.active = false
+    window.removeEventListener('mousemove', onDrag)
+    window.removeEventListener('mouseup', endDrag)
+  }
+
+  useEffect(() => () => endDrag(), [])
+
   return (
     <Stack spacing={1.2}>
       <Button variant="contained" component="label">Choose image<input hidden type="file" accept="image/*" onChange={(e) => {
         const reader = new FileReader()
-        reader.onload = () => setSrc(String(reader.result || ''))
+        reader.onload = () => {
+          setOut('')
+          setSrc(String(reader.result || ''))
+        }
         if (e.target.files?.[0]) reader.readAsDataURL(e.target.files[0])
       }} /></Button>
+
+      {src ? (
+        <Box sx={{ position: 'relative', width: 'fit-content', maxWidth: '100%' }}>
+          <Box
+            component="img"
+            src={src}
+            onLoad={handleImageLoad}
+            onResize={updateDisplaySize}
+            sx={{ display: 'block', maxWidth: 'min(100%, 640px)', borderRadius: 1, border: '1px solid', borderColor: 'divider' }}
+          />
+          {imgInfo.naturalW ? (
+            <Box
+              onMouseDown={beginDrag}
+              sx={{
+                position: 'absolute',
+                left: `${Number(x) * scaleX}px`,
+                top: `${Number(y) * scaleY}px`,
+                width: `${Math.max(1, Number(w)) * scaleX}px`,
+                height: `${Math.max(1, Number(h)) * scaleY}px`,
+                border: '2px solid',
+                borderColor: 'secondary.main',
+                bgcolor: 'rgba(25, 118, 210, 0.18)',
+                cursor: 'move',
+                boxSizing: 'border-box',
+              }}
+            />
+          ) : null}
+        </Box>
+      ) : null}
+
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-        <TextField type="number" label="X" value={x} onChange={(e) => setX(e.target.value)} />
-        <TextField type="number" label="Y" value={y} onChange={(e) => setY(e.target.value)} />
-        <TextField type="number" label="Width" value={w} onChange={(e) => setW(e.target.value)} />
-        <TextField type="number" label="Height" value={h} onChange={(e) => setH(e.target.value)} />
+        <TextField type="number" label="X" value={x} onChange={(e) => applyCropBounds(e.target.value, y, w, h)} />
+        <TextField type="number" label="Y" value={y} onChange={(e) => applyCropBounds(x, e.target.value, w, h)} />
+        <TextField type="number" label="Width" value={w} onChange={(e) => applyCropBounds(x, y, e.target.value, h)} />
+        <TextField type="number" label="Height" value={h} onChange={(e) => applyCropBounds(x, y, w, e.target.value)} />
       </Stack>
       <Button variant="contained" onClick={crop} disabled={!src}>Crop image</Button>
       {out ? <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.2}><Box component="img" src={src} sx={{ maxWidth: 280 }} /><Box component="img" src={out} sx={{ maxWidth: 280 }} /></Stack> : null}
