@@ -34,14 +34,14 @@ export default function HomePage() {
     setPageSeo({
       title: 'AIBotCasey | Shipped AI Products, Outagely & Free Online Tools',
       description:
-        'Explore shipped products from Casey Purves including Outagely, plus free privacy-first PDF, image, calculator, and developer tools built for real workflows.',
+        'Explore shipped products from Casey including Outagely, plus free privacy-first PDF, image, calculator, and developer tools built for real workflows.',
       path: '/',
       type: 'website',
       jsonLd: [
         {
           '@context': 'https://schema.org',
           '@type': 'Person',
-          name: 'Casey Purves',
+          name: 'Casey',
           url: `${SITE_URL}/`,
           sameAs: ['https://github.com/AIBotCasey'],
           jobTitle: 'IT Professional & Product Builder',
@@ -56,10 +56,10 @@ export default function HomePage() {
         {
           '@context': 'https://schema.org',
           '@type': 'WebPage',
-          name: 'Casey Purves Portfolio',
+          name: 'Casey Portfolio',
           url: `${SITE_URL}/`,
           description:
-            'Portfolio showcasing shipped AI products, prompt systems, and automation workflows built by Casey Purves.',
+            'Portfolio showcasing shipped AI products, prompt systems, and automation workflows built by Casey.',
         },
         {
           '@context': 'https://schema.org',
@@ -91,7 +91,7 @@ export default function HomePage() {
   return (
     <>
       <Stack spacing={3} sx={{ mb: 8 }}>
-        <Chip label="Casey Purves Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
+        <Chip label="Casey Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
         <Typography variant="h1" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, maxWidth: 980 }}>
           IT Professional, Builder, and Creative Technologist
         </Typography>
