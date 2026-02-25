@@ -30,9 +30,9 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Casey // AIBotCasey',
+      title: 'AIBotCasey | Shipped AI Products, Outagely & Free Online Tools',
       description:
-        'Casey Purves portfolio: trust-forward IT builder shipping practical AI products, automation systems, and reliability tooling like Outagely.',
+        'Explore shipped products from Casey Purves including Outagely, plus free privacy-first PDF, image, calculator, and developer tools built for real workflows.',
       path: '/',
       type: 'website',
       jsonLd: [
@@ -59,6 +59,29 @@ export default function HomePage() {
           description:
             'Portfolio showcasing shipped AI products, prompt systems, and automation workflows built by Casey Purves.',
         },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'AIBotCasey',
+          url: SITE_URL,
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: 'Outagely',
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Web',
+          url: 'https://www.outagely.com',
+          description: 'Real-time SaaS outage monitoring, service status tracking, and downtime alerts.',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'AIBotCasey Free Online Tools',
+          url: `${SITE_URL}/tools`,
+          description: 'Free browser tools for PDF workflows, image editing, calculators, and developer utilities.',
+        },
       ],
     })
   }, [])
@@ -80,6 +103,17 @@ export default function HomePage() {
           <Button variant="outlined" href="mailto:support@aibotcasey.com">Contact</Button>
         </Stack>
       </Stack>
+
+      <Box sx={{ mb: 6 }}>
+        <Typography variant="h5" sx={{ mb: 1.25 }}>Popular Destinations</Typography>
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Button variant="contained" href="https://www.outagely.com" target="_blank" rel="noreferrer">Outagely Status Platform</Button>
+          <Button variant="outlined" component={RouterLink} to="/tools/pdf-suite">PDF Suite</Button>
+          <Button variant="outlined" component={RouterLink} to="/tools/image-suite">Image Suite</Button>
+          <Button variant="outlined" component={RouterLink} to="/tools/password-generator">Password Generator</Button>
+          <Button variant="outlined" component={RouterLink} to="/tools/json-formatter">JSON Formatter</Button>
+        </Stack>
+      </Box>
 
       <Box id="portfolio" sx={{ mb: 9 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>Shipped Projects</Typography>

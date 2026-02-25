@@ -24,7 +24,7 @@ export default function ProjectPage() {
 
     const path = `/projects/${project.slug}`
     setPageSeo({
-      title: 'Casey // AIBotCasey',
+      title: `${project.name} | Shipped Product by AIBotCasey`,
       description: project.summary,
       path,
       jsonLd: [

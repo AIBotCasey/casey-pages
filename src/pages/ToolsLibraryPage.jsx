@@ -12,8 +12,8 @@ export default function ToolsLibraryPage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Free Browser Tools Library | AIBotCasey',
-      description: 'All-in-one Image Suite and PDF Suite plus clustered browser tools for editing, conversion, and productivity workflows.',
+      title: 'Free Online Tools by AIBotCasey | PDF, Image, Calculator & Dev Utilities',
+      description: 'Use fast, privacy-first online tools for PDF merge/split/compress, image resize/convert/crop, calculators, and developer text utilities.',
       path: '/tools',
       jsonLd: [
         {

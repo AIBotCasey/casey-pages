@@ -14,8 +14,8 @@ export default function ToolPage() {
   useEffect(() => {
     if (!tool) return
     setPageSeo({
-      title: `${tool.name} | AIBotCasey Tools`,
-      description: tool.description,
+      title: `${tool.name} - Free Online ${tool.category} Tool | AIBotCasey`,
+      description: `${tool.description} Free, browser-based, and privacy-first with no server uploads required.`,
       path: `/tools/${tool.slug}`,
       jsonLd: [
         {

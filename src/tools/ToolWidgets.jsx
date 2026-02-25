@@ -1,8 +1,24 @@
 import { Alert, Box, Button, FormControlLabel, LinearProgress, Slider, Stack, Switch, TextField, Typography } from '@mui/material'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import QRCode from 'qrcode'
-import { marked } from 'marked'
-import { PDFDocument, degrees } from 'pdf-lib'
+
+let _qrcode
+let _marked
+let _pdfLib
+
+async function getQrCode() {
+  if (!_qrcode) _qrcode = (await import('qrcode')).default
+  return _qrcode
+}
+
+async function getMarked() {
+  if (!_marked) _marked = (await import('marked')).marked
+  return _marked
+}
+
+async function getPdfLib() {
+  if (!_pdfLib) _pdfLib = await import('pdf-lib')
+  return _pdfLib
+}
 
 function downloadBlob(blob, fileName) {
   const url = URL.createObjectURL(blob)
@@ -154,7 +170,7 @@ function QrGenerator() {
   const [src, setSrc] = useState('')
 
   useEffect(() => {
-    QRCode.toDataURL(text || ' ', { width: 260, margin: 1 }).then(setSrc).catch(() => setSrc(''))
+    getQrCode().then((QRCode) => QRCode.toDataURL(text || ' ', { width: 260, margin: 1 })).then(setSrc).catch(() => setSrc(''))
   }, [text])
 
   return (
@@ -287,6 +303,7 @@ function PdfMerge() {
     const next = []
     for (const file of arr) {
       try {
+        const { PDFDocument } = await getPdfLib()
         const pdf = await PDFDocument.load(await file.arrayBuffer())
         next.push({ name: file.name, pages: pdf.getPageCount() })
       } catch {
@@ -300,6 +317,7 @@ function PdfMerge() {
     if (!files.length) return
     setBusy(true)
     try {
+      const { PDFDocument } = await getPdfLib()
       const merged = await PDFDocument.create()
       for (const file of files) {
         const bytes = await file.arrayBuffer()
@@ -331,6 +349,7 @@ function JpgToPdf() {
     if (!files.length) return
     setBusy(true)
     try {
+      const { PDFDocument } = await getPdfLib()
       const pdf = await PDFDocument.create()
       for (const file of files) {
         const bytes = new Uint8Array(await file.arrayBuffer())
@@ -377,12 +396,14 @@ function PdfSplit() {
   const onFile = async (nextFile) => {
     setFile(nextFile)
     if (!nextFile) return
+    const { PDFDocument } = await getPdfLib()
     const pdf = await PDFDocument.load(await nextFile.arrayBuffer())
     setPages(pdf.getPageCount())
   }
 
   const split = async () => {
     if (!file) return
+    const { PDFDocument } = await getPdfLib()
     const src = await PDFDocument.load(await file.arrayBuffer())
     const selected = parseRange(range, src.getPageCount()).map((p) => p - 1)
     if (!selected.length) return
@@ -411,12 +432,14 @@ function PdfRotate() {
   const onFile = async (nextFile) => {
     setFile(nextFile)
     if (!nextFile) return
+    const { PDFDocument } = await getPdfLib()
     const pdf = await PDFDocument.load(await nextFile.arrayBuffer())
     setPages(pdf.getPageCount())
   }
 
   const rotatePdf = async () => {
     if (!file) return
+    const { PDFDocument, degrees } = await getPdfLib()
     const pdf = await PDFDocument.load(await file.arrayBuffer())
     const total = pdf.getPageCount()
     const selected = range.trim().toLowerCase() === 'all' ? Array.from({ length: total }, (_, i) => i + 1) : parseRange(range, total)
@@ -455,6 +478,7 @@ function PdfCompress() {
     setBusy(true)
     try {
       const srcBytes = await file.arrayBuffer()
+      const { PDFDocument } = await getPdfLib()
       const srcPdf = await PDFDocument.load(srcBytes)
       const outPdf = await PDFDocument.create()
       const scale = quality >= 90 ? 1 : quality >= 70 ? 0.85 : quality >= 50 ? 0.7 : 0.55
@@ -498,6 +522,7 @@ function PdfPageCounter() {
     const next = []
     for (const file of files) {
       try {
+        const { PDFDocument } = await getPdfLib()
         const pdf = await PDFDocument.load(await file.arrayBuffer())
         next.push({ name: file.name, size: file.size, pages: pdf.getPageCount() })
       } catch {
@@ -1015,7 +1040,15 @@ function UrlEncoderDecoder() {
 
 function MarkdownPreview() {
   const [input, setInput] = useState('# Markdown Preview\n\n- Fast\n- Browser-only\n\n**Bold** text here.')
-  const html = useMemo(() => marked.parse(input || ''), [input])
+  const [html, setHtml] = useState('')
+
+  useEffect(() => {
+    let active = true
+    getMarked().then((marked) => {
+      if (active) setHtml(marked.parse(input || ''))
+    })
+    return () => { active = false }
+  }, [input])
 
   return (
     <Stack spacing={1.2}>
