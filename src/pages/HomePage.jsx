@@ -12,6 +12,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
 import { projects } from '../data/projects'
+import { toolGuides } from '../data/toolGuides'
+import { toolComparisons } from '../data/toolComparisons'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
 export default function HomePage() {
@@ -108,12 +110,32 @@ export default function HomePage() {
         <Typography variant="h5" sx={{ mb: 1.25 }}>Popular Destinations</Typography>
         <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
           <Button variant="contained" href="https://www.outagely.com" target="_blank" rel="noreferrer">Outagely Status Platform</Button>
+          <Button variant="outlined" component={RouterLink} to="/outagely/solutions">Outagely Solutions</Button>
           <Button variant="outlined" component={RouterLink} to="/tools/pdf-suite">PDF Suite</Button>
           <Button variant="outlined" component={RouterLink} to="/tools/image-suite">Image Suite</Button>
           <Button variant="outlined" component={RouterLink} to="/tools/password-generator">Password Generator</Button>
           <Button variant="outlined" component={RouterLink} to="/tools/json-formatter">JSON Formatter</Button>
         </Stack>
       </Box>
+
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mb: 6 }}>
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h5" sx={{ mb: 1 }}>Popular Tool Guides</Typography>
+          <Stack spacing={0.7}>
+            {toolGuides.slice(0, 4).map((g) => (
+              <Link key={g.slug} component={RouterLink} to={`/guides/${g.slug}`} underline="hover" color="secondary">{g.title}</Link>
+            ))}
+          </Stack>
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <Typography variant="h5" sx={{ mb: 1 }}>Top Comparisons</Typography>
+          <Stack spacing={0.7}>
+            {toolComparisons.map((c) => (
+              <Link key={c.slug} component={RouterLink} to={`/compare/${c.slug}`} underline="hover" color="secondary">{c.title}</Link>
+            ))}
+          </Stack>
+        </Box>
+      </Stack>
 
       <Box id="portfolio" sx={{ mb: 9 }}>
         <Typography variant="h4" sx={{ mb: 2 }}>Shipped Projects</Typography>

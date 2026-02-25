@@ -1,8 +1,11 @@
-import { Box, Breadcrumbs, Card, CardActions, CardContent, Chip, Stack, TextField, Typography, Button, Link } from '@mui/material'
+import { Box, Breadcrumbs, Card, CardActions, CardContent, CardMedia, Chip, Stack, TextField, Typography, Button, Link } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { useMemo, useState, useEffect } from 'react'
 import { tools } from '../data/tools'
+import { toolGuides } from '../data/toolGuides'
+import { toolComparisons } from '../data/toolComparisons'
 import { setPageSeo, SITE_URL } from '../utils/seo'
+import { getToolImageUrl } from '../utils/toolImages'
 
 export default function ToolsLibraryPage() {
   const [query, setQuery] = useState('')
@@ -89,6 +92,7 @@ export default function ToolsLibraryPage() {
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 2 }}>
         {filtered.map((tool) => (
           <Card key={tool.slug} sx={{ background: 'rgba(18, 24, 44, 0.72)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <CardMedia component="img" image={getToolImageUrl(tool)} alt={tool.name} sx={{ aspectRatio: '16 / 9', objectFit: 'cover', borderBottom: '1px solid rgba(255,255,255,0.08)' }} />
             <CardContent>
               <Chip size="small" label={tool.category} sx={{ mb: 1 }} />
               <Typography variant="h6">{tool.name}</Typography>
@@ -99,6 +103,24 @@ export default function ToolsLibraryPage() {
             </CardActions>
           </Card>
         ))}
+      </Box>
+
+      <Box>
+        <Typography variant="h5" sx={{ mb: 1.25 }}>Popular How-To Guides</Typography>
+        <Stack spacing={0.8}>
+          {toolGuides.slice(0, 5).map((g) => (
+            <Link key={g.slug} component={RouterLink} to={`/guides/${g.slug}`} underline="hover" color="secondary">{g.title}</Link>
+          ))}
+        </Stack>
+      </Box>
+
+      <Box>
+        <Typography variant="h5" sx={{ mb: 1.25 }}>Tool Comparisons</Typography>
+        <Stack spacing={0.8}>
+          {toolComparisons.map((c) => (
+            <Link key={c.slug} component={RouterLink} to={`/compare/${c.slug}`} underline="hover" color="secondary">{c.title}</Link>
+          ))}
+        </Stack>
       </Box>
     </Stack>
   )

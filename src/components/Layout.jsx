@@ -100,11 +100,20 @@ export default function Layout({ children, moneySite = false }) {
             {moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/tools">Tools</Button> : null}
+            {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/changelog">Changelog</Button> : null}
           </Stack>
         </Toolbar>
       </AppBar>
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 10 } }}>
+        {!moneySite ? (
+          <Chip
+            label="Trust: Browser-local processing • No tool-input retention • Privacy-first"
+            color="secondary"
+            variant="outlined"
+            sx={{ mb: 2 }}
+          />
+        ) : null}
         {children}
         <Stack spacing={1} sx={{ mt: 9, pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
           <Chip label="Built with React + MUI" color="secondary" sx={{ width: 'fit-content' }} />

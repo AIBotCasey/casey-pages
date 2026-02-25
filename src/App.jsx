@@ -11,6 +11,10 @@ import MoneyBlogPage from './pages/MoneyBlogPage'
 import MoneyStartHerePage from './pages/MoneyStartHerePage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
+import ToolGuidePage from './pages/ToolGuidePage'
+import ToolComparisonPage from './pages/ToolComparisonPage'
+import OutagelySolutionsPage from './pages/OutagelySolutionsPage'
+import ChangelogPage from './pages/ChangelogPage'
 import { isMoneySubdomain } from './utils/siteMode'
 
 const ToolsLibraryPage = lazy(() => import('./pages/ToolsLibraryPage'))
@@ -36,6 +40,10 @@ export default function App() {
           {!moneySite ? <Route path="/tools/:slug" element={<Suspense fallback={null}><ToolPage /></Suspense>} /> : null}
           {!moneySite ? <Route path="/terms" element={<TermsPage />} /> : null}
           {!moneySite ? <Route path="/privacy" element={<PrivacyPage />} /> : null}
+          {!moneySite ? <Route path="/guides/:slug" element={<ToolGuidePage />} /> : null}
+          {!moneySite ? <Route path="/compare/:slug" element={<ToolComparisonPage />} /> : null}
+          {!moneySite ? <Route path="/outagely/solutions" element={<OutagelySolutionsPage />} /> : null}
+          {!moneySite ? <Route path="/changelog" element={<ChangelogPage />} /> : null}
         </Routes>
       </Layout>
       <Analytics />
