@@ -9,6 +9,8 @@ import PortfolioPage from './pages/PortfolioPage'
 import MoneyHomePage from './pages/MoneyHomePage'
 import MoneyBlogPage from './pages/MoneyBlogPage'
 import MoneyStartHerePage from './pages/MoneyStartHerePage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 import { isMoneySubdomain } from './utils/siteMode'
 
 const ToolsLibraryPage = lazy(() => import('./pages/ToolsLibraryPage'))
@@ -32,6 +34,8 @@ export default function App() {
           {!moneySite ? <Route path="/tools/image-suite" element={<Suspense fallback={null}><ToolSuitePage suite="image" /></Suspense>} /> : null}
           {!moneySite ? <Route path="/tools/pdf-suite" element={<Suspense fallback={null}><ToolSuitePage suite="pdf" /></Suspense>} /> : null}
           {!moneySite ? <Route path="/tools/:slug" element={<Suspense fallback={null}><ToolPage /></Suspense>} /> : null}
+          {!moneySite ? <Route path="/terms" element={<TermsPage />} /> : null}
+          {!moneySite ? <Route path="/privacy" element={<PrivacyPage />} /> : null}
         </Routes>
       </Layout>
       <Analytics />

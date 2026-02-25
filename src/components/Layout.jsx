@@ -108,6 +108,12 @@ export default function Layout({ children, moneySite = false }) {
         {children}
         <Stack spacing={1} sx={{ mt: 9, pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
           <Chip label="Built with React + MUI" color="secondary" sx={{ width: 'fit-content' }} />
+          {!moneySite ? (
+            <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
+              <Button size="small" color="inherit" component={RouterLink} to="/terms">Terms of Use</Button>
+              <Button size="small" color="inherit" component={RouterLink} to="/privacy">Privacy Policy</Button>
+            </Stack>
+          ) : null}
           <Typography variant="body2" color="text.secondary">
             © {new Date().getFullYear()} Casey • Built with AIBotCasey 🤖
           </Typography>
