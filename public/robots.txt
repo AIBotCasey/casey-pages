@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aibotcasey.com/sitemap.xml
+Sitemap: https://www.aibotcasey.com/sitemap.xml

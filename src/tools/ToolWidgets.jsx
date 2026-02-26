@@ -166,7 +166,7 @@ function JsonFormatter() {
 }
 
 function QrGenerator() {
-  const [text, setText] = useState('https://aibotcasey.com')
+  const [text, setText] = useState('https://www.aibotcasey.com')
   const [src, setSrc] = useState('')
 
   useEffect(() => {
