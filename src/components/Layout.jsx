@@ -12,7 +12,7 @@ import {
   createTheme,
 } from '@mui/material'
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
 import CookieConsent from './CookieConsent'
 
@@ -42,6 +42,9 @@ function AnimatedBackground({ moneySite }) {
 }
 
 export default function Layout({ children, moneySite = false }) {
+  const { pathname } = useLocation()
+  const isHomePage = pathname === '/'
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -96,7 +99,7 @@ export default function Layout({ children, moneySite = false }) {
             </Typography>
           </Stack>
           <Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} alignItems="center" flexWrap="wrap" useFlexGap>
-            <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button>
+            {!isHomePage ? <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button> : null}
             {moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/tools">Tools</Button> : null}
