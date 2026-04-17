@@ -106,13 +106,6 @@ export default function Layout({ children, moneySite = false }) {
       </AppBar>
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 10 } }}>
-        {!moneySite ? (
-          <Chip
-            label="Trust: Browser-local processing • Privacy-first"
-            variant="outlined"
-            sx={{ mb: 2, borderRadius: 0, borderColor: 'rgba(255,255,255,0.25)', color: '#d8d8d8' }}
-          />
-        ) : null}
         {children}
         <Stack spacing={1} sx={{ mt: 9, pt: 3, borderTop: '1px solid rgba(255,255,255,0.16)' }}>
           <Chip label="Built with React + MUI" variant="outlined" sx={{ width: 'fit-content', borderRadius: 0 }} />
