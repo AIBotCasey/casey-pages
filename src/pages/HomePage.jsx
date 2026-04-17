@@ -12,13 +12,25 @@ import { useEffect } from 'react'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
-const previousTitles = [
-  { title: 'IT Support Specialist', period: 'Mar 2022 – Present' },
-  { title: 'IT Support Specialist', period: 'Jul 2020 – Mar 2022' },
-  { title: 'IT System Support Analyst', period: 'Jul 2019 – Jul 2020' },
-  { title: 'IT Helpdesk Operator', period: 'Dec 2018 – Jul 2019' },
-  { title: 'System Designer', period: 'Jun 2017 – Dec 2018' },
-  { title: 'Sales Associate', period: 'Oct 2015 – Jun 2017' },
+const experienceBlocks = [
+  {
+    label: 'Role Progression Block 01',
+    period: 'Oct 2015 – Dec 2018',
+    roles: [
+      { title: 'Sales Associate', period: 'Oct 2015 – Jun 2017' },
+      { title: 'System Designer', period: 'Jun 2017 – Dec 2018' },
+    ],
+  },
+  {
+    label: 'Role Progression Block 02',
+    period: 'Dec 2018 – Present',
+    roles: [
+      { title: 'IT Helpdesk Operator', period: 'Dec 2018 – Jul 2019' },
+      { title: 'IT System Support Analyst', period: 'Jul 2019 – Jul 2020' },
+      { title: 'IT Support Specialist', period: 'Jul 2020 – Mar 2022' },
+      { title: 'IT Support Specialist', period: 'Mar 2022 – Present' },
+    ],
+  },
 ]
 
 export default function HomePage() {
@@ -210,13 +222,13 @@ export default function HomePage() {
           }}
         >
           <Stack spacing={1.8}>
-            {previousTitles.map((item) => (
+            {experienceBlocks.map((block) => (
               <Box
-                key={`${item.title}-${item.period}`}
+                key={block.label}
                 sx={{
                   position: 'relative',
                   px: 2,
-                  py: 1.3,
+                  py: 1.5,
                   border: '2px solid #525252',
                   borderRadius: 0,
                   bgcolor: '#171717',
@@ -225,8 +237,7 @@ export default function HomePage() {
                     content: '""',
                     position: 'absolute',
                     left: { xs: -25, sm: -30 },
-                    top: '50%',
-                    transform: 'translateY(-50%)',
+                    top: 18,
                     width: 10,
                     height: 10,
                     bgcolor: '#e0e0e0',
@@ -235,8 +246,27 @@ export default function HomePage() {
                   },
                 }}
               >
-                <Typography sx={{ fontWeight: 700 }}>{item.title}</Typography>
-                <Typography color="text.secondary">{item.period}</Typography>
+                <Typography sx={{ fontWeight: 700 }}>{block.label}</Typography>
+                <Typography color="text.secondary" sx={{ mb: 1.1, fontSize: '0.9rem' }}>
+                  {block.period}
+                </Typography>
+
+                <Stack spacing={0.8}>
+                  {block.roles.map((role, idx) => (
+                    <Box
+                      key={`${block.label}-${role.title}-${role.period}`}
+                      sx={{ pl: 1.2, borderLeft: '2px solid #3f3f3f' }}
+                    >
+                      <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>{role.title}</Typography>
+                      <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>{role.period}</Typography>
+                      {idx < block.roles.length - 1 ? (
+                        <Typography color="text.secondary" sx={{ fontSize: '0.72rem', mt: 0.35, opacity: 0.85 }}>
+                          progression
+                        </Typography>
+                      ) : null}
+                    </Box>
+                  ))}
+                </Stack>
               </Box>
             ))}
           </Stack>
