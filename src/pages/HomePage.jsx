@@ -4,7 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Chip,
   Stack,
   Typography,
 } from '@mui/material'
@@ -64,7 +63,6 @@ export default function HomePage() {
               <Typography color="text.secondary">IT Professional • Product Builder</Typography>
             </Box>
             <Stack direction="row" gap={1} flexWrap="wrap">
-              <Chip label="AIBotCasey" sx={{ borderRadius: 0, bgcolor: '#222', color: '#efefef' }} />
               <Button
                 variant="outlined"
                 size="small"
@@ -107,31 +105,6 @@ export default function HomePage() {
           </Stack>
         </CardContent>
       </Card>
-
-      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        <Button
-          variant="contained"
-          href="#projects"
-          sx={{ borderRadius: 0, border: '1px solid #8f8f8f', bgcolor: '#e5e5e5', color: '#121212', '&:hover': { bgcolor: '#d5d5d5' } }}
-        >
-          Projects
-        </Button>
-        <Button
-          variant="outlined"
-          href="#experience"
-          sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-        >
-          Experience
-        </Button>
-        <Button
-          variant="outlined"
-          component={RouterLink}
-          to="/portfolio"
-          sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-        >
-          Full Portfolio
-        </Button>
-      </Box>
 
       <Box id="projects" sx={{ pt: 1 }}>
         <Typography variant="h5" sx={{ mb: 1.5 }}>
@@ -218,7 +191,7 @@ export default function HomePage() {
 
       <Box id="experience" sx={{ pt: 1 }}>
         <Typography variant="h5" sx={{ mb: 1.5 }}>
-          Previous Titles + Dates
+          Experience
         </Typography>
 
         <Box

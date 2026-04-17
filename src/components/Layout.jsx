@@ -79,7 +79,8 @@ export default function Layout({ children, moneySite = false }) {
       >
         <Toolbar
           sx={{
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            position: 'relative',
             flexWrap: 'wrap',
             gap: 1,
             py: { xs: 0.75, sm: 0 },
@@ -97,11 +98,9 @@ export default function Layout({ children, moneySite = false }) {
               {moneySite ? 'Casey // Money' : 'Casey // AIBotCasey'}
             </Typography>
           </Stack>
-          <Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} alignItems="center" flexWrap="wrap" useFlexGap>
+          <Stack direction="row" spacing={{ xs: 0.5, sm: 1 }} alignItems="center" flexWrap="wrap" useFlexGap sx={{ position: 'absolute', right: 16 }}>
             {!isHomePage ? <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button> : null}
             {moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button> : null}
-            {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button> : null}
-            {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/changelog">Changelog</Button> : null}
           </Stack>
         </Toolbar>
       </AppBar>
