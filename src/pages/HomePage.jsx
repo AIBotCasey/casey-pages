@@ -89,7 +89,7 @@ export default function HomePage() {
       </Card>
 
       <Box id="projects" sx={{ pt: 1 }}>
-        <Typography variant="h5" sx={{ mb: 1.5 }}>Active Projects</Typography>
+        <Typography variant="h5" sx={{ mb: 1.5 }}>Projects</Typography>
         <Box
           sx={{
             display: 'grid',
