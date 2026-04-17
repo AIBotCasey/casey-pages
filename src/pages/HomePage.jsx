@@ -174,8 +174,8 @@ export default function HomePage() {
                   <Stack spacing={0.8}>
                     {entry.roles.map((role) => (
                       <Box key={`${role.title}-${role.period}`} sx={{ pl: 1.2, borderLeft: '2px solid #3f3f3f' }}>
-                        <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>{role.title}</Typography>
-                        <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>{role.period}</Typography>
+                        <Typography sx={{ fontWeight: 700 }}>{role.title}</Typography>
+                        <Typography color="text.secondary">{role.period}</Typography>
                       </Box>
                     ))}
                   </Stack>

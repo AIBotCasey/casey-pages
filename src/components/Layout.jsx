@@ -2,7 +2,6 @@ import {
   AppBar,
   Box,
   Button,
-  Chip,
   Container,
   CssBaseline,
   Stack,
@@ -14,7 +13,6 @@ import {
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import { useMemo } from 'react'
-import CookieConsent from './CookieConsent'
 
 function AnimatedBackground({ moneySite }) {
   const background = moneySite
@@ -107,20 +105,7 @@ export default function Layout({ children, moneySite = false }) {
 
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 10 } }}>
         {children}
-        <Stack spacing={1} sx={{ mt: 9, pt: 3, borderTop: '1px solid rgba(255,255,255,0.16)' }}>
-          <Chip label="Built with React + MUI" variant="outlined" sx={{ width: 'fit-content', borderRadius: 0 }} />
-          {!moneySite ? (
-            <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
-              <Button size="small" color="inherit" component={RouterLink} to="/terms">Terms of Use</Button>
-              <Button size="small" color="inherit" component={RouterLink} to="/privacy">Privacy Policy</Button>
-            </Stack>
-          ) : null}
-          <Typography variant="body2" color="text.secondary">
-            © {new Date().getFullYear()} Casey • Built with AIBotCasey 🤖
-          </Typography>
-        </Stack>
       </Container>
-      <CookieConsent />
     </ThemeProvider>
   )
 }
