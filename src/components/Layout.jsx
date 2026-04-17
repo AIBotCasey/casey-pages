@@ -18,8 +18,8 @@ import CookieConsent from './CookieConsent'
 
 function AnimatedBackground({ moneySite }) {
   const background = moneySite
-    ? 'radial-gradient(circle at 20% 20%, rgba(0,200,140,0.24), transparent 35%), radial-gradient(circle at 80% 30%, rgba(0,171,145,0.18), transparent 38%), radial-gradient(circle at 40% 80%, rgba(156,204,101,0.14), transparent 34%), linear-gradient(130deg, #05110f 0%, #0a1916 48%, #06100d 100%)'
-    : 'radial-gradient(circle at 20% 20%, rgba(124,77,255,0.30), transparent 38%), radial-gradient(circle at 80% 30%, rgba(0,229,255,0.25), transparent 40%), radial-gradient(circle at 40% 80%, rgba(255,64,129,0.20), transparent 35%), linear-gradient(130deg, #070a14 0%, #0c1226 50%, #060912 100%)'
+    ? 'linear-gradient(140deg, #0e0e0e 0%, #131313 50%, #0e0e0e 100%)'
+    : 'linear-gradient(140deg, #111111 0%, #161616 50%, #101010 100%)'
 
   return (
     <Box
@@ -31,10 +31,8 @@ function AnimatedBackground({ moneySite }) {
         '&::before': {
           content: '""',
           position: 'absolute',
-          inset: '-20%',
+          inset: '-10%',
           background,
-          animation: 'floatBg 28s ease-in-out infinite alternate',
-          transformOrigin: 'center',
         },
       }}
     />
@@ -50,11 +48,12 @@ export default function Layout({ children, moneySite = false }) {
       createTheme({
         palette: {
           mode: 'dark',
-          primary: { main: moneySite ? '#2e7d32' : '#7c4dff' },
-          secondary: { main: moneySite ? '#4dd0a8' : '#00e5ff' },
-          background: { default: moneySite ? '#05110f' : '#070a14', paper: moneySite ? 'rgba(10, 24, 20, 0.72)' : 'rgba(16, 21, 38, 0.7)' },
+          primary: { main: '#dcdcdc' },
+          secondary: { main: '#bdbdbd' },
+          background: { default: '#101010', paper: 'rgba(22, 22, 22, 0.92)' },
+          text: { primary: '#f1f1f1', secondary: '#b8b8b8' },
         },
-        shape: { borderRadius: 16 },
+        shape: { borderRadius: 0 },
         typography: {
           fontFamily: 'Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif',
           h1: { fontWeight: 800 },
@@ -73,9 +72,9 @@ export default function Layout({ children, moneySite = false }) {
         position="sticky"
         elevation={0}
         sx={{
-          backdropFilter: 'blur(8px)',
-          background: moneySite ? 'rgba(5, 17, 15, 0.58)' : 'rgba(7, 10, 20, 0.55)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          backdropFilter: 'blur(6px)',
+          background: 'rgba(16, 16, 16, 0.88)',
+          borderBottom: '1px solid rgba(255,255,255,0.14)',
         }}
       >
         <Toolbar
@@ -87,7 +86,7 @@ export default function Layout({ children, moneySite = false }) {
           }}
         >
           <Stack direction="row" spacing={1} alignItems="center" sx={{ minWidth: 0 }}>
-            <RocketLaunchRoundedIcon color="secondary" sx={{ display: { xs: 'none', sm: 'block' } }} />
+            <RocketLaunchRoundedIcon sx={{ color: '#dcdcdc', display: { xs: 'none', sm: 'block' } }} />
             <Typography
               variant="h6"
               fontWeight={800}
@@ -111,14 +110,13 @@ export default function Layout({ children, moneySite = false }) {
         {!moneySite ? (
           <Chip
             label="Trust: Browser-local processing • Privacy-first"
-            color="secondary"
             variant="outlined"
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, borderRadius: 0, borderColor: 'rgba(255,255,255,0.25)', color: '#d8d8d8' }}
           />
         ) : null}
         {children}
-        <Stack spacing={1} sx={{ mt: 9, pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-          <Chip label="Built with React + MUI" color="secondary" sx={{ width: 'fit-content' }} />
+        <Stack spacing={1} sx={{ mt: 9, pt: 3, borderTop: '1px solid rgba(255,255,255,0.16)' }}>
+          <Chip label="Built with React + MUI" variant="outlined" sx={{ width: 'fit-content', borderRadius: 0 }} />
           {!moneySite ? (
             <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
               <Button size="small" color="inherit" component={RouterLink} to="/terms">Terms of Use</Button>
