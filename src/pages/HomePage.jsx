@@ -5,6 +5,7 @@ import {
   CardActions,
   CardContent,
   Chip,
+  Stack,
   Typography,
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
@@ -40,65 +41,82 @@ export default function HomePage() {
           sameAs: ['https://github.com/AIBotCasey'],
           jobTitle: 'IT Professional & Product Builder',
         },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebPage',
-          name: 'Casey Home',
-          url: `${SITE_URL}/`,
-          description: 'Projects, portfolio, and previous titles for Casey.',
-        },
       ],
     })
   }, [])
 
   return (
-    <Box
-      sx={{
-        fontFamily: '"Courier New", Courier, monospace',
-      }}
-    >
-      <Box sx={{ mb: 5 }}>
-        <Chip
-          label="AIBotCasey // Home"
-          sx={{
-            width: 'fit-content',
-            borderRadius: 0,
-            bgcolor: '#1f1f1f',
-            color: '#efefef',
-            border: '1px solid #4f4f4f',
-            mb: 2,
-          }}
-        />
-        <Typography variant="h1" sx={{ fontSize: { xs: '2rem', md: '2.8rem' }, letterSpacing: 0.5 }}>
-          Casey Projects + Portfolio
-        </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860, mt: 1.5 }}>
-          Practical IT and AI systems, shipped projects, and active work in progress.
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1.25, flexWrap: 'wrap', mt: 2.5 }}>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/portfolio"
-            sx={{ borderRadius: 0, border: '1px solid #8f8f8f', bgcolor: '#e5e5e5', color: '#121212', '&:hover': { bgcolor: '#d5d5d5' } }}
-          >
-            View Portfolio
-          </Button>
-          <Button
-            variant="outlined"
-            href="mailto:support@aibotcasey.com"
-            sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#f1f1f1' }}
-          >
-            Contact
-          </Button>
-        </Box>
+    <Stack spacing={3} sx={{ fontFamily: '"Courier New", Courier, monospace' }}>
+      <Card
+        sx={{
+          border: '2px solid #525252',
+          borderRadius: 0,
+          bgcolor: '#171717',
+          boxShadow: '6px 6px 0 rgba(0,0,0,0.45)',
+        }}
+      >
+        <CardContent sx={{ pb: '16px !important' }}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.5}>
+            <Box>
+              <Typography variant="h4" sx={{ fontSize: { xs: '1.55rem', md: '1.8rem' }, mb: 0.2 }}>
+                Casey
+              </Typography>
+              <Typography color="text.secondary">IT Professional • Product Builder</Typography>
+            </Box>
+            <Stack direction="row" gap={1} flexWrap="wrap">
+              <Chip label="AIBotCasey" sx={{ borderRadius: 0, bgcolor: '#222', color: '#efefef' }} />
+              <Button
+                variant="outlined"
+                size="small"
+                href="mailto:support@aibotcasey.com"
+                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
+              >
+                Email
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                href="https://github.com/AIBotCasey"
+                target="_blank"
+                rel="noreferrer"
+                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
+              >
+                GitHub
+              </Button>
+            </Stack>
+          </Stack>
+        </CardContent>
+      </Card>
+
+      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+        <Button
+          variant="contained"
+          href="#projects"
+          sx={{ borderRadius: 0, border: '1px solid #8f8f8f', bgcolor: '#e5e5e5', color: '#121212', '&:hover': { bgcolor: '#d5d5d5' } }}
+        >
+          Projects
+        </Button>
+        <Button
+          variant="outlined"
+          href="#experience"
+          sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
+        >
+          Experience
+        </Button>
+        <Button
+          variant="outlined"
+          component={RouterLink}
+          to="/portfolio"
+          sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
+        >
+          Full Portfolio
+        </Button>
       </Box>
 
-      <Box id="projects" sx={{ mb: 6 }}>
-        <Typography variant="h4" sx={{ mb: 2, letterSpacing: 0.4 }}>
-          Active Project Cards
+      <Box id="projects" sx={{ pt: 1 }}>
+        <Typography variant="h5" sx={{ mb: 1.5 }}>
+          Active Projects
         </Typography>
-
         <Box
           sx={{
             display: 'grid',
@@ -169,7 +187,7 @@ export default function HomePage() {
                     rel="noreferrer"
                     sx={{ borderRadius: 0, border: '1px solid #8f8f8f', bgcolor: '#e5e5e5', color: '#121212', '&:hover': { bgcolor: '#d5d5d5' } }}
                   >
-                    View Repo
+                    Repo
                   </Button>
                 ) : null}
               </CardActions>
@@ -178,11 +196,11 @@ export default function HomePage() {
         </Box>
       </Box>
 
-      <Box>
-        <Typography variant="h4" sx={{ mb: 2, letterSpacing: 0.4 }}>
+      <Box id="experience" sx={{ pt: 1 }}>
+        <Typography variant="h5" sx={{ mb: 1.5 }}>
           Previous Titles + Dates
         </Typography>
-        <Box sx={{ display: 'grid', gap: 1.1 }}>
+        <Stack spacing={1.1}>
           {previousTitles.map((item) => (
             <Box
               key={`${item.title}-${item.period}`}
@@ -203,8 +221,8 @@ export default function HomePage() {
               <Typography color="text.secondary">{item.period}</Typography>
             </Box>
           ))}
-        </Box>
+        </Stack>
       </Box>
-    </Box>
+    </Stack>
   )
 }
