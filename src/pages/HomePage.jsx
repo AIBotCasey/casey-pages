@@ -83,6 +83,26 @@ export default function HomePage() {
               >
                 GitHub
               </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                href="https://www.linkedin.com/in/caseypurves/"
+                target="_blank"
+                rel="noreferrer"
+                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
+              >
+                LinkedIn
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                href="https://www.youtube.com/@TechTutorialSpot"
+                target="_blank"
+                rel="noreferrer"
+                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
+              >
+                YouTube
+              </Button>
             </Stack>
           </Stack>
         </CardContent>
