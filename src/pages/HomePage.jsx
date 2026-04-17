@@ -12,25 +12,20 @@ import { useEffect } from 'react'
 import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
-const experienceBlocks = [
+const timelineEntries = [
   {
-    label: 'Role Progression Block 01',
+    type: 'group',
+    label: 'Same company',
     period: 'Oct 2015 – Dec 2018',
     roles: [
       { title: 'Sales Associate', period: 'Oct 2015 – Jun 2017' },
       { title: 'System Designer', period: 'Jun 2017 – Dec 2018' },
     ],
   },
-  {
-    label: 'Role Progression Block 02',
-    period: 'Dec 2018 – Present',
-    roles: [
-      { title: 'IT Helpdesk Operator', period: 'Dec 2018 – Jul 2019' },
-      { title: 'IT System Support Analyst', period: 'Jul 2019 – Jul 2020' },
-      { title: 'IT Support Specialist', period: 'Jul 2020 – Mar 2022' },
-      { title: 'IT Support Specialist', period: 'Mar 2022 – Present' },
-    ],
-  },
+  { type: 'single', title: 'IT Helpdesk Operator', period: 'Dec 2018 – Jul 2019' },
+  { type: 'single', title: 'IT System Support Analyst', period: 'Jul 2019 – Jul 2020' },
+  { type: 'single', title: 'IT Support Specialist', period: 'Jul 2020 – Mar 2022' },
+  { type: 'single', title: 'IT Support Specialist', period: 'Mar 2022 – Present' },
 ]
 
 export default function HomePage() {
@@ -75,53 +70,17 @@ export default function HomePage() {
               <Typography color="text.secondary">IT Professional • Product Builder</Typography>
             </Box>
             <Stack direction="row" gap={1} flexWrap="wrap">
-              <Button
-                variant="outlined"
-                size="small"
-                href="mailto:support@aibotcasey.com"
-                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-              >
-                Email
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                href="https://github.com/AIBotCasey"
-                target="_blank"
-                rel="noreferrer"
-                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-              >
-                GitHub
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                href="https://www.linkedin.com/in/caseypurves/"
-                target="_blank"
-                rel="noreferrer"
-                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-              >
-                LinkedIn
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                href="https://www.youtube.com/@TechTutorialSpot"
-                target="_blank"
-                rel="noreferrer"
-                sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-              >
-                YouTube
-              </Button>
+              <Button variant="outlined" size="small" href="mailto:support@aibotcasey.com" sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}>Email</Button>
+              <Button variant="outlined" size="small" href="https://github.com/AIBotCasey" target="_blank" rel="noreferrer" sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}>GitHub</Button>
+              <Button variant="outlined" size="small" href="https://www.linkedin.com/in/caseypurves/" target="_blank" rel="noreferrer" sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}>LinkedIn</Button>
+              <Button variant="outlined" size="small" href="https://www.youtube.com/@TechTutorialSpot" target="_blank" rel="noreferrer" sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}>YouTube</Button>
             </Stack>
           </Stack>
         </CardContent>
       </Card>
 
       <Box id="projects" sx={{ pt: 1 }}>
-        <Typography variant="h5" sx={{ mb: 1.5 }}>
-          Active Projects
-        </Typography>
+        <Typography variant="h5" sx={{ mb: 1.5 }}>Active Projects</Typography>
         <Box
           sx={{
             display: 'grid',
@@ -148,52 +107,20 @@ export default function HomePage() {
               }}
             >
               <CardContent sx={{ pb: 0 }}>
-                <Typography variant="h6" gutterBottom>
-                  {project.name}
-                </Typography>
-                <Typography color="text.secondary" sx={{ mb: 1.2, fontSize: '0.92rem' }}>
-                  {project.tagline}
-                </Typography>
-                <Typography color="text.secondary" sx={{ fontSize: '0.85rem' }}>
-                  {project.summary}
-                </Typography>
+                <Typography variant="h6" gutterBottom>{project.name}</Typography>
+                <Typography color="text.secondary" sx={{ mb: 1.2, fontSize: '0.92rem' }}>{project.tagline}</Typography>
+                <Typography color="text.secondary" sx={{ fontSize: '0.85rem' }}>{project.summary}</Typography>
               </CardContent>
               <CardActions sx={{ px: 2, pb: 2, gap: 1, flexWrap: 'wrap' }}>
                 {project.liveUrl ? (
                   project.liveUrl.startsWith('/') ? (
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      component={RouterLink}
-                      to={project.liveUrl}
-                      sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-                    >
-                      Open
-                    </Button>
+                    <Button size="small" variant="outlined" component={RouterLink} to={project.liveUrl} sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}>Open</Button>
                   ) : (
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}
-                    >
-                      Live App
-                    </Button>
+                    <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer" sx={{ borderRadius: 0, borderColor: '#8f8f8f', color: '#efefef' }}>Live App</Button>
                   )
                 ) : null}
                 {!project.hideRepo ? (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    href={project.repoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    sx={{ borderRadius: 0, border: '1px solid #8f8f8f', bgcolor: '#e5e5e5', color: '#121212', '&:hover': { bgcolor: '#d5d5d5' } }}
-                  >
-                    Repo
-                  </Button>
+                  <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer" sx={{ borderRadius: 0, border: '1px solid #8f8f8f', bgcolor: '#e5e5e5', color: '#121212', '&:hover': { bgcolor: '#d5d5d5' } }}>Repo</Button>
                 ) : null}
               </CardActions>
             </Card>
@@ -202,9 +129,7 @@ export default function HomePage() {
       </Box>
 
       <Box id="experience" sx={{ pt: 1 }}>
-        <Typography variant="h5" sx={{ mb: 1.5 }}>
-          Experience
-        </Typography>
+        <Typography variant="h5" sx={{ mb: 1.5 }}>Experience</Typography>
 
         <Box
           sx={{
@@ -222,9 +147,9 @@ export default function HomePage() {
           }}
         >
           <Stack spacing={1.8}>
-            {experienceBlocks.map((block) => (
+            {timelineEntries.map((entry, idx) => (
               <Box
-                key={block.label}
+                key={`entry-${idx}`}
                 sx={{
                   position: 'relative',
                   px: 2,
@@ -237,7 +162,8 @@ export default function HomePage() {
                     content: '""',
                     position: 'absolute',
                     left: { xs: -25, sm: -30 },
-                    top: 18,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
                     width: 10,
                     height: 10,
                     bgcolor: '#e0e0e0',
@@ -246,27 +172,41 @@ export default function HomePage() {
                   },
                 }}
               >
-                <Typography sx={{ fontWeight: 700 }}>{block.label}</Typography>
-                <Typography color="text.secondary" sx={{ mb: 1.1, fontSize: '0.9rem' }}>
-                  {block.period}
-                </Typography>
-
-                <Stack spacing={0.8}>
-                  {block.roles.map((role, idx) => (
+                {entry.type === 'group' ? (
+                  <>
                     <Box
-                      key={`${block.label}-${role.title}-${role.period}`}
-                      sx={{ pl: 1.2, borderLeft: '2px solid #3f3f3f' }}
+                      sx={{
+                        position: 'absolute',
+                        right: -2,
+                        top: -2,
+                        px: 0.9,
+                        py: 0.2,
+                        fontSize: '0.68rem',
+                        bgcolor: '#2a2a2a',
+                        borderLeft: '2px solid #525252',
+                        borderBottom: '2px solid #525252',
+                        textTransform: 'uppercase',
+                        letterSpacing: 0.4,
+                      }}
                     >
-                      <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>{role.title}</Typography>
-                      <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>{role.period}</Typography>
-                      {idx < block.roles.length - 1 ? (
-                        <Typography color="text.secondary" sx={{ fontSize: '0.72rem', mt: 0.35, opacity: 0.85 }}>
-                          progression
-                        </Typography>
-                      ) : null}
+                      {entry.label}
                     </Box>
-                  ))}
-                </Stack>
+                    <Typography color="text.secondary" sx={{ mb: 0.9, fontSize: '0.86rem' }}>{entry.period}</Typography>
+                    <Stack spacing={0.8}>
+                      {entry.roles.map((role) => (
+                        <Box key={`${role.title}-${role.period}`} sx={{ pl: 1.2, borderLeft: '2px solid #3f3f3f' }}>
+                          <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>{role.title}</Typography>
+                          <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>{role.period}</Typography>
+                        </Box>
+                      ))}
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Typography sx={{ fontWeight: 700 }}>{entry.title}</Typography>
+                    <Typography color="text.secondary">{entry.period}</Typography>
+                  </>
+                )}
               </Box>
             ))}
           </Stack>
