@@ -102,7 +102,6 @@ export default function Layout({ children, moneySite = false }) {
             {!isHomePage ? <Button color="inherit" size="small" component={RouterLink} to="/">Home</Button> : null}
             {moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/blog">Blog</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/portfolio">Portfolio</Button> : null}
-            {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/tools">Tools</Button> : null}
             {!moneySite ? <Button color="inherit" size="small" component={RouterLink} to="/changelog">Changelog</Button> : null}
           </Stack>
         </Toolbar>
@@ -111,7 +110,7 @@ export default function Layout({ children, moneySite = false }) {
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 10 } }}>
         {!moneySite ? (
           <Chip
-            label="Trust: Browser-local processing • No tool-input retention • Privacy-first"
+            label="Trust: Browser-local processing • Privacy-first"
             color="secondary"
             variant="outlined"
             sx={{ mb: 2 }}

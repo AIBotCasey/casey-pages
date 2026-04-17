@@ -4,37 +4,29 @@ import {
   Card,
   CardActions,
   CardContent,
+  Chip,
   Stack,
   Typography,
-  Chip,
-  Link,
 } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import { useEffect } from 'react'
 import { projects } from '../data/projects'
-import { toolGuides } from '../data/toolGuides'
-import { toolComparisons } from '../data/toolComparisons'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
+const previousTitles = [
+  { title: 'Assistant to the CEO', period: 'Present' },
+  { title: 'IT Professional', period: 'Prior Experience' },
+  { title: 'Product Builder', period: 'Prior Experience' },
+]
+
 export default function HomePage() {
-  const featuredProjects = [
-    ...projects.filter((p) => p.featured),
-    {
-      slug: 'free-web-tools',
-      name: 'Free Web Tools',
-      tagline: 'Browser-based utility suite for fast everyday tasks',
-      summary:
-        'A growing library of privacy-first tools for PDF workflows, image utilities, calculators, generators, and developer helpers. Built to run client-side with minimal data handling.',
-      liveUrl: '/tools',
-      hideRepo: true,
-    },
-  ]
+  const featuredProjects = projects.filter((p) => p.featured)
 
   useEffect(() => {
     setPageSeo({
-      title: 'AIBotCasey | Shipped AI Products, Outagely & Free Online Tools',
+      title: 'AIBotCasey | Projects, Portfolio, and Career History',
       description:
-        'Explore shipped products from Casey including Outagely, plus free privacy-first PDF, image, calculator, and developer tools built for real workflows.',
+        'Explore Casey’s current projects, portfolio highlights, and professional title history.',
       path: '/',
       type: 'website',
       jsonLd: [
@@ -45,124 +37,99 @@ export default function HomePage() {
           url: `${SITE_URL}/`,
           sameAs: ['https://github.com/AIBotCasey'],
           jobTitle: 'IT Professional & Product Builder',
-          knowsAbout: [
-            'AI Systems Design',
-            'AI Workflow Automation',
-            'LLM System Design',
-            'Incident Response Tooling',
-            'Product Engineering',
-          ],
         },
         {
           '@context': 'https://schema.org',
           '@type': 'WebPage',
-          name: 'Casey Portfolio',
+          name: 'Casey Home',
           url: `${SITE_URL}/`,
-          description:
-            'Portfolio showcasing shipped AI products, prompt systems, and automation workflows built by Casey.',
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'WebSite',
-          name: 'AIBotCasey',
-          url: SITE_URL,
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'SoftwareApplication',
-          name: 'Outagely',
-          applicationCategory: 'BusinessApplication',
-          operatingSystem: 'Web',
-          url: 'https://www.outagely.com',
-          description: 'Real-time SaaS outage monitoring, service status tracking, and downtime alerts.',
-          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        },
-        {
-          '@context': 'https://schema.org',
-          '@type': 'CollectionPage',
-          name: 'AIBotCasey Free Online Tools',
-          url: `${SITE_URL}/tools`,
-          description: 'Free browser tools for PDF workflows, image editing, calculators, and developer utilities.',
+          description: 'Projects, portfolio, and previous titles for Casey.',
         },
       ],
     })
   }, [])
 
   return (
-    <>
-      <Stack spacing={3} sx={{ mb: 8 }}>
-        <Chip label="Casey Portfolio" color="secondary" sx={{ width: 'fit-content' }} />
-        <Typography variant="h1" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, maxWidth: 980 }}>
-          IT Professional, Builder, and Creative Technologist
+    <Stack
+      spacing={4}
+      sx={{
+        fontFamily: '"Courier New", Courier, monospace',
+        '& .pixel-card': {
+          border: '2px solid rgba(255,255,255,0.45)',
+          borderRadius: 0,
+          background: 'rgba(11, 14, 28, 0.88)',
+          boxShadow: '6px 6px 0 rgba(0,0,0,0.45)',
+        },
+        '& .pixel-button': {
+          borderRadius: 0,
+          borderWidth: 2,
+        },
+      }}
+    >
+      <Stack spacing={2} sx={{ mb: 2 }}>
+        <Chip label="AIBotCasey // Home" color="secondary" sx={{ width: 'fit-content', borderRadius: 0 }} />
+        <Typography variant="h1" sx={{ fontSize: { xs: '2rem', md: '2.8rem' }, letterSpacing: 0.5 }}>
+          Casey Projects + Portfolio
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 860 }}>
-          I build practical AI and IT systems that teams can trust in production — from workflow automation to outage monitoring.
-          Recent shipped work includes Outagely, a real-time SaaS status platform built to speed up incident response and customer communication.
+          Practical IT and AI systems, shipped projects, and active work in progress.
         </Typography>
         <Stack direction="row" spacing={1.25} flexWrap="wrap" useFlexGap>
-          <Button variant="contained" component={RouterLink} to="/portfolio">View Portfolio</Button>
-          <Button variant="outlined" component={RouterLink} to="/tools">Browse Tools</Button>
-          <Button variant="outlined" href="mailto:support@aibotcasey.com">Contact</Button>
+          <Button className="pixel-button" variant="contained" component={RouterLink} to="/portfolio">
+            View Portfolio
+          </Button>
+          <Button className="pixel-button" variant="outlined" href="mailto:support@aibotcasey.com">
+            Contact
+          </Button>
         </Stack>
       </Stack>
 
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="h5" sx={{ mb: 1.25 }}>Popular Destinations</Typography>
-        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-          <Button variant="contained" href="https://www.outagely.com" target="_blank" rel="noreferrer">Outagely Status Platform</Button>
-          <Button variant="outlined" component={RouterLink} to="/outagely/solutions">Outagely Solutions</Button>
-          <Button variant="outlined" component={RouterLink} to="/tools/pdf-suite">PDF Suite</Button>
-          <Button variant="outlined" component={RouterLink} to="/tools/image-suite">Image Suite</Button>
-          <Button variant="outlined" component={RouterLink} to="/tools/password-generator">Password Generator</Button>
-          <Button variant="outlined" component={RouterLink} to="/tools/json-formatter">JSON Formatter</Button>
-        </Stack>
-      </Box>
-
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} sx={{ mb: 6 }}>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h5" sx={{ mb: 1 }}>Popular Tool Guides</Typography>
-          <Stack spacing={0.7}>
-            {toolGuides.slice(0, 4).map((g) => (
-              <Link key={g.slug} component={RouterLink} to={`/guides/${g.slug}`} underline="hover" color="secondary">{g.title}</Link>
-            ))}
-          </Stack>
-        </Box>
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h5" sx={{ mb: 1 }}>Top Comparisons</Typography>
-          <Stack spacing={0.7}>
-            {toolComparisons.map((c) => (
-              <Link key={c.slug} component={RouterLink} to={`/compare/${c.slug}`} underline="hover" color="secondary">{c.title}</Link>
-            ))}
-          </Stack>
-        </Box>
-      </Stack>
-
-      <Box id="portfolio" sx={{ mb: 9 }}>
-        <Typography variant="h4" sx={{ mb: 2 }}>Shipped Projects</Typography>
+      <Box id="projects">
+        <Typography variant="h4" sx={{ mb: 2, letterSpacing: 0.4 }}>
+          Active Project Cards
+        </Typography>
         <Stack spacing={2.5}>
           {featuredProjects.map((project) => (
-            <Card
-              key={project.slug}
-              sx={{
-                background: 'rgba(18, 24, 44, 0.72)',
-                border: '1px solid rgba(255,255,255,0.08)',
-              }}
-            >
+            <Card key={project.slug} className="pixel-card">
               <CardContent>
-                <Typography variant="h5" gutterBottom>{project.name}</Typography>
-                <Typography color="text.secondary" sx={{ mb: 1.5 }}>{project.tagline}</Typography>
+                <Typography variant="h5" gutterBottom>
+                  {project.name}
+                </Typography>
+                <Typography color="text.secondary" sx={{ mb: 1.5 }}>
+                  {project.tagline}
+                </Typography>
                 <Typography color="text.secondary">{project.summary}</Typography>
               </CardContent>
               <CardActions sx={{ px: 2, pb: 2, gap: 1, flexWrap: 'wrap' }}>
                 {project.liveUrl ? (
                   project.liveUrl.startsWith('/') ? (
-                    <Button size="small" variant="outlined" component={RouterLink} to={project.liveUrl}>Open</Button>
+                    <Button size="small" className="pixel-button" variant="outlined" component={RouterLink} to={project.liveUrl}>
+                      Open
+                    </Button>
                   ) : (
-                    <Button size="small" variant="outlined" href={project.liveUrl} target="_blank" rel="noreferrer">Live App</Button>
+                    <Button
+                      size="small"
+                      className="pixel-button"
+                      variant="outlined"
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Live App
+                    </Button>
                   )
                 ) : null}
                 {!project.hideRepo ? (
-                  <Button size="small" variant="contained" href={project.repoUrl} target="_blank" rel="noreferrer">View Repo</Button>
+                  <Button
+                    size="small"
+                    className="pixel-button"
+                    variant="contained"
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Repo
+                  </Button>
                 ) : null}
               </CardActions>
             </Card>
@@ -170,15 +137,26 @@ export default function HomePage() {
         </Stack>
       </Box>
 
-      <Stack spacing={1} sx={{ mt: 6 }}>
-        <Typography variant="h5">Core Skills</Typography>
-        <Typography color="text.secondary">
-          AI systems design, workflow automation, product architecture, and practical IT troubleshooting that delivers measurable outcomes.
+      <Box>
+        <Typography variant="h4" sx={{ mb: 2, letterSpacing: 0.4 }}>
+          Previous Titles + Dates
         </Typography>
-        <Link href="https://github.com/AIBotCasey" target="_blank" rel="noreferrer" underline="hover" color="secondary">
-          GitHub Profile
-        </Link>
-      </Stack>
-    </>
+        <Stack spacing={1.2}>
+          {previousTitles.map((item) => (
+            <Box
+              key={`${item.title}-${item.period}`}
+              className="pixel-card"
+              sx={{ px: 2, py: 1.4, display: 'flex', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}
+            >
+              <Typography sx={{ fontWeight: 700 }}>{item.title}</Typography>
+              <Typography color="text.secondary">{item.period}</Typography>
+            </Box>
+          ))}
+        </Stack>
+        <Typography color="text.secondary" sx={{ mt: 1.2, fontSize: '0.85rem' }}>
+          Send me your exact title/date history and I’ll replace these with your final timeline.
+        </Typography>
+      </Box>
+    </Stack>
   )
 }
