@@ -13,19 +13,17 @@ import { projects } from '../data/projects'
 import { setPageSeo, SITE_URL } from '../utils/seo'
 
 const timelineEntries = [
+  { type: 'single', title: 'IT Support Specialist', period: 'Mar 2022 – Present' },
+  { type: 'single', title: 'IT Support Specialist', period: 'Jul 2020 – Mar 2022' },
+  { type: 'single', title: 'IT System Support Analyst', period: 'Jul 2019 – Jul 2020' },
+  { type: 'single', title: 'IT Helpdesk Operator', period: 'Dec 2018 – Jul 2019' },
   {
     type: 'group',
-    label: 'Same company',
-    period: 'Oct 2015 – Dec 2018',
     roles: [
-      { title: 'Sales Associate', period: 'Oct 2015 – Jun 2017' },
       { title: 'System Designer', period: 'Jun 2017 – Dec 2018' },
+      { title: 'Sales Associate', period: 'Oct 2015 – Jun 2017' },
     ],
   },
-  { type: 'single', title: 'IT Helpdesk Operator', period: 'Dec 2018 – Jul 2019' },
-  { type: 'single', title: 'IT System Support Analyst', period: 'Jul 2019 – Jul 2020' },
-  { type: 'single', title: 'IT Support Specialist', period: 'Jul 2020 – Mar 2022' },
-  { type: 'single', title: 'IT Support Specialist', period: 'Mar 2022 – Present' },
 ]
 
 export default function HomePage() {
@@ -173,34 +171,14 @@ export default function HomePage() {
                 }}
               >
                 {entry.type === 'group' ? (
-                  <>
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        right: -2,
-                        top: -2,
-                        px: 0.9,
-                        py: 0.2,
-                        fontSize: '0.68rem',
-                        bgcolor: '#2a2a2a',
-                        borderLeft: '2px solid #525252',
-                        borderBottom: '2px solid #525252',
-                        textTransform: 'uppercase',
-                        letterSpacing: 0.4,
-                      }}
-                    >
-                      {entry.label}
-                    </Box>
-                    <Typography color="text.secondary" sx={{ mb: 0.9, fontSize: '0.86rem' }}>{entry.period}</Typography>
-                    <Stack spacing={0.8}>
-                      {entry.roles.map((role) => (
-                        <Box key={`${role.title}-${role.period}`} sx={{ pl: 1.2, borderLeft: '2px solid #3f3f3f' }}>
-                          <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>{role.title}</Typography>
-                          <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>{role.period}</Typography>
-                        </Box>
-                      ))}
-                    </Stack>
-                  </>
+                  <Stack spacing={0.8}>
+                    {entry.roles.map((role) => (
+                      <Box key={`${role.title}-${role.period}`} sx={{ pl: 1.2, borderLeft: '2px solid #3f3f3f' }}>
+                        <Typography sx={{ fontWeight: 600, fontSize: '0.95rem' }}>{role.title}</Typography>
+                        <Typography color="text.secondary" sx={{ fontSize: '0.82rem' }}>{role.period}</Typography>
+                      </Box>
+                    ))}
+                  </Stack>
                 ) : (
                   <>
                     <Typography sx={{ fontWeight: 700 }}>{entry.title}</Typography>
