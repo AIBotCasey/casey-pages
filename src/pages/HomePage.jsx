@@ -200,28 +200,54 @@ export default function HomePage() {
         <Typography variant="h5" sx={{ mb: 1.5 }}>
           Previous Titles + Dates
         </Typography>
-        <Stack spacing={1.1}>
-          {previousTitles.map((item) => (
-            <Box
-              key={`${item.title}-${item.period}`}
-              sx={{
-                px: 2,
-                py: 1.3,
-                display: 'flex',
-                justifyContent: 'space-between',
-                gap: 2,
-                flexWrap: 'wrap',
-                border: '2px solid #525252',
-                borderRadius: 0,
-                bgcolor: '#171717',
-                boxShadow: '6px 6px 0 rgba(0,0,0,0.45)',
-              }}
-            >
-              <Typography sx={{ fontWeight: 700 }}>{item.title}</Typography>
-              <Typography color="text.secondary">{item.period}</Typography>
-            </Box>
-          ))}
-        </Stack>
+
+        <Box
+          sx={{
+            position: 'relative',
+            pl: { xs: 3, sm: 4 },
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              left: { xs: 10, sm: 14 },
+              top: 6,
+              bottom: 6,
+              width: '2px',
+              bgcolor: '#6a6a6a',
+            },
+          }}
+        >
+          <Stack spacing={1.8}>
+            {previousTitles.map((item) => (
+              <Box
+                key={`${item.title}-${item.period}`}
+                sx={{
+                  position: 'relative',
+                  px: 2,
+                  py: 1.3,
+                  border: '2px solid #525252',
+                  borderRadius: 0,
+                  bgcolor: '#171717',
+                  boxShadow: '6px 6px 0 rgba(0,0,0,0.45)',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: { xs: -25, sm: -30 },
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 10,
+                    height: 10,
+                    bgcolor: '#e0e0e0',
+                    border: '2px solid #525252',
+                    borderRadius: 0,
+                  },
+                }}
+              >
+                <Typography sx={{ fontWeight: 700 }}>{item.title}</Typography>
+                <Typography color="text.secondary">{item.period}</Typography>
+              </Box>
+            ))}
+          </Stack>
+        </Box>
       </Box>
     </Stack>
   )
