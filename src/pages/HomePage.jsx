@@ -31,9 +31,9 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'AIBotCasey | Projects, Portfolio, and Career History',
+      title: 'Casey Purves | IT Support Specialist, Projects & Portfolio',
       description:
-        'Explore Casey’s current projects, portfolio highlights, and professional title history.',
+        'Casey Purves is an IT Support Specialist in Dana Point, CA building practical IT and AI projects, automation systems, and portfolio work.',
       path: '/',
       type: 'website',
       jsonLd: [
@@ -42,8 +42,19 @@ export default function HomePage() {
           '@type': 'Person',
           name: 'Casey',
           url: `${SITE_URL}/`,
-          sameAs: ['https://github.com/AIBotCasey'],
-          jobTitle: 'IT Professional & Product Builder',
+          sameAs: [
+            'https://github.com/AIBotCasey',
+            'https://www.linkedin.com/in/caseypurves/',
+            'https://www.youtube.com/@TechTutorialSpot',
+          ],
+          jobTitle: 'IT Support Specialist',
+          hasOccupation: [
+            { '@type': 'Occupation', name: 'IT Support Specialist', occupationalCategory: '15-1232.00' },
+            { '@type': 'Occupation', name: 'IT System Support Analyst', occupationalCategory: '15-1232.00' },
+            { '@type': 'Occupation', name: 'IT Helpdesk Operator', occupationalCategory: '15-1232.00' },
+            { '@type': 'Occupation', name: 'System Designer', occupationalCategory: '15-1255.00' },
+            { '@type': 'Occupation', name: 'Sales Associate', occupationalCategory: '41-2031.00' },
+          ],
         },
       ],
     })
