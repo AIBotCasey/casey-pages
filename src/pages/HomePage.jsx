@@ -31,7 +31,7 @@ export default function HomePage() {
 
   useEffect(() => {
     setPageSeo({
-      title: 'Casey Purves | IT Support Specialist, Projects & Portfolio',
+      title: 'Casey | IT Support Specialist, Projects & Portfolio',
       description:
         'Casey Purves is an IT Support Specialist in Dana Point, CA building practical IT and AI projects, automation systems, and portfolio work.',
       path: '/',
